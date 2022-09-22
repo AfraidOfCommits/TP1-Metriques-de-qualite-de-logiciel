@@ -6,6 +6,7 @@ public class ParsedClassData {
 
     public ParsedRepository repo;
 
+    private String filePath;
     private String packageName;
     private Visibility visibility;
     private String className;
@@ -16,6 +17,16 @@ public class ParsedClassData {
 
     private int numLines;
     private int numLinesEmpty;
+
+    public ParsedClassData(ParsedRepository repo, String filePath, String packageName, String className, Visibility v){
+        this.repo = repo;
+        this.filePath = filePath;
+        this.packageName = packageName;
+        this.className = className;
+        this.visibility = v;
+        this.classesInherited = new ArrayList<>();
+        this.classesImported = new ArrayList<>();
+    }
 
     public void addReferenceFrom(String classSignature) {
         if(this.visibility == Visibility.PRIVATE) return;
