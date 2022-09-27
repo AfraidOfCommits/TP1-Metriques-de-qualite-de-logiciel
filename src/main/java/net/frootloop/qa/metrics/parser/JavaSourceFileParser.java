@@ -2,13 +2,10 @@ package net.frootloop.qa.metrics.parser;
 
 import net.frootloop.qa.metrics.parser.result.ParsedClass;
 
+import java.util.ArrayList;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner; // Import the Scanner class to read text files
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class JavaSourceFileParser {
 
