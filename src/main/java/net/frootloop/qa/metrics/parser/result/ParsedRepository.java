@@ -6,26 +6,51 @@ public class ParsedRepository {
 
     public String rootFilePath;
     public int totalLines;
-    public int totalEmptyLines;
+    public int totalLinesComments;
+    public int totalLinesEmpty;
 
-    private HashMap<String,ParsedClassData> classMap;
+    private HashMap<String, ParsedClass> classMap;
 
     public ParsedRepository(String filePath){
         this.rootFilePath = filePath;
         this.totalLines = 0;
-        this.totalEmptyLines = 0;
-        this.classMap = new HashMap<String,ParsedClassData>();
+        this.totalLinesComments = 0;
+        this.totalLinesEmpty = 0;
+        this.classMap = new HashMap<String, ParsedClass>();
     }
 
     public boolean isInRepo(String signature){
         return classMap.containsKey(signature);
     }
 
-    public void addToRepo(String signature, ParsedClassData data){
-        classMap.put(signature, data);
+    public void addToRepo(String signature, ParsedClass data){
+        if(!classMap.containsKey(signature)) {
+            classMap.put(signature, data);
+            this.totalLines += data.getNumLines();
+            this.totalLinesComments += data.getNumLinesComments();
+            this.totalLinesEmpty += data.getNumLinesEmpty();
+        }
     }
 
-    public ParsedClassData getClassDataOf(String signature){
+    public ParsedClass getClassDataOf(String signature){
         return classMap.get(signature);
+    }
+
+    public void addReferenceFromTo(String classSignatureReferenced, String classSignatureOrigin) {
+
+        ParsedClass referenced = classMap.get(classSignatureReferenced);
+        ParsedClass origin = classMap.get(classSignatureOrigin);
+        if(referenced == null || origin == null || referenced.getVisibility() == Visibility.PRIVATE) return;
+
+        // Add class references:
+        origin.addReferenceTo(classSignatureReferenced);
+        referenced.addReferenceFrom(classSignatureOrigin);
+        ParsedClass parent;
+        for (String parentSignature : referenced.getParents()) {
+            parent = classMap.get(parentSignature);
+            if(parent != null) {
+                parent.addIndirectReferenceFrom(classSignatureOrigin);
+            }
+        }
     }
 }

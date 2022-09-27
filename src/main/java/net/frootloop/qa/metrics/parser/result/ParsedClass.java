@@ -2,7 +2,7 @@ package net.frootloop.qa.metrics.parser.result;
 
 import java.util.ArrayList;
 
-public class ParsedClassData {
+public class ParsedClass {
 
     public ParsedRepository repo;
 
@@ -16,28 +16,19 @@ public class ParsedClassData {
     private ArrayList<String> classesReferencingMyChildren;
 
     private int numLines;
+    private int numLinesComments;
     private int numLinesEmpty;
 
-    public ParsedClassData(ParsedRepository repo, String filePath, String packageName, String className, Visibility v){
-        this.repo = repo;
+    public ParsedClass(String filePath, String packageName, String className, Visibility v){
         this.filePath = filePath;
         this.packageName = packageName;
         this.className = className;
         this.visibility = v;
         this.classesInherited = new ArrayList<>();
         this.classesImported = new ArrayList<>();
-    }
-
-    public void addReferenceFrom(String classSignature) {
-        if(this.visibility == Visibility.PRIVATE) return;
-        classesReferencingMeDirectly.add(classSignature);
-        for (String parentSignature : classesInherited)
-            repo.getClassDataOf(parentSignature).addChildReferenceFrom(classSignature);
-    }
-
-    public void addChildReferenceFrom(String classSignature){
-        if(this.visibility == Visibility.PRIVATE) return;
-        classesReferencingMyChildren.add(classSignature);
+        this.numLines = 0;
+        this.numLinesComments = 0;
+        this.numLinesEmpty = 0;
     }
 
     public String getSignature() {
@@ -64,7 +55,27 @@ public class ParsedClassData {
         return numLines;
     }
 
+    public int getNumLinesComments(){
+        return numLinesComments;
+    }
+
     public int getNumLinesEmpty() {
         return numLinesEmpty;
+    }
+
+    public ArrayList<String> getParents() {
+        return this.classesInherited;
+    }
+
+    public void addReferenceTo(String classSignatureReferenced) {
+        classesImported.add(classSignatureReferenced);
+    }
+
+    public void addReferenceFrom(String classSignatureOrigin) {
+        classesReferencingMeDirectly.add(classSignatureOrigin);
+    }
+
+    public void addIndirectReferenceFrom(String classSignatureOrigin) {
+        classesReferencingMyChildren.add(classSignatureOrigin);
     }
 }
