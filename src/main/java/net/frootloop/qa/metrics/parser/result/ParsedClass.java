@@ -19,10 +19,40 @@ public class ParsedClass {
     private int numLinesComments;
     private int numLinesEmpty;
 
-    public ParsedClass(String filePath, String packageName, String className, Visibility v){
-        this.filePath = filePath;
-        this.packageName = packageName;
+    public ParsedClass(String className){
         this.className = className;
+        this.classesInherited = new ArrayList<>();
+        this.classesImported = new ArrayList<>();
+        this.numLines = 0;
+        this.numLinesComments = 0;
+        this.numLinesEmpty = 0;
+    }
+
+    public ParsedClass(String className, Visibility v){
+        this.className = className;
+        this.visibility = v;
+        this.classesInherited = new ArrayList<>();
+        this.classesImported = new ArrayList<>();
+        this.numLines = 0;
+        this.numLinesComments = 0;
+        this.numLinesEmpty = 0;
+    }
+
+    public ParsedClass(String className, Visibility v, String packageName){
+        this.className = className;
+        this.packageName = packageName;
+        this.visibility = v;
+        this.classesInherited = new ArrayList<>();
+        this.classesImported = new ArrayList<>();
+        this.numLines = 0;
+        this.numLinesComments = 0;
+        this.numLinesEmpty = 0;
+    }
+
+    public ParsedClass(String className, Visibility v, String packageName, String filePath){
+        this.className = className;
+        this.packageName = packageName;
+        this.filePath = filePath;
         this.visibility = v;
         this.classesInherited = new ArrayList<>();
         this.classesImported = new ArrayList<>();
@@ -42,28 +72,50 @@ public class ParsedClass {
     public String getPackageName() {
         return packageName;
     }
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
     public String getFilePath() {
+        if(filePath != null || filePath != "") return filePath;
         return "./" + this.getSignature().replace(".", "/") + ".java";
+    }
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public Visibility getVisibility(){
         return visibility;
+    }
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 
     public int getNumLines(){
         return numLines;
     }
 
+    public void setNumLines(int numLines) {
+        this.numLines = numLines;
+    }
+
     public int getNumLinesComments(){
         return numLinesComments;
+    }
+
+    public void setNumLinesComments(int numLinesComments) {
+        this.numLinesComments = numLinesComments;
     }
 
     public int getNumLinesEmpty() {
         return numLinesEmpty;
     }
 
-    public ArrayList<String> getParents() {
+    public void setNumLinesEmpty(int numLinesEmpty) {
+        this.numLinesEmpty = numLinesEmpty;
+    }
+
+    public ArrayList<String> getParentSignatures() {
         return this.classesInherited;
     }
 

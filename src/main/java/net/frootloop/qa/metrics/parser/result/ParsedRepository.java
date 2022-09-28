@@ -46,7 +46,7 @@ public class ParsedRepository {
         origin.addReferenceTo(classSignatureReferenced);
         referenced.addReferenceFrom(classSignatureOrigin);
         ParsedClass parent;
-        for (String parentSignature : referenced.getParents()) {
+        for (String parentSignature : referenced.getParentSignatures()) {
             parent = classMap.get(parentSignature);
             if(parent != null) {
                 parent.addIndirectReferenceFrom(classSignatureOrigin);

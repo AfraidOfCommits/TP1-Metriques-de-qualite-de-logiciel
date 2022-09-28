@@ -2,9 +2,9 @@ package net.frootloop.qa.metrics.parser;
 
 import net.frootloop.qa.metrics.parser.result.ParsedRepository;
 
-import java.util.ArrayList;
+public class JavaRepositoryParser {
 
-public class JavaRepositoryParser extends JavaSourceFileParser {
+    private static JavaSourceFileParser fileParser = new JavaSourceFileParser();
 
     public static ParsedRepository parse(String filePath){
         ParsedRepository repo = new ParsedRepository(filePath);
