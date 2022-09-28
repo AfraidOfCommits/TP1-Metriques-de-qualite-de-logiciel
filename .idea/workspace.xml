@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added skeleton for parser and source file analysis.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaLexicalAnalysis.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClassData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +25,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$PROJECT_DIR$/../../../../../../Program Files/Microsoft/jdk-11.0.12.7-hotspot/lib/src.zip!/java.base/java/util/regex/Pattern.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -68,7 +68,21 @@
       <option name="project" value="LOCAL" />
       <updated>1663881162305</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path.">
+      <created>1664301665653</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1664301665653</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path.">
+      <created>1664301750780</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1664301750780</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -85,6 +99,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit! Adding the backbones and structure for file parsing, which will be used by the .JAR programs to get info out of the repository given." />
     <MESSAGE value="Added skeleton for parser and source file analysis." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added skeleton for parser and source file analysis." />
+    <MESSAGE value="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path." />
   </component>
 </project>
