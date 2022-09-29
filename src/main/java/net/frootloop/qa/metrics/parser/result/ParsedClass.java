@@ -8,8 +8,8 @@ public class ParsedClass {
     private String packageName;
     private Visibility visibility;
     private String className;
-    private ArrayList<String> classesInherited;
-    private ArrayList<String> classesImported;
+    private ArrayList<String> classesInherited = new ArrayList<>();
+    private ArrayList<String> classesImported = new ArrayList<>();
 
     public ParsedClass(String className){
         this.className = className;

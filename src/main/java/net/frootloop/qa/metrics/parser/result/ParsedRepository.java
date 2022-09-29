@@ -1,5 +1,7 @@
 package net.frootloop.qa.metrics.parser.result;
 
+import net.frootloop.qa.metrics.parser.SourceFileData;
+
 import java.util.HashMap;
 
 public class ParsedRepository {
@@ -25,13 +27,13 @@ public class ParsedRepository {
         return classMap.containsKey(signature);
     }
 
-    public void addToRepo(String signature, ParsedClass data){
-        if(!classMap.containsKey(signature)) {
-            classMap.put(signature, data);
-            this.totalLines += data.getNumLines();
-            this.totalLinesComments += data.getNumLinesComments();
-            this.totalLinesEmpty += data.getNumLinesEmpty();
+    public void addToRepo(SourceFileData fileData) {
+        for (ParsedClass c: fileData.classes) {
+            classMap.put(c.getSignature(), c);
         }
+        this.totalLines += fileData.numLines;
+        this.totalLinesComments += fileData.numLinesComments;
+        this.totalLinesEmpty += fileData.numLinesEmpty;
     }
 
     public ParsedClass getClassDataOf(String signature){
@@ -71,5 +73,4 @@ public class ParsedRepository {
             this.addIndirectReferenceTo(parentSignature);
         }
     }
-
 }
