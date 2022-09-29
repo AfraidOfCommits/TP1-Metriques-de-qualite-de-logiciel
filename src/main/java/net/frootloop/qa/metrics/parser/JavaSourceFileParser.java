@@ -70,10 +70,7 @@ public class JavaSourceFileParser {
                     for (String name : inheritedClasses) {
                         for (String signature : importStatements) {
 
-                            System.out.println("The name of the parent is " + name + " and we're comparing with imported signature " + signature);
-                            System.out.println(signature.matches(name + "$"));
-
-                            if(signature.matches(name + "$")) { // TODO: FIX REGEX
+                            if(signature.matches("([\\w\\d]+\\.)+" + name + "$")) {
                                 parsedClass.addParent(signature);
                                 sourceFileData.importStatements.remove(signature);
                             }
