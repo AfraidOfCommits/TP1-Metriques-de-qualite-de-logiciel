@@ -8,6 +8,10 @@ import java.io.FileNotFoundException;
 
 public class Main extends JavaSourceFileParser {
 
+    public class Maine {
+        // Nested class
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
 
         // Test!
@@ -20,7 +24,7 @@ public class Main extends JavaSourceFileParser {
 
         System.out.println();
         System.out.println("Package : " + f.packageName);
-        System.out.println("Main class name : " + f.mainClassName);
+        System.out.println("Main class name : " + f.mainClass.getClassName());
         System.out.println("Import statements : " + String.join("; ", f.importStatements));
 
         System.out.println();

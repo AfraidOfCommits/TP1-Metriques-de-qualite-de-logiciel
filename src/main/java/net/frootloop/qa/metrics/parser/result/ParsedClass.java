@@ -12,12 +12,12 @@ public class ParsedClass {
     private String className;
     private ArrayList<String> classesInherited;
     private ArrayList<String> classesImported;
-    private ArrayList<String> classesReferencingMeDirectly;
-    private ArrayList<String> classesReferencingMyChildren;
 
     private int numLines;
     private int numLinesComments;
     private int numLinesEmpty;
+
+    public int numTimesReferenced, numTimesReferencesIndirectly;
 
     public ParsedClass(String className){
         this.className = className;
@@ -127,15 +127,5 @@ public class ParsedClass {
     public void addReferenceTo(String classSignatureReferenced) {
         if(!classesImported.contains(classSignatureReferenced))
             classesImported.add(classSignatureReferenced);
-    }
-
-    public void addReferenceFrom(String classSignatureOrigin) {
-        if(!classesReferencingMeDirectly.contains(classSignatureOrigin))
-            classesReferencingMeDirectly.add(classSignatureOrigin);
-    }
-
-    public void addIndirectReferenceFrom(String classSignatureOrigin) {
-        if(!classesReferencingMyChildren.contains(classSignatureOrigin))
-            classesReferencingMyChildren.add(classSignatureOrigin);
     }
 }

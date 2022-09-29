@@ -9,8 +9,9 @@ import java.util.regex.Pattern;
 
 public class SourceFileData {
 
-        public String packageName, mainClassName, filePath;
+        public String packageName, filePath;
         public String textData = "";
+        public ParsedClass mainClass;
         public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
 
 

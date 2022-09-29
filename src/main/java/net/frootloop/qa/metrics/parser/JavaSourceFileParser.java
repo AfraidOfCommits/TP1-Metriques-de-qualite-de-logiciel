@@ -69,7 +69,6 @@ public class JavaSourceFileParser {
                     String[] importStatements = sourceFileData.importStatements.toArray(String[]::new);
                     for (String name : inheritedClasses) {
                         for (String signature : importStatements) {
-
                             if(signature.matches("([\\w\\d]+\\.)+" + name + "$")) {
                                 parsedClass.addParent(signature);
                                 sourceFileData.importStatements.remove(signature);
@@ -78,8 +77,13 @@ public class JavaSourceFileParser {
                     }
 
                     // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
-                    if(sourceFileData.mainClassName == null) sourceFileData.mainClassName = className;
-                    else parsedClass.addParent(sourceFileData.packageName + sourceFileData.mainClassName);
+                    if(sourceFileData.mainClass == null) sourceFileData.mainClass = parsedClass;
+                    else {
+                        parsedClass.addParent(sourceFileData.mainClass.getSignature());
+                        for (String signature : sourceFileData.mainClass.getParentSignatures()) {
+                            parsedClass.addParent(signature);
+                        }
+                    }
 
                     // Add a new ParsedClass to the list
                     sourceFileData.classes.add(parsedClass);

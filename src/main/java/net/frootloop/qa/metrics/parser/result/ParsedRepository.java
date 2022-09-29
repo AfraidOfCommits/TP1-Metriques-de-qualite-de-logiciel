@@ -10,6 +10,8 @@ public class ParsedRepository {
     public int totalLinesEmpty;
 
     private HashMap<String, ParsedClass> classMap;
+    private HashMap<String, Integer> numTimesReferenced;
+    private HashMap<String, Integer> NumTimesReferencedIndirectly;
 
     public ParsedRepository(String filePath){
         this.rootFilePath = filePath;
@@ -36,21 +38,7 @@ public class ParsedRepository {
         return classMap.get(signature);
     }
 
-    public void addReferenceFromTo(String classSignatureReferenced, String classSignatureOrigin) {
-
-        ParsedClass referenced = classMap.get(classSignatureReferenced);
-        ParsedClass origin = classMap.get(classSignatureOrigin);
-        if(referenced == null || origin == null || referenced.getVisibility() == Visibility.PRIVATE) return;
-
-        // Add class references:
-        origin.addReferenceTo(classSignatureReferenced);
-        referenced.addReferenceFrom(classSignatureOrigin);
-        ParsedClass parent;
-        for (String parentSignature : referenced.getParentSignatures()) {
-            parent = classMap.get(parentSignature);
-            if(parent != null) {
-                parent.addIndirectReferenceFrom(classSignatureOrigin);
-            }
-        }
+    private void buildReferenceMaps() {
+        // TODO: Add number of times each class is referenced by cycling through all ParsedClasses
     }
 }
