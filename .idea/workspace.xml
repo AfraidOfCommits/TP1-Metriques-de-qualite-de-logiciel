@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Correction: NOW pretty much complete. I missed a nullpointer issue.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664478873213</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Correction: NOW pretty much complete. I missed a nullpointer issue.">
+      <created>1664478971284</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1664478971284</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -216,6 +226,7 @@
     <MESSAGE value="Tweaks and some bug fixes." />
     <MESSAGE value="More tweaks, lol" />
     <MESSAGE value="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository." />
+    <MESSAGE value="Correction: NOW pretty much complete. I missed a nullpointer issue." />
+    <option name="LAST_COMMIT_MESSAGE" value="Correction: NOW pretty much complete. I missed a nullpointer issue." />
   </component>
 </project>

@@ -17,7 +17,6 @@ public class JavaRepositoryParser {
         // For each .java file in the folder:
             // Parse the file using JavaSourceFileParser:
             // Add each ParsedClass to repo:
-            // Every
         // Recursively call on every subfolder:
     }
 

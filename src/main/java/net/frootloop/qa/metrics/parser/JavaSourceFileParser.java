@@ -27,8 +27,12 @@ public class JavaSourceFileParser {
         // Regex precompiled patterns:
         Pattern classNamePattern = Pattern.compile("(class|interface|enum)\\s(\\w+)");
         Matcher classNameMatcher = null;
+
         Pattern inheritedClassesPattern = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
         Matcher inheritedClassesMatcher = null;
+
+        Pattern newClassObjectPattern = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
+        Matcher newClassObjectMatcher = null;
 
         int i = 0;
 
@@ -40,19 +44,23 @@ public class JavaSourceFileParser {
             for (String statement : block) {
                 if(i == 3) System.out.println(statement);
 
-                /**
-                 * Note: There is a big disadvantage with this method of getting class references; unfortunately, classes in
-                 * the same package can reference each other without requiring an import statement.
-                 *
-                 * We're not actually parsing the code itself, only specific code statements, which saves us a huge amount of effort.
-                 * So our number of references won't be totally representative of reality, we'll have to accept the error margin.
-                 */
+                // Check for import statements; they'll be useful for getting the packages of referenced classes
                 if(statement.matches("^import(.|[^.])*"))
                     sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
 
+                // Check for the current package name:
                 else if(statement.matches("^package(.|[^.])*"))
                     sourceFileData.packageName = statement.replaceAll("(\\s|package)", "");
 
+                else if((newClassObjectMatcher = newClassObjectPattern.matcher(statement)).find()){
+                    while(newClassObjectMatcher.find()){
+                        System.out.println(newClassObjectMatcher.group(1));
+                    }
+
+
+                }
+
+                // Check for a class declaration:
                 else if((classNameMatcher = classNamePattern.matcher(statement)).find()) {
 
                     // Get the visibility type:
@@ -70,17 +78,14 @@ public class JavaSourceFileParser {
                     // Does the class inherit from another? Get a list of all matching candidates
                     List<String> inheritedClasses = new ArrayList<>();
                     inheritedClassesMatcher = inheritedClassesPattern.matcher(statement);
-                    while(inheritedClassesMatcher.find())
+                    while(inheritedClassesMatcher.find()) {
                         inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
+                    };
 
-                    String[] importStatements = sourceFileData.importStatements.toArray(String[]::new);
+                    // For each inherited class, add their signature to the ParsedClass
                     for (String name : inheritedClasses) {
-                        for (String signature : importStatements) {
-                            if(signature.matches("([\\w\\d]+\\.)+" + name + "$")) {
-                                parsedClass.addParent(signature);
-                                sourceFileData.importStatements.remove(signature);
-                            }
-                        }
+                        String signatureOfParent = sourceFileData.getApproxClassSignature(name);
+                        parsedClass.addParent(signatureOfParent);
                     }
 
                     // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
