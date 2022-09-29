@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 public class JavaSourceFileParser {
 
     public void test() throws FileNotFoundException {
-        new JavaSourceFileParser().getParsedClassDataOf("/C:/Users/Alex/Desktop/IFT3913 - Qualité Logiciel/TP1/TP1 Metriques de qualite de logiciel/src/main/java/net/frootloop/qa/metrics/Main.java");
+        new JavaSourceFileParser().parse("/C:/Users/Alex/Desktop/IFT3913 - Qualité Logiciel/TP1/TP1 Metriques de qualite de logiciel/src/main/java/net/frootloop/qa/metrics/Main.java");
     }
 
-    public static SourceFileData getParsedClassDataOf(String filePath) throws FileNotFoundException {
+    public static SourceFileData parse(String filePath) throws FileNotFoundException {
 
         // Read the file and extract the source code's list of statements;
         SourceFileData sourceFileData = JavaSourceFileParser.readSourceFile(filePath);
