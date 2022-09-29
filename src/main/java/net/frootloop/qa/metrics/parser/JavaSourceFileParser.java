@@ -34,6 +34,9 @@ public class JavaSourceFileParser {
         Pattern newClassObjectPattern = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
         Matcher newClassObjectMatcher = null;
 
+        Pattern classVariablePattern = Pattern.compile("(|\\s|\\(|,)([A-Z]\\w*)\\s\\w*");
+        Matcher classVariableMatcher = null;
+
         int i = 0;
 
         // Cycle through the code:
@@ -52,12 +55,29 @@ public class JavaSourceFileParser {
                 else if(statement.matches("^package(.|[^.])*"))
                     sourceFileData.packageName = statement.replaceAll("(\\s|package)", "");
 
+
+                /*
+                 *  Note: unfortunately it's not possible to keep track of which class we're currently parsing due to the
+                 *  choice of using a linked list instead of a full graph to represent the code's structure.
+                 *
+                 *  So we lose a bit of accuracy when it comes to assigning who references who. Luckily that isn't useful
+                 *  data for the purposes of this project, but a good thing to keep in mind for future improvements.
+                 */
+
+                // Check for classes declared on the heap with the "new" keyword, and add them as a reference of the main class:
                 else if((newClassObjectMatcher = newClassObjectPattern.matcher(statement)).find()){
-                    while(newClassObjectMatcher.find()){
-                        System.out.println(newClassObjectMatcher.group(1));
+                    String nameOfClassInstantiated = newClassObjectMatcher.group(1);
+                    String signatureOfInstantiated = sourceFileData.getApproxClassSignature(nameOfClassInstantiated);
+                    if(!sourceFileData.classes.isEmpty())
+                        sourceFileData.classes.get(0).addReferenceTo(signatureOfInstantiated);
+                }
+
+                // Check for classes referenced as variables, and add them as a reference of the main class:
+                else if(classVariablePattern.matcher(statement).find()) {
+                    classVariableMatcher = classVariablePattern.matcher(statement);
+                    while (classVariableMatcher.find()) {
+
                     }
-
-
                 }
 
                 // Check for a class declaration:
