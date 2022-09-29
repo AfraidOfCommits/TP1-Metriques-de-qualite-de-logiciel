@@ -8,13 +8,14 @@ import java.util.LinkedList;
 public class SourceFileData {
 
         public String packageName, mainClassName, filePath;
-        public int numLines, numLinesEmpty, numLinesComments;
+        public String textData = null;
+        public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
+
 
         // List of classes found within the source file (one file can declare multiple nested classes)
-        public ArrayList<ParsedClass> classes = new ArrayList<>();
-        public ArrayList<String> importStatements;
-        public String textData = null;
-        public LinkedList<String[]> codeBlocks = null;
+        public ArrayList<ParsedClass> classes = new ArrayList<ParsedClass>();
+        public ArrayList<String> importStatements = new ArrayList<String>();
+        public LinkedList<String[]> codeBlocks = new LinkedList<String[]>();
 
         public void addNewLineOfText(String lineOfText){
             this.numLines += 1;
@@ -28,11 +29,11 @@ public class SourceFileData {
             lineOfText = lineOfText.replaceAll("}\\s", "}");
 
             // If the line is a single-line comment (like this one!):
-            if(lineOfText.matches("/[[:blank:]]*\\/{2,}/gm"))
+            if(lineOfText.matches("\\s*\\/{2,}(.|\\s)*"))
                 this.numLinesComments += 1;
 
                 // If the line is just empty:
-            else if (lineOfText.matches("/\\A[[:blank:]]*\\Z/gm"))
+            else if (lineOfText.matches("\\A[[:blank:]]*\\Z"))
                 this.numLinesEmpty += 1;
 
                 // Only add actual lines of code to the output:

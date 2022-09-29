@@ -3,12 +3,11 @@ package net.frootloop.qa.metrics.parser;
 import net.frootloop.qa.metrics.parser.result.ParsedClass;
 import net.frootloop.qa.metrics.parser.result.Visibility;
 
-import java.security.spec.ECField;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,10 +18,10 @@ public class JavaSourceFileParser {
         new JavaSourceFileParser().getParsedClassDataOf("/C:/Users/Alex/Desktop/IFT3913 - Qualité Logiciel/TP1/TP1 Metriques de qualite de logiciel/src/main/java/net/frootloop/qa/metrics/Main.java");
     }
 
-    public SourceFileData getParsedClassDataOf(String filePath) throws FileNotFoundException {
+    public static SourceFileData getParsedClassDataOf(String filePath) throws FileNotFoundException {
 
         // Read the file and extract the source code's list of statements;
-        SourceFileData sourceFileData = this.readSourceFile(filePath);
+        SourceFileData sourceFileData = JavaSourceFileParser.readSourceFile(filePath);
         LinkedList<String[]> codeBlocks = sourceFileData.getCode();
 
         // Regex precompiled patterns:
@@ -35,7 +34,9 @@ public class JavaSourceFileParser {
         for (String[] block : codeBlocks) {
             for (String statement : block) {
 
-                if(statement.contains("import"))
+                if(block == null) break;
+
+                else if(statement.contains("import"))
                     sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
 
                 else if(statement.contains("package"))
@@ -80,7 +81,7 @@ public class JavaSourceFileParser {
         return sourceFileData;
     }
 
-    private SourceFileData readSourceFile(String path) throws FileNotFoundException {
+    private static SourceFileData readSourceFile(String path) throws FileNotFoundException {
         SourceFileData fileData = new SourceFileData();
         fileData.filePath = path;
         try {
