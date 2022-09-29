@@ -5,6 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Source file parse done, need to test it to be sure its behavior is all good.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,7 +104,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664417463338</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Source file parse done, need to test it to be sure its behavior is all good.">
+      <created>1664417540756</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1664417540756</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
