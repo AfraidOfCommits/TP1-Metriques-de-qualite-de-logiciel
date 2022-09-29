@@ -119,15 +119,23 @@ public class ParsedClass {
         return this.classesInherited;
     }
 
+    public void addParent(String classSignatureOfParent) {
+        if(!classesInherited.contains(classSignatureOfParent))
+            classesInherited.add(classSignatureOfParent);
+    }
+
     public void addReferenceTo(String classSignatureReferenced) {
-        classesImported.add(classSignatureReferenced);
+        if(!classesImported.contains(classSignatureReferenced))
+            classesImported.add(classSignatureReferenced);
     }
 
     public void addReferenceFrom(String classSignatureOrigin) {
-        classesReferencingMeDirectly.add(classSignatureOrigin);
+        if(!classesReferencingMeDirectly.contains(classSignatureOrigin))
+            classesReferencingMeDirectly.add(classSignatureOrigin);
     }
 
     public void addIndirectReferenceFrom(String classSignatureOrigin) {
-        classesReferencingMyChildren.add(classSignatureOrigin);
+        if(!classesReferencingMyChildren.contains(classSignatureOrigin))
+            classesReferencingMyChildren.add(classSignatureOrigin);
     }
 }

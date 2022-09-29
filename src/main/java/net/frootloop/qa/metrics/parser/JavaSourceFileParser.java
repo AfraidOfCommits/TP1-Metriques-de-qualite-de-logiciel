@@ -3,11 +3,15 @@ package net.frootloop.qa.metrics.parser;
 import net.frootloop.qa.metrics.parser.result.ParsedClass;
 import net.frootloop.qa.metrics.parser.result.Visibility;
 
+import java.security.spec.ECField;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner; // Import the Scanner class to read text files
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JavaSourceFileParser {
 
@@ -24,8 +28,13 @@ public class JavaSourceFileParser {
         SourceFileData fileData = this.readSourceFile(filePath);
         LinkedList<String[]> codeBlocks = fileData.getCode();
 
+        // Regex precompiled patterns:
+        Pattern classNamePattern = Pattern.compile("(class|interface|enum)\\s(\\w+)");
+        Matcher classNameMatcher = null;
+        Pattern inheritedClassesPattern = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
+        Matcher inheritedClassesMatcher = null;
+
         // Cycle through the code:
-        boolean isFirstCodeBlock = true;
         for (String[] block : codeBlocks) {
             for (String statement : block) {
 
@@ -35,30 +44,59 @@ public class JavaSourceFileParser {
                 else if(statement.contains("package"))
                     fileData.packageName = statement.replaceAll("(\\s|package)", "");
 
-                else if(statement.matches("(class|interface|enum)")) {
+                else if((classNameMatcher = classNamePattern.matcher(statement)).find()) {
+
+                    // Get the visibility type:
+                    Visibility visibility;
+                    if(statement.contains("Public")) visibility = Visibility.PUBLIC;
+                    if(statement.contains("Protected")) visibility = Visibility.PROTECTED;
+                    else visibility = Visibility.PRIVATE;
+
+                    // Get the class name:
+                    String className = classNameMatcher.group(2);
+
+                    // Create a new ParsedClass object
+                    ParsedClass parsedClass = new ParsedClass(className, visibility, fileData.packageName, filePath);
+
+                    // Does the class inherit from another? Get a list of all matching candidates
+                    List<String> inheritedClasses = new ArrayList<>();
+                    while((inheritedClassesMatcher = inheritedClassesPattern.matcher(statement)).find())
+                        inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
+
+                    for (String name : inheritedClasses) {
+                        for (String signature : fileData.importStatements) {
+                            if(signature.matches("(\\w\\.)+" + name))
+                                parsedClass.addParent(signature);
+                        }
+                    }
+
+                    // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
+                    if(fileData.mainClassName == null) fileData.mainClassName = className;
+                    else parsedClass.addParent(fileData.packageName + fileData.mainClassName);
+
                     // Add a new ParsedClass to the list
+                    classes.add(parsedClass);
                 }
             }
         }
-
-
-        // Locate statements only (we don't need to look at nested bodies yet)
-
-
-        // Split the code by its nesting levels, i.e. curly backets, and iterate on each level:
-
-        // Split each nested level of the code into individual statements:
-
-        // Get the package name (from the first level):
-
-        // Get a list of all the import statements (from the first level):
-
-        // Get the main class from the file (from the first level):
-
-        // For every other level, parse its statements and look for nested classes:
-
-
         return classes;
+    }
+
+    private SourceFileData readSourceFile(String path) throws FileNotFoundException {
+        SourceFileData fileData = new SourceFileData();
+        fileData.filePath = path;
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine())
+                fileData.addNewLineOfText(myReader.nextLine());
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR. Unable to read file " + path);
+            e.printStackTrace();
+        };
+        return fileData;
     }
 
     private class SourceFileData {
@@ -119,57 +157,6 @@ public class JavaSourceFileParser {
 
             // Remove extra spaces:
             this.textData = textData.replaceAll("\\s+", " ");
-        }
-    }
-
-    private SourceFileData readSourceFile(String path) throws FileNotFoundException {
-        SourceFileData fileData = new SourceFileData();
-        fileData.filePath = path;
-        try {
-            File myObj = new File(path);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine())
-                fileData.addNewLineOfText(myReader.nextLine());
-            myReader.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("ERROR. Unable to read file " + path);
-            e.printStackTrace();
-        };
-        return fileData;
-    }
-
-    private static ParsedClass parseCodeStatement(String blockOfCode){
-        if(!blockOfCode.contains("(class|interface|enum)"))
-            return null; // No new object is declared, so return result is null.
-        else {
-            String className;
-            Visibility visibility;
-
-            // Split the code into statements (lines of code):
-            String[] codeStatements = blockOfCode.split(";");
-
-            for (String s : codeStatements) {
-
-                // If the statement is a class declaration, jackpot!
-                if(s.contains("(class|interface)")){
-
-                    // Get the visibility type:
-                    if(s.contains("Public")) visibility = Visibility.PUBLIC;
-                    if(s.contains("Protected")) visibility = Visibility.PROTECTED;
-                    else visibility = Visibility.PRIVATE;
-
-                    // Get the class name:
-
-                    // Does the class inherit from another? If so, add a reference to it:
-
-                    // Does the class implement an interface? If so, add a reference to it:
-
-                }
-            }
-
-            //ParsedClass c = new ParsedClass(filePath, packageName, className, visibility);
-            return null;
         }
     }
 }
