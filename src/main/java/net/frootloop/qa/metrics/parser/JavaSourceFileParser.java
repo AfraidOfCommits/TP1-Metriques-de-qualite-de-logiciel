@@ -100,7 +100,6 @@ public class JavaSourceFileParser {
     }
 
     private class SourceFileData {
-
         private String packageName, mainClassName, filePath;
         private ArrayList<String> importStatements;
         public int numLines, numLinesEmpty, numLinesComments;

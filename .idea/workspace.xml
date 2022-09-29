@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Porgress on the parser! Almost done being able to parse source files and nested classed.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Source file parse done, need to test it to be sure its behavior is all good.">
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClass.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664402713811</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Source file parse done, need to test it to be sure its behavior is all good.">
+      <created>1664417463338</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1664417463338</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -117,6 +121,7 @@
     <MESSAGE value="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path." />
     <MESSAGE value="Porgress on the parser, still. Added some comments" />
     <MESSAGE value="Porgress on the parser! Almost done being able to parse source files and nested classed." />
-    <option name="LAST_COMMIT_MESSAGE" value="Porgress on the parser! Almost done being able to parse source files and nested classed." />
+    <MESSAGE value="Source file parse done, need to test it to be sure its behavior is all good." />
+    <option name="LAST_COMMIT_MESSAGE" value="Source file parse done, need to test it to be sure its behavior is all good." />
   </component>
 </project>
