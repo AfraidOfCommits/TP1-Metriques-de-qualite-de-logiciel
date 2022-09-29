@@ -40,6 +40,13 @@ public class JavaSourceFileParser {
             for (String statement : block) {
                 if(i == 3) System.out.println(statement);
 
+                /**
+                 * Note: There is a big disadvantage with this method of getting class references; unfortunately, classes in
+                 * the same package can reference each other without requiring an import statement.
+                 *
+                 * We're not actually parsing the code itself, only specific code statements, which saves us a huge amount of effort.
+                 * So our number of references won't be totally representative of reality, we'll have to accept the error margin.
+                 */
                 if(statement.matches("^import(.|[^.])*"))
                     sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
 

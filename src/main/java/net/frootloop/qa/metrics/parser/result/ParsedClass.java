@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class ParsedClass {
 
-    public ParsedRepository repo;
-
     private String filePath;
     private String packageName;
     private Visibility visibility;
@@ -13,40 +11,19 @@ public class ParsedClass {
     private ArrayList<String> classesInherited;
     private ArrayList<String> classesImported;
 
-    private int numLines;
-    private int numLinesComments;
-    private int numLinesEmpty;
-
-    public int numTimesReferenced, numTimesReferencesIndirectly;
-
     public ParsedClass(String className){
         this.className = className;
-        this.classesInherited = new ArrayList<>();
-        this.classesImported = new ArrayList<>();
-        this.numLines = 0;
-        this.numLinesComments = 0;
-        this.numLinesEmpty = 0;
     }
 
     public ParsedClass(String className, Visibility v){
         this.className = className;
         this.visibility = v;
-        this.classesInherited = new ArrayList<>();
-        this.classesImported = new ArrayList<>();
-        this.numLines = 0;
-        this.numLinesComments = 0;
-        this.numLinesEmpty = 0;
     }
 
     public ParsedClass(String className, Visibility v, String packageName){
         this.className = className;
         this.packageName = packageName;
         this.visibility = v;
-        this.classesInherited = new ArrayList<>();
-        this.classesImported = new ArrayList<>();
-        this.numLines = 0;
-        this.numLinesComments = 0;
-        this.numLinesEmpty = 0;
     }
 
     public ParsedClass(String className, Visibility v, String packageName, String filePath){
@@ -54,11 +31,6 @@ public class ParsedClass {
         this.packageName = packageName;
         this.filePath = filePath;
         this.visibility = v;
-        this.classesInherited = new ArrayList<>();
-        this.classesImported = new ArrayList<>();
-        this.numLines = 0;
-        this.numLinesComments = 0;
-        this.numLinesEmpty = 0;
     }
 
     public String getSignature() {
@@ -89,30 +61,6 @@ public class ParsedClass {
     }
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
-    }
-
-    public int getNumLines(){
-        return numLines;
-    }
-
-    public void setNumLines(int numLines) {
-        this.numLines = numLines;
-    }
-
-    public int getNumLinesComments(){
-        return numLinesComments;
-    }
-
-    public void setNumLinesComments(int numLinesComments) {
-        this.numLinesComments = numLinesComments;
-    }
-
-    public int getNumLinesEmpty() {
-        return numLinesEmpty;
-    }
-
-    public void setNumLinesEmpty(int numLinesEmpty) {
-        this.numLinesEmpty = numLinesEmpty;
     }
 
     public ArrayList<String> getParentSignatures() {
