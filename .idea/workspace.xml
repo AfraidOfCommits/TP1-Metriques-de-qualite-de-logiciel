@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Renamed the parse function.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed a good amount of bugs with the parser. Statements are now all properly parsed.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/SourceFileData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -139,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664419554946</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fixed a good amount of bugs with the parser. Statements are now all properly parsed.">
+      <created>1664425362309</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1664425362309</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -163,6 +169,7 @@
     <MESSAGE value="Tweaks to FileParser" />
     <MESSAGE value="Added test for line count in Main." />
     <MESSAGE value="Renamed the parse function." />
-    <option name="LAST_COMMIT_MESSAGE" value="Renamed the parse function." />
+    <MESSAGE value="Fixed a good amount of bugs with the parser. Statements are now all properly parsed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a good amount of bugs with the parser. Statements are now all properly parsed." />
   </component>
 </project>

@@ -30,9 +30,15 @@ public class JavaSourceFileParser {
         Pattern inheritedClassesPattern = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
         Matcher inheritedClassesMatcher = null;
 
+        int i = 0;
+
         // Cycle through the code:
         for (String[] block : codeBlocks) {
+
+            i ++;
+
             for (String statement : block) {
+                if(i == 3) System.out.println(statement);
 
                 if(statement.matches("^import(.|[^.])*"))
                     sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
@@ -41,8 +47,6 @@ public class JavaSourceFileParser {
                     sourceFileData.packageName = statement.replaceAll("(\\s|package)", "");
 
                 else if((classNameMatcher = classNamePattern.matcher(statement)).find()) {
-
-                    System.out.println("Class declaration found: " + statement);
 
                     // Get the visibility type:
                     Visibility visibility;
@@ -58,14 +62,21 @@ public class JavaSourceFileParser {
 
                     // Does the class inherit from another? Get a list of all matching candidates
                     List<String> inheritedClasses = new ArrayList<>();
-                    while((inheritedClassesMatcher = inheritedClassesPattern.matcher(statement)).find())
+                    inheritedClassesMatcher = inheritedClassesPattern.matcher(statement);
+                    while(inheritedClassesMatcher.find())
                         inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
 
+                    String[] importStatements = sourceFileData.importStatements.toArray(String[]::new);
                     for (String name : inheritedClasses) {
-                        for (String signature : sourceFileData.importStatements) {
-                            if(signature.matches("(\\w\\.)+" + name))
+                        for (String signature : importStatements) {
+
+                            System.out.println("The name of the parent is " + name + " and we're comparing with imported signature " + signature);
+                            System.out.println(signature.matches(name + "$"));
+
+                            if(signature.matches(name + "$")) { // TODO: FIX REGEX
                                 parsedClass.addParent(signature);
-                            sourceFileData.importStatements.remove(signature);
+                                sourceFileData.importStatements.remove(signature);
+                            }
                         }
                     }
 
