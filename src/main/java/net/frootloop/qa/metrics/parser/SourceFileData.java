@@ -4,18 +4,20 @@ import net.frootloop.qa.metrics.parser.result.ParsedClass;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SourceFileData {
 
         public String packageName, mainClassName, filePath;
-        public String textData = null;
+        public String textData = "";
         public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
 
 
         // List of classes found within the source file (one file can declare multiple nested classes)
         public ArrayList<ParsedClass> classes = new ArrayList<ParsedClass>();
         public ArrayList<String> importStatements = new ArrayList<String>();
-        public LinkedList<String[]> codeBlocks = new LinkedList<String[]>();
+        public LinkedList<String[]> codeBlocks = null;
 
         public void addNewLineOfText(String lineOfText){
             this.numLines += 1;
@@ -23,28 +25,27 @@ public class SourceFileData {
             // Replace strings with a generic value:
             lineOfText = lineOfText.replaceAll("\\\"[^\\\"]*\\\"", "\"(string value)\"]");
 
-            // Clean up the line a bit by removing extraneous spaces:
-            lineOfText = lineOfText.replaceAll("\\s+", " ");
-            lineOfText = lineOfText.replaceAll(";\\s", ";");
-            lineOfText = lineOfText.replaceAll("}\\s", "}");
-
             // If the line is a single-line comment (like this one!):
             if(lineOfText.matches("\\s*\\/{2,}(.|\\s)*"))
                 this.numLinesComments += 1;
 
-                // If the line is just empty:
+            // If the line is just empty:
             else if (lineOfText.matches("\\A[[:blank:]]*\\Z"))
                 this.numLinesEmpty += 1;
 
-                // Only add actual lines of code to the output:
+            // Only add actual lines of code to the output:
             else {
-                lineOfText = lineOfText.replaceAll("\\/\\/.*", ""); // Remove comments appended to code (like this one!)
+                lineOfText = lineOfText.replaceAll("\\/\\/((?!\\*\\/).)*", ""); // Remove comments appended to code (like this one!)
+
+                // Clean up the line a bit by removing spaces and tabs at the front:
+                lineOfText = lineOfText.replaceAll("^\\s+", "");
+
                 this.textData += lineOfText;
             }
         }
 
         public LinkedList<String[]> getCode(){
-            if(this.codeBlocks == null && this.textData != null) {
+            if(this.codeBlocks == null && this.textData != "") {
                 this.generateCodeFromTextData();
             }
             return this.codeBlocks;
@@ -59,6 +60,7 @@ public class SourceFileData {
         }
 
         private void cleanUpTextData(){
+
             // Remove null chars:
             this.textData = textData.replaceAll("\0", " ");
 
@@ -67,5 +69,7 @@ public class SourceFileData {
 
             // Remove extra spaces:
             this.textData = textData.replaceAll("\\s+", " ");
+            this.textData = textData.replaceAll("\\s\\{", "{");
+            this.textData = textData.replaceAll("\\s;", ";");
         }
     }

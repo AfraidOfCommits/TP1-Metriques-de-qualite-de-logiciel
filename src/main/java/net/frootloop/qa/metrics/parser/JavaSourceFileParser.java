@@ -34,15 +34,15 @@ public class JavaSourceFileParser {
         for (String[] block : codeBlocks) {
             for (String statement : block) {
 
-                if(block == null) break;
-
-                else if(statement.contains("import"))
+                if(statement.matches("^import(.|[^.])*"))
                     sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
 
-                else if(statement.contains("package"))
+                else if(statement.matches("^package(.|[^.])*"))
                     sourceFileData.packageName = statement.replaceAll("(\\s|package)", "");
 
                 else if((classNameMatcher = classNamePattern.matcher(statement)).find()) {
+
+                    System.out.println("Class declaration found: " + statement);
 
                     // Get the visibility type:
                     Visibility visibility;
