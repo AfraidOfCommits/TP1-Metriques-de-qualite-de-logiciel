@@ -128,4 +128,8 @@ public class ParsedClass {
         if(!classesImported.contains(classSignatureReferenced))
             classesImported.add(classSignatureReferenced);
     }
+
+    public ArrayList<String> getClassesReferencedDirectly() {
+        return classesImported;
+    }
 }
