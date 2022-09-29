@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class JavaSourceFileParser {
 
-    public static SourceFileData parse(String filePath) throws FileNotFoundException {
+    public static SourceFileData parse(String filePath) {
 
         // Read the file and extract the source code's list of statements;
         SourceFileData sourceFileData = JavaSourceFileParser.readSourceFile(filePath);
@@ -131,7 +131,7 @@ public class JavaSourceFileParser {
         return sourceFileData;
     }
 
-    private static SourceFileData readSourceFile(String path) throws FileNotFoundException {
+    private static SourceFileData readSourceFile(String path) {
         SourceFileData fileData = new SourceFileData();
         fileData.filePath = path;
         try {
