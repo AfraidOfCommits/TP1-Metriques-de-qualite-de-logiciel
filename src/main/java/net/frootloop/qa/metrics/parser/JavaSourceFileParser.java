@@ -14,10 +14,6 @@ import java.util.regex.Pattern;
 
 public class JavaSourceFileParser {
 
-    public void test() throws FileNotFoundException {
-        new JavaSourceFileParser().parse("/C:/Users/Alex/Desktop/IFT3913 - Qualité Logiciel/TP1/TP1 Metriques de qualite de logiciel/src/main/java/net/frootloop/qa/metrics/Main.java");
-    }
-
     public static SourceFileData parse(String filePath) throws FileNotFoundException {
 
         // Read the file and extract the source code's list of statements;
@@ -65,18 +61,28 @@ public class JavaSourceFileParser {
                  */
 
                 // Check for classes declared on the heap with the "new" keyword, and add them as a reference of the main class:
-                else if((newClassObjectMatcher = newClassObjectPattern.matcher(statement)).find()){
-                    String nameOfClassInstantiated = newClassObjectMatcher.group(1);
-                    String signatureOfInstantiated = sourceFileData.getApproxClassSignature(nameOfClassInstantiated);
-                    if(!sourceFileData.classes.isEmpty())
-                        sourceFileData.classes.get(0).addReferenceTo(signatureOfInstantiated);
+                else if(newClassObjectPattern.matcher(statement).find()){
+                    // Note: It's very unlikely, but if ever a class instance is created BEFORE ANY class declaration
+                    // in the file, they won't count as a reference.
+                    if(!sourceFileData.classes.isEmpty()) {
+                        newClassObjectMatcher = newClassObjectPattern.matcher(statement);
+                        while (newClassObjectMatcher.find()) {
+                            String signatureOfInstantiated = sourceFileData.getApproxClassSignature(newClassObjectMatcher.group(1));
+                            sourceFileData.classes.get(0).addReferenceTo(signatureOfInstantiated);
+                        }
+                    }
                 }
 
                 // Check for classes referenced as variables, and add them as a reference of the main class:
                 else if(classVariablePattern.matcher(statement).find()) {
-                    classVariableMatcher = classVariablePattern.matcher(statement);
-                    while (classVariableMatcher.find()) {
-
+                    // Note: It's very unlikely, but if ever a class instance is created BEFORE ANY class declaration
+                    // in the file, they won't count as a reference.
+                    if(!sourceFileData.classes.isEmpty()) {
+                        classVariableMatcher = classVariablePattern.matcher(statement);
+                        while (classVariableMatcher.find()) {
+                            String signatureOfVariable = sourceFileData.getApproxClassSignature(classVariableMatcher.group(1));
+                            sourceFileData.classes.get(0).addReferenceTo(signatureOfVariable);
+                        }
                     }
                 }
 
