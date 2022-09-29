@@ -17,10 +17,9 @@ public class ParsedRepository {
 
     public ParsedRepository(String filePath){
         this.rootFilePath = filePath;
-        this.totalLines = 0;
-        this.totalLinesComments = 0;
-        this.totalLinesEmpty = 0;
-        this.classMap = new HashMap<String, ParsedClass>();
+        this.classMap = new HashMap<>();
+        this.numTimesReferenced = new HashMap<>();
+        this.NumTimesReferencedIndirectly = new HashMap<>();
     }
 
     public boolean isInRepo(String signature){

@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="More tweaks, lol">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -180,7 +179,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664478495111</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository.">
+      <created>1664478873213</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1664478873213</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -209,6 +215,7 @@
     <MESSAGE value="My relationship with regex is one of hate and toxic abuse" />
     <MESSAGE value="Tweaks and some bug fixes." />
     <MESSAGE value="More tweaks, lol" />
-    <option name="LAST_COMMIT_MESSAGE" value="More tweaks, lol" />
+    <MESSAGE value="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository." />
+    <option name="LAST_COMMIT_MESSAGE" value="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository." />
   </component>
 </project>
