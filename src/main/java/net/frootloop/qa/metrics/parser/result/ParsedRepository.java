@@ -1,7 +1,5 @@
 package net.frootloop.qa.metrics.parser.result;
 
-import net.frootloop.qa.metrics.parser.SourceFileData;
-
 import java.util.HashMap;
 
 public class ParsedRepository {
@@ -11,8 +9,21 @@ public class ParsedRepository {
     public int totalLinesComments;
     public int totalLinesEmpty;
 
+    /***
+     * Map to store and fetch ParsedClass instances by their signature.
+     */
     private HashMap<String, ParsedClass> classMap;
+
+    /***
+     * Map to store and fetch the amount of times a class has been directly referred to by
+     * another class, with the key being the class's signature.
+     */
     private HashMap<String, Integer> numTimesReferenced;
+
+    /***
+     * Map to store and fetch the amount of times a parent class has been indirectly referred to by
+     * a child class, with the key being the parent's signature.
+     */
     private HashMap<String, Integer> NumTimesReferencedIndirectly;
 
     public ParsedRepository(String filePath){
@@ -22,17 +33,13 @@ public class ParsedRepository {
         this.NumTimesReferencedIndirectly = new HashMap<>();
     }
 
-    public boolean isInRepo(String signature){
-        return classMap.containsKey(signature);
-    }
-
-    public void addToRepo(SourceFileData fileData) {
-        for (ParsedClass c: fileData.classes) {
+    public void addParsedFile(ParsedSourceFile parsedFile) {
+        for (ParsedClass c: parsedFile.classes) {
             classMap.put(c.getSignature(), c);
         }
-        this.totalLines += fileData.numLines;
-        this.totalLinesComments += fileData.numLinesComments;
-        this.totalLinesEmpty += fileData.numLinesEmpty;
+        this.totalLines += parsedFile.numLines;
+        this.totalLinesComments += parsedFile.numLinesComments;
+        this.totalLinesEmpty += parsedFile.numLinesEmpty;
     }
 
     public ParsedClass getClassDataOf(String signature){

@@ -1,13 +1,9 @@
-package net.frootloop.qa.metrics.parser;
-
-import net.frootloop.qa.metrics.parser.result.ParsedClass;
+package net.frootloop.qa.metrics.parser.result;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class SourceFileData {
+public class ParsedSourceFile {
 
     public String packageName, filePath;
     public String textData = "";
@@ -15,9 +11,21 @@ public class SourceFileData {
     public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
 
 
-    // List of classes found within the source file (one file can declare multiple nested classes)
+    /***
+     * List of classes found within the source file. One file can declare multiple nested classes, enums, etc.
+     */
     public ArrayList<ParsedClass> classes = new ArrayList<ParsedClass>();
+
+    /***
+     * List of import statements found within the source file.
+     */
     public ArrayList<String> importStatements = new ArrayList<String>();
+
+    /***
+     * The source code is split by blocks of code (i.e. curly braces), where each block of code is represented by
+     * an array of statements. It's good to note that a better representation of code and nesting would've been achieved
+     * by creating a proper graph datastructure, but this is overkill for our purposes.
+     */
     public LinkedList<String[]> codeBlocks = null;
 
     public void addNewLineOfText(String lineOfText){
@@ -46,16 +54,16 @@ public class SourceFileData {
     }
 
     public LinkedList<String[]> getCode(){
-        if(this.codeBlocks == null && this.textData != "") {
-            this.generateCodeFromTextData();
-        }
+        if(this.codeBlocks == null && this.textData != "") this.generateCodeFromTextData();
         return this.codeBlocks;
     }
 
     private void generateCodeFromTextData(){
         this.cleanUpTextData();
+        // Split the code into "blocks", i.e. blocks of code seperated by curly brackets:
         this.codeBlocks = new LinkedList<>();
         for (String nestedCodeBlock : this.textData.split("[\\{\\}]")) {
+            // Split the code blocks into individual statements:
             codeBlocks.add(nestedCodeBlock.split(";"));
         }
     }
@@ -82,8 +90,7 @@ public class SourceFileData {
         // If the class was referenced in the import statements, we can find its packageName there:
         String[] importStatementsArray = this.importStatements.toArray(String[]::new);
         for (String signature : importStatementsArray) {
-            if(signature.matches("([\\w\\d]+\\.)+" + className + "$"))
-               return signature;
+            if(signature.endsWith(className)) return signature;
         }
 
         // Otherwise, it (very likely) means the class in the same package as current:

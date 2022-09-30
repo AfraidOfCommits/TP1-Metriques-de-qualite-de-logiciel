@@ -1,6 +1,7 @@
 package net.frootloop.qa.metrics.parser;
 
 import net.frootloop.qa.metrics.parser.result.ParsedClass;
+import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 import net.frootloop.qa.metrics.parser.result.Visibility;
 
 import java.util.List;
@@ -14,61 +15,50 @@ import java.util.regex.Pattern;
 
 public class JavaSourceFileParser {
 
-    public static SourceFileData parse(String filePath) {
+    private static final Pattern newClassObjectPattern = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
+    private static final Pattern classVariablePattern = Pattern.compile("(|\\s|\\(|,)([A-Z]\\w*)\\s\\w*");
+    private static final Pattern inheritedClassesPattern = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
+    private static final Pattern classNamePattern = Pattern.compile("(class|interface|enum)\\s(\\w+)");
+
+
+    /***
+     * Reads a .java given .java file and parses its code to extract information about
+     * its classes, statements, number of lines, etc,
+     *
+     * @param filePath : Path of the .java file that was found.
+     * @return ParsedSourceFile instance with data relating to the .java file's code.
+     */
+    public static ParsedSourceFile parse(String filePath) {
 
         // Read the file and extract the source code's list of statements;
-        SourceFileData sourceFileData = JavaSourceFileParser.readSourceFile(filePath);
-        LinkedList<String[]> codeBlocks = sourceFileData.getCode();
+        ParsedSourceFile parsedFile = JavaSourceFileParser.readSourceFile(filePath);
+        LinkedList<String[]> codeBlocks = parsedFile.getCode();
 
-        // Regex precompiled patterns:
-        Pattern classNamePattern = Pattern.compile("(class|interface|enum)\\s(\\w+)");
-        Matcher classNameMatcher = null;
-
-        Pattern inheritedClassesPattern = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
-        Matcher inheritedClassesMatcher = null;
-
-        Pattern newClassObjectPattern = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
-        Matcher newClassObjectMatcher = null;
-
-        Pattern classVariablePattern = Pattern.compile("(|\\s|\\(|,)([A-Z]\\w*)\\s\\w*");
-        Matcher classVariableMatcher = null;
-
-        int i = 0;
+        // Prepare some regex tools for class name detection:
+        Matcher classNameMatcher, inheritedClassesMatcher;
 
         // Cycle through the code:
         for (String[] block : codeBlocks) {
-
-            i ++;
-
             for (String statement : block) {
-                if(i == 3) System.out.println(statement);
 
                 // Check for import statements; they'll be useful for getting the packages of referenced classes
                 if(statement.matches("^import(.|[^.])*"))
-                    sourceFileData.importStatements.add(statement.replaceAll("(\\s|import)", ""));
+                    parsedFile.importStatements.add(statement.replaceAll("(\\s|import)", ""));
 
                 // Check for the current package name:
                 else if(statement.matches("^package(.|[^.])*"))
-                    sourceFileData.packageName = statement.replaceAll("(\\s|package)", "");
-
-
-                /*
-                 *  Note: unfortunately it's not possible to keep track of which class we're currently parsing due to the
-                 *  choice of using a linked list instead of a full graph to represent the code's structure.
-                 *
-                 *  So we lose a bit of accuracy when it comes to assigning who references who. Luckily that isn't useful
-                 *  data for the purposes of this project, but a good thing to keep in mind for future improvements.
-                 */
+                    parsedFile.packageName = statement.replaceAll("(\\s|package)", "");
 
                 // Check for classes declared on the heap with the "new" keyword, and add them as a reference of the main class:
                 else if(newClassObjectPattern.matcher(statement).find()){
                     // Note: It's very unlikely, but if ever a class instance is created BEFORE ANY class declaration
                     // in the file, they won't count as a reference.
-                    if(!sourceFileData.classes.isEmpty()) {
-                        newClassObjectMatcher = newClassObjectPattern.matcher(statement);
+                    if(!parsedFile.classes.isEmpty()) {
+                        Matcher newClassObjectMatcher = newClassObjectPattern.matcher(statement);
                         while (newClassObjectMatcher.find()) {
-                            String signatureOfInstantiated = sourceFileData.getApproxClassSignature(newClassObjectMatcher.group(1));
-                            sourceFileData.classes.get(0).addReferenceTo(signatureOfInstantiated);
+                            String nameOfInstantiatedClass = newClassObjectMatcher.group(1);
+                            String signOfInstantiatedClass = parsedFile.getApproxClassSignature(nameOfInstantiatedClass);
+                            parsedFile.classes.get(0).addReferenceTo(signOfInstantiatedClass);
                         }
                     }
                 }
@@ -77,11 +67,12 @@ public class JavaSourceFileParser {
                 else if(classVariablePattern.matcher(statement).find()) {
                     // Note: It's very unlikely, but if ever a class instance is created BEFORE ANY class declaration
                     // in the file, they won't count as a reference.
-                    if(!sourceFileData.classes.isEmpty()) {
-                        classVariableMatcher = classVariablePattern.matcher(statement);
+                    if(!parsedFile.classes.isEmpty()) {
+                        Matcher classVariableMatcher = classVariablePattern.matcher(statement);
                         while (classVariableMatcher.find()) {
-                            String signatureOfVariable = sourceFileData.getApproxClassSignature(classVariableMatcher.group(1));
-                            sourceFileData.classes.get(0).addReferenceTo(signatureOfVariable);
+                            String nameOfVariableClass = classVariableMatcher.group(2);
+                            String signOfVariableClass = parsedFile.getApproxClassSignature(nameOfVariableClass);
+                            parsedFile.classes.get(0).addReferenceTo(signOfVariableClass);
                         }
                     }
                 }
@@ -99,40 +90,45 @@ public class JavaSourceFileParser {
                     String className = classNameMatcher.group(2);
 
                     // Create a new ParsedClass object
-                    ParsedClass parsedClass = new ParsedClass(className, visibility, sourceFileData.packageName, filePath);
+                    ParsedClass parsedClass = new ParsedClass(className, visibility, parsedFile.packageName, filePath);
 
                     // Does the class inherit from another? Get a list of all matching candidates
                     List<String> inheritedClasses = new ArrayList<>();
-                    inheritedClassesMatcher = inheritedClassesPattern.matcher(statement);
-                    while(inheritedClassesMatcher.find()) {
+                    while((inheritedClassesMatcher = inheritedClassesPattern.matcher(statement)).find()) {
                         inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
                     };
 
                     // For each inherited class, add their signature to the ParsedClass
                     for (String name : inheritedClasses) {
-                        String signatureOfParent = sourceFileData.getApproxClassSignature(name);
+                        String signatureOfParent = parsedFile.getApproxClassSignature(name);
                         parsedClass.addParent(signatureOfParent);
                     }
 
                     // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
-                    if(sourceFileData.mainClass == null) sourceFileData.mainClass = parsedClass;
+                    if(parsedFile.mainClass == null) parsedFile.mainClass = parsedClass;
                     else {
-                        parsedClass.addParent(sourceFileData.mainClass.getSignature());
-                        for (String signature : sourceFileData.mainClass.getParentSignatures()) {
+                        parsedClass.addParent(parsedFile.mainClass.getSignature());
+                        for (String signature : parsedFile.mainClass.getParentSignatures()) {
                             parsedClass.addParent(signature);
                         }
                     }
 
                     // Add a new ParsedClass to the list
-                    sourceFileData.classes.add(parsedClass);
+                    parsedFile.classes.add(parsedClass);
                 }
             }
         }
-        return sourceFileData;
+        return parsedFile;
     }
 
-    private static SourceFileData readSourceFile(String path) {
-        SourceFileData fileData = new SourceFileData();
+    /***
+     * Called by the parse() function to get the data of a given file, in string format.
+     *
+     * @param path : file path and extension.
+     * @return Data contained in the file, in the form of a String.
+     */
+    private static ParsedSourceFile readSourceFile(String path) {
+        ParsedSourceFile fileData = new ParsedSourceFile();
         fileData.filePath = path;
         try {
             File myObj = new File(path);
