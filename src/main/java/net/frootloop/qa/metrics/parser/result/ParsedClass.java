@@ -68,12 +68,16 @@ public class ParsedClass {
     }
 
     public void addParent(String classSignatureOfParent) {
-        if(!classesInherited.contains(classSignatureOfParent))
+        if(this.getSignature() == classSignatureOfParent)
+            return;
+        else if(!classesInherited.contains(classSignatureOfParent))
             classesInherited.add(classSignatureOfParent);
     }
 
     public void addReferenceTo(String classSignatureReferenced) {
-        if(!classesImported.contains(classSignatureReferenced))
+        if(this.getSignature() == classSignatureReferenced)
+            return;
+        else if(!classesImported.contains(classSignatureReferenced))
             classesImported.add(classSignatureReferenced);
     }
 
