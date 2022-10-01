@@ -51,12 +51,12 @@ public class JavaSourceFileParser {
         // Linked list of code statements:
         LinkedList<String[]> codeBlocks = parsedFile.getCode();
 
-        // Prepare some regex tools for class name detection:
-        Matcher classNameMatcher, inheritedClassesMatcher;
-
         // Cycle through the code:
         for (String[] block : codeBlocks) {
             for (String statement : block) {
+
+                // Prepare regex matcher to detect a class declaration:
+                Matcher classNameMatcher = classNamePattern.matcher(statement);
 
                 // Check for import statements; they'll be useful for getting the packages of referenced classes
                 if(statement.matches("^import(.|[^.])*"))
@@ -65,6 +65,47 @@ public class JavaSourceFileParser {
                 // Check for the current package name:
                 else if(statement.matches("^package(.|[^.])*"))
                     parsedFile.packageName = statement.replaceAll("(\\s|package)", "");
+
+                // Check for a class declaration:
+                else if(classNameMatcher.find()) {
+
+                    // Get the visibility type:
+                    Visibility visibility;
+                    if(statement.contains("Public")) visibility = Visibility.PUBLIC;
+                    if(statement.contains("Protected")) visibility = Visibility.PROTECTED;
+                    else visibility = Visibility.PRIVATE;
+
+                    // Get the class name:
+                    String className = classNameMatcher.group(2);
+
+                    // Create a new ParsedClass object
+                    ParsedClass parsedClass = new ParsedClass(className, visibility, parsedFile.packageName, filePath);
+
+                    // Does the class inherit from another? Get a list of all matching candidates
+                    List<String> inheritedClasses = new ArrayList<>();
+                    Matcher inheritedClassesMatcher = inheritedClassesPattern.matcher(statement);
+                    while(inheritedClassesMatcher.find()) {
+                        inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
+                    };
+
+                    // For each inherited class, add their signature to the ParsedClass
+                    for (String name : inheritedClasses) {
+                        String signatureOfParent = parsedFile.getApproxClassSignature(name);
+                        parsedClass.addParent(signatureOfParent);
+                    }
+
+                    // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
+                    if(parsedFile.mainClass == null) parsedFile.mainClass = parsedClass;
+                    else {
+                        parsedClass.addParent(parsedFile.mainClass.getSignature());
+                        for (String signature : parsedFile.mainClass.getParentSignatures()) {
+                            parsedClass.addParent(signature);
+                        }
+                    }
+
+                    // Add a new ParsedClass to the list
+                    parsedFile.classes.add(parsedClass);
+                }
 
                 // Check for classes declared on the heap with the "new" keyword, and add them as a reference of the main class:
                 else if(newClassObjectPattern.matcher(statement).find()){
@@ -92,46 +133,6 @@ public class JavaSourceFileParser {
                             parsedFile.classes.get(0).addReferenceTo(signOfVariableClass);
                         }
                     }
-                }
-
-                // Check for a class declaration:
-                else if((classNameMatcher = classNamePattern.matcher(statement)).find()) {
-
-                    // Get the visibility type:
-                    Visibility visibility;
-                    if(statement.contains("Public")) visibility = Visibility.PUBLIC;
-                    if(statement.contains("Protected")) visibility = Visibility.PROTECTED;
-                    else visibility = Visibility.PRIVATE;
-
-                    // Get the class name:
-                    String className = classNameMatcher.group(2);
-
-                    // Create a new ParsedClass object
-                    ParsedClass parsedClass = new ParsedClass(className, visibility, parsedFile.packageName, filePath);
-
-                    // Does the class inherit from another? Get a list of all matching candidates
-                    List<String> inheritedClasses = new ArrayList<>();
-                    while((inheritedClassesMatcher = inheritedClassesPattern.matcher(statement)).find()) {
-                        inheritedClasses.addAll(List.of(inheritedClassesMatcher.group(2).replace(" ", "").split(",")));
-                    };
-
-                    // For each inherited class, add their signature to the ParsedClass
-                    for (String name : inheritedClasses) {
-                        String signatureOfParent = parsedFile.getApproxClassSignature(name);
-                        parsedClass.addParent(signatureOfParent);
-                    }
-
-                    // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
-                    if(parsedFile.mainClass == null) parsedFile.mainClass = parsedClass;
-                    else {
-                        parsedClass.addParent(parsedFile.mainClass.getSignature());
-                        for (String signature : parsedFile.mainClass.getParentSignatures()) {
-                            parsedClass.addParent(signature);
-                        }
-                    }
-
-                    // Add a new ParsedClass to the list
-                    parsedFile.classes.add(parsedClass);
                 }
             }
         }

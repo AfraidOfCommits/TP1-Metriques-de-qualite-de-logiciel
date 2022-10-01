@@ -39,7 +39,12 @@ public class Main extends JavaSourceFileParser {
 
         System.out.println();
         System.out.println("Package : " + f.packageName);
-        System.out.println("Main class name : " + f.mainClass.getClassName());
+        System.out.println("Number of classes : " + f.classes.size());
+        System.out.print("\nClasses : ");
+        for (ParsedClass cow:f.classes) {
+            System.out.print(cow.getClassName() + ", ");
+        }
+        System.out.println("\nMain class name : " + f.mainClass.getClassName());
         System.out.println("Import statements : " + String.join("; ", f.importStatements));
 
         System.out.println();

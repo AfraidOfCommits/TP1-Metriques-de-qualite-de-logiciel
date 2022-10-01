@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added some overloads for path types (String or Path now works, and inputting a String will format it as well!)">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Same as last commit, but this time for File Parser as well as Repo Parser.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -270,7 +271,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664586035190</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Same as last commit, but this time for File Parser as well as Repo Parser.">
+      <created>1664586137172</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1664586137172</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -285,7 +293,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added skeleton for parser and source file analysis." />
     <MESSAGE value="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path." />
     <MESSAGE value="Porgress on the parser, still. Added some comments" />
     <MESSAGE value="Porgress on the parser! Almost done being able to parse source files and nested classed." />
@@ -310,6 +317,7 @@
     <MESSAGE value="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!" />
     <MESSAGE value="Docstrings!" />
     <MESSAGE value="Added some overloads for path types (String or Path now works, and inputting a String will format it as well!)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some overloads for path types (String or Path now works, and inputting a String will format it as well!)" />
+    <MESSAGE value="Same as last commit, but this time for File Parser as well as Repo Parser." />
+    <option name="LAST_COMMIT_MESSAGE" value="Same as last commit, but this time for File Parser as well as Repo Parser." />
   </component>
 </project>
