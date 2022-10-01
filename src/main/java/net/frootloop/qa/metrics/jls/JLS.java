@@ -1,8 +1,8 @@
 package net.frootloop.qa.metrics.jls;
 
-import net.frootloop.qa.metrics.parser.JavaRepositoryParser;
-import net.frootloop.qa.metrics.parser.result.ParsedClass;
-import net.frootloop.qa.metrics.parser.result.ParsedRepository;
+import net.frootloop.qa.parser.JavaRepositoryParser;
+import net.frootloop.qa.parser.result.ParsedClass;
+import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

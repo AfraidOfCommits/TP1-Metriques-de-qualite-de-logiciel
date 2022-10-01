@@ -1,7 +1,6 @@
-package net.frootloop.qa.metrics.parser.result;
+package net.frootloop.qa.parser.result;
 
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 
 public class ParsedRepository {
@@ -48,7 +47,7 @@ public class ParsedRepository {
         return classMap.get(signature);
     }
 
-    private void buildReferenceMaps() {
+    public void buildReferenceMaps() {
         // Add number of times each class is referenced by cycling through all ParsedClasses
         for (ParsedClass c : this.classMap.values()) {
             for (String referencedClass : c.getClassesReferencedDirectly()) {

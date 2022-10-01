@@ -1,4 +1,4 @@
-package net.frootloop.qa.metrics.parser.result;
+package net.frootloop.qa.parser.result;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
-package net.frootloop.qa.metrics.parser;
+package net.frootloop.qa.parser;
 
-import net.frootloop.qa.metrics.parser.result.ParsedClass;
-import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
-import net.frootloop.qa.metrics.parser.result.Visibility;
+import net.frootloop.qa.parser.result.ParsedClass;
+import net.frootloop.qa.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.result.Visibility;
 
 import java.nio.file.Path;
 import java.util.List;

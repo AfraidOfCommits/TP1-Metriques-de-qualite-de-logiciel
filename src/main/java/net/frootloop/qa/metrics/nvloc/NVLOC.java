@@ -1,7 +1,7 @@
 package net.frootloop.qa.metrics.nvloc;
 
-import net.frootloop.qa.metrics.parser.JavaSourceFileParser;
-import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.JavaSourceFileParser;
+import net.frootloop.qa.parser.result.ParsedSourceFile;
 
 import java.nio.file.Path;
 

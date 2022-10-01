@@ -1,13 +1,10 @@
-package net.frootloop.qa.metrics;
+package net.frootloop.qa;
 
 import net.frootloop.qa.metrics.jls.JLS;
-import net.frootloop.qa.metrics.parser.JavaRepositoryParser;
-import net.frootloop.qa.metrics.parser.JavaSourceFileParser;
-import net.frootloop.qa.metrics.parser.result.ParsedClass;
-import net.frootloop.qa.metrics.parser.result.ParsedRepository;
-import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.JavaSourceFileParser;
+import net.frootloop.qa.parser.result.ParsedClass;
+import net.frootloop.qa.parser.result.ParsedSourceFile;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 
 public class Main extends JavaSourceFileParser {
@@ -16,8 +13,9 @@ public class Main extends JavaSourceFileParser {
         // Nested class
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         JLS.print("");
+
         //whoNeedsUnitTests();
     }
 

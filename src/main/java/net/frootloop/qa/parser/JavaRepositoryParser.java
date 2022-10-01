@@ -1,7 +1,7 @@
-package net.frootloop.qa.metrics.parser;
+package net.frootloop.qa.parser;
 
-import net.frootloop.qa.metrics.parser.result.ParsedRepository;
-import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.result.ParsedRepository;
+import net.frootloop.qa.parser.result.ParsedSourceFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +31,7 @@ public class JavaRepositoryParser {
     public static ParsedRepository parse(Path filePath){
         ParsedRepository repo = new ParsedRepository(filePath);
         JavaRepositoryParser.walk(filePath, repo);
+        repo.buildReferenceMaps();
         return repo;
     }
 

@@ -1,4 +1,4 @@
-package net.frootloop.qa.metrics.parser.result;
+package net.frootloop.qa.parser.result;
 
 public enum Visibility {
     PRIVATE,
