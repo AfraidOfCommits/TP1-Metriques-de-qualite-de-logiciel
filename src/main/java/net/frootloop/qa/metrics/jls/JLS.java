@@ -1,16 +1,25 @@
 package net.frootloop.qa.metrics.jls;
 
+import net.frootloop.qa.metrics.lcsec.LSEC;
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class JLS {
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println("SVP entrer un chemin de dossier (à partir d'ou ce fichier .JAR est localisé): ");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String input = reader.readLine();
+
+        JLS.print(input);
+    }
 
     /**
      * Prends en entrée le chemin d'accès d'un dossier qui contient du code java potentiellement

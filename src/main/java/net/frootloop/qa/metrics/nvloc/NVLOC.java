@@ -1,11 +1,25 @@
 package net.frootloop.qa.metrics.nvloc;
 
+import net.frootloop.qa.metrics.lcsec.LSEC;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 
 public class NVLOC {
+
+    public static void main(String[] args) throws IOException {
+
+        System.out.println("SVP entrer le chemin d'un fichier .java (à partir d'ou ce fichier .JAR est localisé): ");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String input = reader.readLine();
+
+        NVLOC.printAmountOfEmptyLines(input);
+    }
 
     /***
      * Etant donné un fichier source d'une classe java, calcule la métrique de taille

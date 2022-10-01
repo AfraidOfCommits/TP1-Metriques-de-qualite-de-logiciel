@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LSEC">
+    <output-path>$PROJECT_DIR$/../artifacts/LSEC</output-path>
+    <root id="archive" name="TP1 Metriques de qualite de logiciel.jar">
+      <element id="module-output" name="TP1 Metriques de qualite de logiciel" />
+    </root>
+  </artifact>
+</component>
