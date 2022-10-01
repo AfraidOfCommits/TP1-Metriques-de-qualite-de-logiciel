@@ -44,11 +44,15 @@ public class JLS {
 
         ArrayList<String> csv = new ArrayList<String>();
         for (ParsedClass c : repo.getClasses())
-            csv.add("." + c.getFilePath().toString().replace("\\", "/") +
-                    ", " + c.getPackageName() +
-                    ", " + c.getClassName());
+            csv.add(JLS.getValueForClass(c));
 
         return csv;
+    }
+
+    public static String getValueForClass(ParsedClass parsedClass) {
+        return "." + parsedClass.getFilePath().toString().replace("\\", "/") +
+                ", " + parsedClass.getPackageName() +
+                ", " + parsedClass.getClassName();
     }
 
     public static void print(String path){

@@ -56,6 +56,13 @@ public class ParsedRepository {
         }
     }
 
+    public int getNumTimesReferenced(ParsedClass parsedClass) {
+        if(!this.numTimesReferenced.containsKey(parsedClass.getSignature()))
+            return 0;
+        else
+            return this.numTimesReferenced.get(parsedClass.getSignature());
+    }
+
     private void addDirectReferenceTo(String classSignature) {
         if(!this.numTimesReferenced.containsKey(classSignature))
             this.numTimesReferenced.put(classSignature, 1);
@@ -64,8 +71,10 @@ public class ParsedRepository {
             this.numTimesReferenced.put(classSignature, this.numTimesReferenced.get(classSignature) + 1);
 
             // Increment parents' number of indirect references;
-            for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
-                this.addIndirectReferenceTo(parentSignature);
+            if(classMap.containsKey(classSignature)) {
+                for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
+                    this.addIndirectReferenceTo(parentSignature);
+                }
             }
         }
     }
@@ -76,8 +85,10 @@ public class ParsedRepository {
         else
             this.NumTimesReferencedIndirectly.put(classSignature, this.NumTimesReferencedIndirectly.get(classSignature) + 1);
 
-        for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
-            this.addIndirectReferenceTo(parentSignature);
+        if(classMap.containsKey(classSignature)) {
+            for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
+                this.addIndirectReferenceTo(parentSignature);
+            }
         }
     }
 

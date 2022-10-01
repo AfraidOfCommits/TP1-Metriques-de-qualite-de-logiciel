@@ -9,6 +9,7 @@ public class ParsedClass {
     private String packageName;
     private Visibility visibility;
     private String className;
+    private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesInherited = new ArrayList<>();
     private ArrayList<String> classesImported = new ArrayList<>();
 

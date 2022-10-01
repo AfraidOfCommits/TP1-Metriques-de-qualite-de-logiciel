@@ -1,6 +1,6 @@
 package net.frootloop.qa;
 
-import net.frootloop.qa.metrics.jls.JLS;
+import net.frootloop.qa.metrics.lcsec.LSEC;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
@@ -14,8 +14,8 @@ public class Main extends JavaSourceFileParser {
     }
 
     public static void main(String[] args) {
-        JLS.print("");
-
+        //JLS.print("");
+        LSEC.print("");
         //whoNeedsUnitTests();
     }
 
