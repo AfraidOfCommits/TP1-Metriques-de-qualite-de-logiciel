@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,7 +284,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664587348803</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser.">
+      <created>1664591280674</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1664591280674</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -303,7 +306,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Porgress on the parser, still. Added some comments" />
     <MESSAGE value="Porgress on the parser! Almost done being able to parse source files and nested classed." />
     <MESSAGE value="Source file parse done, need to test it to be sure its behavior is all good." />
     <MESSAGE value="Tweaks to FileParser" />
@@ -328,6 +330,7 @@
     <MESSAGE value="Added some overloads for path types (String or Path now works, and inputting a String will format it as well!)" />
     <MESSAGE value="Same as last commit, but this time for File Parser as well as Repo Parser." />
     <MESSAGE value="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements." />
-    <option name="LAST_COMMIT_MESSAGE" value="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements." />
+    <MESSAGE value="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser." />
   </component>
 </project>
