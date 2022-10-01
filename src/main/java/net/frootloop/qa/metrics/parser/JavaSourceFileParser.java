@@ -94,9 +94,12 @@ public class JavaSourceFileParser {
                         parsedClass.addParent(signatureOfParent);
                     }
 
-                    // If the class is nested, add the main one to its list of parents. Otherwise, make this the main class!
-                    if(parsedFile.mainClass == null) parsedFile.mainClass = parsedClass;
+                    // Check if this is the first class declared. If so, make this the main class!
+                    if(parsedFile.mainClass == null)
+                        parsedFile.mainClass = parsedClass;
+                    // Otherwise, we assume that the class is nested, so we add the main one to its list of parents:
                     else {
+                        parsedClass.setPackageName(parsedFile.packageName + "." + parsedFile.mainClass.getClassName());
                         parsedClass.addParent(parsedFile.mainClass.getSignature());
                         for (String signature : parsedFile.mainClass.getParentSignatures()) {
                             parsedClass.addParent(signature);
@@ -146,6 +149,7 @@ public class JavaSourceFileParser {
      * @return Data contained in the file, in the form of a String.
      */
     private static ParsedSourceFile readSourceFile(Path path) {
+
         if(!path.toString().endsWith(".java")) return null;
         ParsedSourceFile parsedFile = new ParsedSourceFile();
         parsedFile.filePath = path;

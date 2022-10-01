@@ -13,25 +13,25 @@ public class JavaRepositoryParser {
      * Builds and returns a data container for information relating to the given repository, including
      * class references, number of lines, etc.
      *
-     * @param filePath : (Path) directory from which .java files will be analyzed and parsed.
+     * @param pathString : (String) directory from which .java files will be analyzed and parsed.
      * @return ParsedRepository instance
      */
-    public static ParsedRepository parse(Path filePath){
-        ParsedRepository repo = new ParsedRepository(filePath);
-        JavaRepositoryParser.walk(filePath, new ParsedRepository(filePath));
-        return repo;
+    public static ParsedRepository parse(String pathString){
+        Path path = Path.of(pathString.replace('/', '\\').replace(":",""));
+        return parse(path);
     }
 
     /***
      * Builds and returns a data container for information relating to the given repository, including
      * class references, number of lines, etc.
      *
-     * @param filePathString : (String) directory from which .java files will be analyzed and parsed.
+     * @param filePath : (Path) directory from which .java files will be analyzed and parsed.
      * @return ParsedRepository instance
      */
-    public static ParsedRepository parse(String filePathString){
-        Path path = Path.of(filePathString.replace('/', '\\').replace(":",""));
-        return parse(path);
+    public static ParsedRepository parse(Path filePath){
+        ParsedRepository repo = new ParsedRepository(filePath);
+        JavaRepositoryParser.walk(filePath, repo);
+        return repo;
     }
 
     /***
@@ -42,22 +42,25 @@ public class JavaRepositoryParser {
      * In the end, the ParsedRepository will contain all relevant data relating to the Java
      * source files contained in a given folder and in all of its subfolders.
      *
-     * @param folderPath
+     * @param path
      * @param repo
      */
-    private static void walk(Path folderPath, ParsedRepository repo) {
+    private static void walk(Path path, ParsedRepository repo) {
         if(repo == null) return;
         try {
-            Files.walk(folderPath)
+            Files.walk(path)
                     .filter(Files::isRegularFile)
                     .filter(Files::isReadable)
                     .forEach((filePath) -> {
                         ParsedSourceFile sourceFile = JavaSourceFileParser.parse(filePath);
+
+                        // Add to the repository:
                         if (sourceFile != null) repo.addParsedFile(sourceFile);
+
                     });
         }
         catch (IOException e) {
-            System.out.println("ERROR: Something went horribly wrong in function visitFolder when trying to list the files of directory :\n" + folderPath);
+            System.out.println("ERROR: Something went horribly wrong in function visitFolder when trying to list the files of directory :\n" + path);
             e.printStackTrace();
         }
     }

@@ -1,5 +1,6 @@
 package net.frootloop.qa.metrics;
 
+import net.frootloop.qa.metrics.jls.JLS;
 import net.frootloop.qa.metrics.parser.JavaRepositoryParser;
 import net.frootloop.qa.metrics.parser.JavaSourceFileParser;
 import net.frootloop.qa.metrics.parser.result.ParsedClass;
@@ -8,8 +9,6 @@ import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main extends JavaSourceFileParser {
 
@@ -18,8 +17,8 @@ public class Main extends JavaSourceFileParser {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-
-        whoNeedsUnitTests();
+        JLS.print("");
+        //whoNeedsUnitTests();
     }
 
     private static void whoNeedsUnitTests(){

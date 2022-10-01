@@ -1,6 +1,7 @@
 package net.frootloop.qa.metrics.parser.result;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class ParsedRepository {
@@ -79,5 +80,9 @@ public class ParsedRepository {
         for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
             this.addIndirectReferenceTo(parentSignature);
         }
+    }
+
+    public ParsedClass[] getClasses(){
+        return classMap.values().toArray(new ParsedClass[classMap.size()]);
     }
 }
