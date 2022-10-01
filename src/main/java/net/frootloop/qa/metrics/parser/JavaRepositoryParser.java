@@ -12,6 +12,13 @@ import java.util.function.Predicate;
 
 public class JavaRepositoryParser {
 
+    /***
+     * Builds and returns a data container for information relating to the given repository, including
+     * class references, number of lines, etc.
+     *
+     * @param filePath : root from which .java files will be analyzed and parsed.
+     * @return ParsedRepository instance
+     */
     public static ParsedRepository parse(Path filePath){
         ParsedRepository repo = new ParsedRepository(filePath);
         JavaRepositoryParser.walk(filePath, new ParsedRepository(filePath));
@@ -30,15 +37,14 @@ public class JavaRepositoryParser {
      * @param repo
      */
     public static void walk(Path folderPath, ParsedRepository repo) {
+        if(repo == null) return;
         try {
             Files.walk(folderPath)
                     .filter(Files::isRegularFile)
                     .filter(Files::isReadable)
                     .forEach((filePath) -> {
-                        System.out.println(" > Visiting file at : " + filePath.toString());
                         ParsedSourceFile sourceFile = JavaSourceFileParser.parse(filePath);
-                        if (sourceFile != null)
-                            repo.addParsedFile(sourceFile);
+                        if (sourceFile != null) repo.addParsedFile(sourceFile);
                     });
         }
         catch (IOException e) {
