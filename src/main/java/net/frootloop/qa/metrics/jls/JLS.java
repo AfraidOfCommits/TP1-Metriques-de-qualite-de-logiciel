@@ -4,6 +4,9 @@ import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -58,5 +61,15 @@ public class JLS {
     public static void print(String path){
         for (String s : JLS.getValuesForFolder(path))
             System.out.println(s);
+    }
+
+    public static void generateCSV(String path) throws FileNotFoundException {
+        File csvOutputFile = new File("jls.csv");
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            for(String line : getValuesForFolder(path))
+                pw.println(line);
+        }
+        if(!csvOutputFile.exists())
+            System.out.println("ERROR: CSV wasn't generated!");
     }
 }

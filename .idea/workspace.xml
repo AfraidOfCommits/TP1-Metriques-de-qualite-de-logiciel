@@ -6,11 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="LSEC's logic is done, now I need to generate a CSV.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -323,7 +320,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664592455508</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="LSEC's logic is done, now I need to generate a CSV.">
+      <created>1664594097909</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1664594097909</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -5,6 +5,9 @@ import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -51,5 +54,15 @@ public class LSEC {
         String jls = JLS.getValueForClass(parsedClass);
         String csec = "" + repo.getNumTimesReferenced(parsedClass);
         return jls + ", " + csec;
+    }
+
+    public static void generateCSV(String path) throws FileNotFoundException {
+        File csvOutputFile = new File("lsec.csv");
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            for(String line : getValuesForFolder(path))
+                pw.println(line);
+        }
+        if(!csvOutputFile.exists())
+            System.out.println("ERROR: CSV wasn't generated!");
     }
 }
