@@ -1,6 +1,7 @@
 package net.frootloop.qa.metrics.parser;
 
 import net.frootloop.qa.metrics.parser.result.ParsedRepository;
+import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,8 +11,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class JavaRepositoryParser {
-
-    private static JavaSourceFileParser fileParser = new JavaSourceFileParser();
 
     public static ParsedRepository parse(Path filePath){
         ParsedRepository repo = new ParsedRepository(filePath);
@@ -35,11 +34,21 @@ public class JavaRepositoryParser {
             Files.walk(folderPath)
                     .filter(Files::isRegularFile)
                     .filter(Files::isReadable)
-                    .forEach(JavaSourceFileParser::parse);
+                    .forEach((filePath) -> {
+                        System.out.println(" > Visiting file at : " + filePath.toString());
+                        ParsedSourceFile sourceFile = JavaSourceFileParser.parse(filePath);
+                        if (sourceFile != null)
+                            repo.addParsedFile(sourceFile);
+                    });
         }
         catch (IOException e) {
             System.out.println("ERROR: Something went horribly wrong in function visitFolder when trying to list the files of directory :\n" + folderPath);
             e.printStackTrace();
         }
+    }
+
+    private static void addFileToRepository(Path filePath, ParsedRepository repo) {
+        ParsedSourceFile sourceFile = JavaSourceFileParser.parse(filePath);
+        if(sourceFile != null) repo.addParsedFile(sourceFile);
     }
 }

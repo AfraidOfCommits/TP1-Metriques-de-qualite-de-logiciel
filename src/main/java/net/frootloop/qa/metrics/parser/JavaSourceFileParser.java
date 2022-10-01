@@ -132,14 +132,12 @@ public class JavaSourceFileParser {
      * @return Data contained in the file, in the form of a String.
      */
     private static ParsedSourceFile readSourceFile(Path path) {
-        if(!path.endsWith(".java")) return null;
+        if(!path.toString().endsWith(".java")) return null;
         ParsedSourceFile parsedFile = new ParsedSourceFile();
         parsedFile.filePath = path;
 
-        System.out.println("Reading file at : " + path.toString());
-
         try {
-            File myObj = path.toFile();
+            File myObj = new File(path.toFile().getPath());
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine())
                 parsedFile.addNewLineOfText(myReader.nextLine());
