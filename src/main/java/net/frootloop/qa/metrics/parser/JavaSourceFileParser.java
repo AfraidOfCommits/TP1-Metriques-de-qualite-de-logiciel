@@ -26,7 +26,20 @@ public class JavaSourceFileParser {
      * Reads a .java given .java file and parses its code to extract information about
      * its classes, statements, number of lines, etc,
      *
-     * @param filePath : Path of the .java file that was found.
+     * @param filePathString : (String) Path of the .java file that was found.
+     * @return ParsedSourceFile instance with data relating to the .java file's code.
+     */
+    public static ParsedSourceFile parse(String filePathString) {
+        Path path = Path.of(filePathString.replace('/', '\\').replace(":",""));
+        return parse(path);
+    }
+
+
+    /***
+     * Reads a .java given .java file and parses its code to extract information about
+     * its classes, statements, number of lines, etc,
+     *
+     * @param filePath : (Path) Path of the .java file that was found.
      * @return ParsedSourceFile instance with data relating to the .java file's code.
      */
     public static ParsedSourceFile parse(Path filePath) {
