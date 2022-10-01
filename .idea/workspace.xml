@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Added LSEC!">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Improved LSEC!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/nvloc/NVLOC.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,7 +298,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664591744133</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="- Improved LSEC!">
+      <created>1664592028732</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1664592028732</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -313,7 +320,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Source file parse done, need to test it to be sure its behavior is all good." />
     <MESSAGE value="Tweaks to FileParser" />
     <MESSAGE value="Added test for line count in Main." />
     <MESSAGE value="Renamed the parse function." />
@@ -338,6 +344,7 @@
     <MESSAGE value="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements." />
     <MESSAGE value="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser." />
     <MESSAGE value="- Added LSEC!" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added LSEC!" />
+    <MESSAGE value="- Improved LSEC!" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Improved LSEC!" />
   </component>
 </project>

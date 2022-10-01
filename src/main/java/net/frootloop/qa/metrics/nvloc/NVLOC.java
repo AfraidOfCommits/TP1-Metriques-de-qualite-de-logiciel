@@ -1,12 +1,11 @@
-package net.frootloop.qa.metrics.lcsec;
+package net.frootloop.qa.metrics.nvloc;
 
-import net.frootloop.qa.metrics.jls.JLS;
 import net.frootloop.qa.metrics.parser.JavaSourceFileParser;
 import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 
 import java.nio.file.Path;
 
-public class LSEC {
+public class NVLOC {
 
     /***
      * Etant donné un fichier source d'une classe java, calcule la métrique de taille
@@ -16,7 +15,7 @@ public class LSEC {
      */
     public static int getAmountOfEmptyLines(String filePathString){
         Path path = Path.of(filePathString.replace('/', '\\').replace(":", ""));
-        return LSEC.getAmountOfEmptyLines(path);
+        return NVLOC.getAmountOfEmptyLines(path);
     }
 
     /***
@@ -41,7 +40,7 @@ public class LSEC {
      * @param filePathString : (String) chemin du fichier à aller évaluer.
      */
     public static int printAmountOfEmptyLines(String filePathString){
-       return LSEC.getAmountOfEmptyLines(filePathString);
+       return NVLOC.getAmountOfEmptyLines(filePathString);
     }
 
 }
