@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Docstrings!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/parser/JavaRepositoryParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -256,7 +257,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664585121277</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Docstrings!">
+      <created>1664585368487</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1664585368487</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -295,6 +303,7 @@
     <MESSAGE value="No more self-referrals. When adding the signature of a class or object being referenced to a ParsedClass, we now check if the signature is the same as the current class." />
     <MESSAGE value="Using proper Path class instead of strings. Will make input handling a lot more reliable." />
     <MESSAGE value="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!" />
+    <MESSAGE value="Docstrings!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Docstrings!" />
   </component>
 </project>

@@ -25,15 +25,10 @@ public class Main extends JavaSourceFileParser {
     private static void whoNeedsUnitTests(){
 
         // Test the repo parser:
-        JavaRepositoryParser.walk(Path.of(""), new ParsedRepository(Path.of("")));
+        //JavaRepositoryParser.walk(Path.of(""), new ParsedRepository(Path.of("")));
 
         // Test the file parser:
-        String inputStr = "./src/main/java/net/frootloop/qa/metrics/Main.java";
-        inputStr.replace('/', '\\');
-        inputStr.replace(":","");
-
-
-        Path path = Path.of("src\\main\\java\\net\\frootloop\\qa\\metrics\\Main.java");
+        Path path = Path.of("./src/main/java/net/frootloop/qa/metrics/Main.java");
         ParsedSourceFile f = JavaSourceFileParser.parse(path);
         System.out.println("\n");
 

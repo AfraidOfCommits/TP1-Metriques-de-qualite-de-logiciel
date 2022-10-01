@@ -6,9 +6,6 @@ import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class JavaRepositoryParser {
 
@@ -16,13 +13,25 @@ public class JavaRepositoryParser {
      * Builds and returns a data container for information relating to the given repository, including
      * class references, number of lines, etc.
      *
-     * @param filePath : root from which .java files will be analyzed and parsed.
+     * @param filePath : (Path) directory from which .java files will be analyzed and parsed.
      * @return ParsedRepository instance
      */
     public static ParsedRepository parse(Path filePath){
         ParsedRepository repo = new ParsedRepository(filePath);
         JavaRepositoryParser.walk(filePath, new ParsedRepository(filePath));
         return repo;
+    }
+
+    /***
+     * Builds and returns a data container for information relating to the given repository, including
+     * class references, number of lines, etc.
+     *
+     * @param filePathString : (String) directory from which .java files will be analyzed and parsed.
+     * @return ParsedRepository instance
+     */
+    public static ParsedRepository parse(String filePathString){
+        Path path = Path.of(filePathString.replace('/', '\\').replace(":",""));
+        return parse(path);
     }
 
     /***
@@ -36,7 +45,7 @@ public class JavaRepositoryParser {
      * @param folderPath
      * @param repo
      */
-    public static void walk(Path folderPath, ParsedRepository repo) {
+    private static void walk(Path folderPath, ParsedRepository repo) {
         if(repo == null) return;
         try {
             Files.walk(folderPath)
