@@ -1,10 +1,11 @@
 package net.frootloop.qa.metrics.parser.result;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class ParsedClass {
 
-    private String filePath;
+    private Path filePath;
     private String packageName;
     private Visibility visibility;
     private String className;
@@ -26,7 +27,7 @@ public class ParsedClass {
         this.visibility = v;
     }
 
-    public ParsedClass(String className, Visibility v, String packageName, String filePath){
+    public ParsedClass(String className, Visibility v, String packageName, Path filePath){
         this.className = className;
         this.packageName = packageName;
         this.filePath = filePath;
@@ -48,11 +49,11 @@ public class ParsedClass {
         this.packageName = packageName;
     }
 
-    public String getFilePath() {
-        if(filePath != null || filePath != "") return filePath;
-        return "./" + this.getSignature().replace(".", "/") + ".java";
+    public Path getFilePath() {
+        return filePath;
+        //return "./" + this.getSignature().replace(".", "/") + ".java";
     }
-    public void setFilePath(String filePath) {
+    public void setFilePath(Path filePath) {
         this.filePath = filePath;
     }
 

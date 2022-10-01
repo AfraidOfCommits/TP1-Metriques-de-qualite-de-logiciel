@@ -1,10 +1,11 @@
 package net.frootloop.qa.metrics.parser.result;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 
 public class ParsedRepository {
 
-    public String rootFilePath;
+    public Path rootFilePath;
     public int totalLines;
     public int totalLinesComments;
     public int totalLinesEmpty;
@@ -26,7 +27,7 @@ public class ParsedRepository {
      */
     private HashMap<String, Integer> NumTimesReferencedIndirectly;
 
-    public ParsedRepository(String filePath){
+    public ParsedRepository(Path filePath){
         this.rootFilePath = filePath;
         this.classMap = new HashMap<>();
         this.numTimesReferenced = new HashMap<>();

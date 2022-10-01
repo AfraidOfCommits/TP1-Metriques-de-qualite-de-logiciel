@@ -4,6 +4,7 @@ import net.frootloop.qa.metrics.parser.result.ParsedClass;
 import net.frootloop.qa.metrics.parser.result.ParsedSourceFile;
 import net.frootloop.qa.metrics.parser.result.Visibility;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,10 +29,13 @@ public class JavaSourceFileParser {
      * @param filePath : Path of the .java file that was found.
      * @return ParsedSourceFile instance with data relating to the .java file's code.
      */
-    public static ParsedSourceFile parse(String filePath) {
+    public static ParsedSourceFile parse(Path filePath) {
 
         // Read the file and extract the source code's list of statements;
         ParsedSourceFile parsedFile = JavaSourceFileParser.readSourceFile(filePath);
+        if(parsedFile == null) return null;
+
+        // Linked list of code statements:
         LinkedList<String[]> codeBlocks = parsedFile.getCode();
 
         // Prepare some regex tools for class name detection:
@@ -127,21 +131,25 @@ public class JavaSourceFileParser {
      * @param path : file path and extension.
      * @return Data contained in the file, in the form of a String.
      */
-    private static ParsedSourceFile readSourceFile(String path) {
-        ParsedSourceFile fileData = new ParsedSourceFile();
-        fileData.filePath = path;
+    private static ParsedSourceFile readSourceFile(Path path) {
+        if(!path.endsWith(".java")) return null;
+        ParsedSourceFile parsedFile = new ParsedSourceFile();
+        parsedFile.filePath = path;
+
+        System.out.println("Reading file at : " + path.toString());
+
         try {
-            File myObj = new File(path);
+            File myObj = path.toFile();
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine())
-                fileData.addNewLineOfText(myReader.nextLine());
+                parsedFile.addNewLineOfText(myReader.nextLine());
             myReader.close();
 
         } catch (FileNotFoundException e) {
             System.out.println("ERROR. Unable to read file " + path);
             e.printStackTrace();
         };
-        return fileData;
+        return parsedFile;
     }
 }
 

@@ -1,11 +1,13 @@
 package net.frootloop.qa.metrics.parser.result;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ParsedSourceFile {
 
-    public String packageName, filePath;
+    public Path filePath;
+    public String packageName;
     public String textData = "";
     public ParsedClass mainClass;
     public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
