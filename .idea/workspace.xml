@@ -11,17 +11,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="LSEC and JLS should, theoretically, have CSV outputs now. God help me">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/JLS.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/LSEC.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/NVLOC.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/JLS/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="COMPILEEEE">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/NVLO.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/egon/EGON.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcsec/LSEC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/nvloc/NVLOC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/nvloc/NVLOC.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -351,7 +344,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664594692852</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="COMPILEEEE">
+      <created>1664595861592</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1664595861592</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -366,7 +366,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="BUUUUGS" />
     <MESSAGE value="My relationship with regex is one of hate and toxic abuse" />
     <MESSAGE value="Tweaks and some bug fixes." />
     <MESSAGE value="More tweaks, lol" />
@@ -391,6 +390,7 @@
     <MESSAGE value="Refactor and LSEC getting started." />
     <MESSAGE value="LSEC's logic is done, now I need to generate a CSV." />
     <MESSAGE value="LSEC and JLS should, theoretically, have CSV outputs now. God help me" />
-    <option name="LAST_COMMIT_MESSAGE" value="LSEC and JLS should, theoretically, have CSV outputs now. God help me" />
+    <MESSAGE value="COMPILEEEE" />
+    <option name="LAST_COMMIT_MESSAGE" value="COMPILEEEE" />
   </component>
 </project>
