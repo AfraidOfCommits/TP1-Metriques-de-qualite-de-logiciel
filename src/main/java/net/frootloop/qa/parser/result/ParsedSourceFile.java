@@ -10,7 +10,8 @@ public class ParsedSourceFile {
     public String packageName;
     public String textData = "";
     public ParsedClass mainClass;
-    public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0;
+    public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0, numLinesDocstring = 0;
+    private boolean wasDocstringStarted = false;
 
 
     /***
@@ -30,30 +31,43 @@ public class ParsedSourceFile {
      */
     public LinkedList<String[]> codeBlocks = null;
 
+
     public void addNewLineOfText(String lineOfText){
         this.numLines += 1;
 
         // Replace strings with a generic value:
         lineOfText = lineOfText.replaceAll("\\\"[^\\\"]*\\\"", "\"(string value)\"]");
 
+        // Clean up the line a bit by removing spaces and tabs at the front:
+        lineOfText = lineOfText.replaceAll("^\\s+", "");
+
+        // Remove appended comments:
+        lineOfText = lineOfText.replaceAll("\\/\\/((?!\\*\\/).)*", ""); // Remove comments appended to code (like this one!)
+
+        // Docstring detection (multiline comments, i,e. /*)
+        int indexOfStart = lineOfText.indexOf("/*");
+        int indexOfEnd = lineOfText.indexOf("*/");
+        boolean isStartingDocstring = indexOfStart > indexOfEnd;
+        boolean isEndingDocstring = indexOfEnd > indexOfStart;
+        this.wasDocstringStarted = (this.wasDocstringStarted || isStartingDocstring) && !isEndingDocstring;
+
+        // If the code opened a multi-line comment, we need to check if it was closed;
+        if(this.wasDocstringStarted) {
+            this.numLinesDocstring += 1;
+            this.textData += lineOfText;
+        }
         // If the line is a single-line comment (like this one!):
-        if(lineOfText.matches("\\s*\\/{2,}(.|\\s)*"))
+        else if(lineOfText.matches("\\s*\\/{2,}(.|\\s)*"))
             this.numLinesComments += 1;
 
-            // If the line is just empty:
+        // If the line is just empty:
         else if (lineOfText.matches("\\A[[:blank:]]*\\Z"))
             this.numLinesEmpty += 1;
 
-            // Only add actual lines of code to the output:
-        else {
-            lineOfText = lineOfText.replaceAll("\\/\\/((?!\\*\\/).)*", ""); // Remove comments appended to code (like this one!)
-
-            // Clean up the line a bit by removing spaces and tabs at the front:
-            lineOfText = lineOfText.replaceAll("^\\s+", "");
-
-            this.textData += lineOfText;
-        }
+        // If the line is made up of code, then we add it to the text to later be processed into code statements;
+        else this.textData += lineOfText;
     }
+
 
     public LinkedList<String[]> getCode(){
         if(this.codeBlocks == null && this.textData != "") this.generateCodeFromTextData();
