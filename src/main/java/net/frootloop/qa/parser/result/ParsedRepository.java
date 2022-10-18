@@ -129,6 +129,14 @@ public class ParsedRepository {
         return mostComplexClass;
     }
 
+    public ParsedClass getMostReferencedClass() {
+        return mostReferencedClass;
+    }
+
+    public ParsedClass getMostIndirectlyReferencedClass() {
+        return mostIndirectlyReferencedClass;
+    }
+
     public int getTotalCyclomaticComplexity() {
         return cyclomaticComplexity;
     }
