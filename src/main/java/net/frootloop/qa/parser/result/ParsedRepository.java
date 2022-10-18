@@ -5,10 +5,18 @@ import java.util.HashMap;
 
 public class ParsedRepository {
 
-    public Path rootFilePath;
-    public int totalLines;
-    public int totalLinesComments;
-    public int totalLinesEmpty;
+    private Path rootFilePath;
+    private int totalLines;
+    private int totalLinesComments;
+    private int totalLinesEmpty;
+    private int totalLinesCode;
+    private int numAssertStatements;
+    private int cyclomaticComplexity;
+    private ParsedClass mostComplexClass;
+    private ParsedClass mostReferencedClass;
+    private int mostAmountReferences;
+    private ParsedClass mostIndirectlyReferencedClass;
+    private int mostAmountIndirectReferences;
 
     /***
      * Map to store and fetch ParsedClass instances by their signature.
@@ -29,18 +37,23 @@ public class ParsedRepository {
 
     public ParsedRepository(Path filePath){
         this.rootFilePath = filePath;
-        this.classMap = new HashMap<>();
-        this.numTimesReferenced = new HashMap<>();
-        this.NumTimesReferencedIndirectly = new HashMap<>();
+        this.classMap = new HashMap<String, ParsedClass>();
+        this.numTimesReferenced = new HashMap<String, Integer>();
+        this.NumTimesReferencedIndirectly = new HashMap<String, Integer>();
     }
 
     public void addParsedFile(ParsedSourceFile parsedFile) {
-        for (ParsedClass c: parsedFile.classes) {
+        for (ParsedClass c: parsedFile.getClasses()) {
             classMap.put(c.getSignature(), c);
+            this.cyclomaticComplexity += c.getCyclomaticComplexity();
+            if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < c.getCyclomaticComplexity())
+                mostComplexClass = c;
         }
-        this.totalLines += parsedFile.numLines;
-        this.totalLinesComments += parsedFile.numLinesComments;
-        this.totalLinesEmpty += parsedFile.numLinesEmpty;
+        this.totalLines += parsedFile.getNumLines();
+        this.totalLinesComments += parsedFile.getNumLinesComments();
+        this.totalLinesEmpty += parsedFile.getNumLinesEmpty();
+        this.totalLinesCode += parsedFile.getNumLinesCode();
+        this.numAssertStatements += parsedFile.getNumAssertStatements();
     }
 
     public ParsedClass getClassDataOf(String signature){
@@ -64,35 +77,79 @@ public class ParsedRepository {
     }
 
     private void addDirectReferenceTo(String classSignature) {
-        if(!this.numTimesReferenced.containsKey(classSignature))
-            this.numTimesReferenced.put(classSignature, 1);
-        else {
-            // Increment number of direct references;
-            this.numTimesReferenced.put(classSignature, this.numTimesReferenced.get(classSignature) + 1);
 
-            // Increment parents' number of indirect references;
+        // Increment number of direct references:
+        int numReferences;
+        if(!this.numTimesReferenced.containsKey(classSignature))
+            numReferences = 1;
+        else {
+            numReferences = this.numTimesReferenced.get(classSignature) + 1;
+
+            // Increment parents' number of indirect references:
             if(classMap.containsKey(classSignature)) {
-                for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
+                for (String parentSignature : this.classMap.get(classSignature).getParentSignatures())
                     this.addIndirectReferenceTo(parentSignature);
-                }
             }
+        }
+        this.numTimesReferenced.put(classSignature, numReferences);
+
+        // Update the class with the most amount of references:
+        if(numReferences > mostAmountReferences) {
+            mostAmountReferences = numReferences;
+            mostReferencedClass = this.classMap.get(classSignature);
         }
     }
 
     private void addIndirectReferenceTo(String classSignature) {
-        if(!this.NumTimesReferencedIndirectly.containsKey(classSignature))
-            this.NumTimesReferencedIndirectly.put(classSignature, 1);
-        else
-            this.NumTimesReferencedIndirectly.put(classSignature, this.NumTimesReferencedIndirectly.get(classSignature) + 1);
 
+        // Increment number of indirect references:
+        int numReferences;
+        if(!this.NumTimesReferencedIndirectly.containsKey(classSignature)) numReferences = 1;
+        else numReferences = this.NumTimesReferencedIndirectly.get(classSignature) + 1;
+        this.NumTimesReferencedIndirectly.put(classSignature, numReferences);
+
+        // Recursively add indirect references to the class's ancestors:
         if(classMap.containsKey(classSignature)) {
-            for (String parentSignature : this.classMap.get(classSignature).getParentSignatures()) {
+            for (String parentSignature : this.classMap.get(classSignature).getParentSignatures())
                 this.addIndirectReferenceTo(parentSignature);
-            }
+        }
+
+        // Update the class with the most amount of indirect references:
+        if(numReferences > mostAmountIndirectReferences) {
+            mostAmountIndirectReferences = numReferences;
+            mostIndirectlyReferencedClass = this.classMap.get(classSignature);
         }
     }
 
     public ParsedClass[] getClasses(){
         return classMap.values().toArray(new ParsedClass[classMap.size()]);
+    }
+
+    public ParsedClass getMostComplexClass() {
+        return mostComplexClass;
+    }
+
+    public int getTotalCyclomaticComplexity() {
+        return cyclomaticComplexity;
+    }
+
+    public int getTotalLines() {
+        return totalLines;
+    }
+
+    public int getTotalLinesCode() {
+        return totalLinesCode;
+    }
+
+    public int getTotalLinesComments() {
+        return totalLinesComments;
+    }
+
+    public int getTotalLinesEmpty() {
+        return totalLinesEmpty;
+    }
+
+    public int getNumAssertStatements() {
+        return numAssertStatements;
     }
 }

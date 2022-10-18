@@ -1,115 +1,110 @@
 package net.frootloop.qa.parser.result;
 
+import net.frootloop.qa.parser.StringParser;
+import net.frootloop.qa.parser.result.internal.CodeTree;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class ParsedSourceFile {
 
-    public Path filePath;
-    public String packageName;
-    public String textData = "";
-    public ParsedClass mainClass;
-    public int numLines = 0, numLinesEmpty = 0, numLinesComments = 0, numLinesDocstring = 0;
-    private boolean wasDocstringStarted = false;
+    /**
+     * The source code is organized as a tree, where blocks of code (i.e. curly braces) are the nodes and where each block is represented by
+     * its contained statements, and its leading statement. This allows us to attribute proper class/method ownership, and do fancy things like
+     * print a .java file's entire cleaned up source code with proper indentation.
+     */
+    private CodeTree codeTree;
+    private Path filePath;
+    private String packageName;
 
+    private int numLines = 0, numLinesEmpty = 0, numLinesComments = 0, numLinesCode = 0;
 
     /***
      * List of classes found within the source file. One file can declare multiple nested classes, enums, etc.
      */
-    public ArrayList<ParsedClass> classes = new ArrayList<ParsedClass>();
+    private ArrayList<ParsedClass> classes = new ArrayList<>();
+
+    private String[] assertStatements;
+
+    private String[] importStatements;
+
 
     /***
-     * List of import statements found within the source file.
+     * Parses a given source file
+     *
+     * @param path : file path and extension.
+     * @return Data contained in the file, in the form of a String.
      */
-    public ArrayList<String> importStatements = new ArrayList<String>();
+    public ParsedSourceFile(Path path) {
 
-    /***
-     * The source code is split by blocks of code (i.e. curly braces), where each block of code is represented by
-     * an array of statements. It's good to note that a better representation of code and nesting would've been achieved
-     * by creating a proper graph datastructure, but this is overkill for our purposes.
-     */
-    public LinkedList<String[]> codeBlocks = null;
+        if(!path.toString().endsWith(".java")) return;
+        this.filePath = path;
 
+        try {
+            // STEP 1: READ AND CLEAN UP THE TEXT DATA
+            // Remove unnecessary spaces, null chars, normalize line breaks, and replace string values with "text":
+            String sourceFileTextData = StringParser.cleanUpSource(Files.readString(path));
 
-    public void addNewLineOfText(String lineOfText){
-        this.numLines += 1;
+            // STEP 2: COUNT LINES
+            // First, get total number of lines:
+            this.numLines = StringParser.getLineCountOf(sourceFileTextData);
 
-        // Replace strings with a generic value:
-        lineOfText = lineOfText.replaceAll("\\\"[^\\\"]*\\\"", "\"(string value)\"]");
+            // Second, remove empty lines, then count what's left:
+            sourceFileTextData = StringParser.getWithoutEmptyLines(sourceFileTextData);
+            this.numLinesEmpty = this.numLines - StringParser.getLineCountOf(sourceFileTextData);
 
-        // Clean up the line a bit by removing spaces and tabs at the front:
-        lineOfText = lineOfText.replaceAll("^\\s+", "");
+            // Third, remove comments, then count what's left:
+            sourceFileTextData = StringParser.getWithoutComments(sourceFileTextData);
+            this.numLinesComments = this.numLines - this.numLinesEmpty - StringParser.getLineCountOf(sourceFileTextData);
+            this.numLinesCode = this.numLines - this.numLinesComments - this.numLinesEmpty;
 
-        // Remove appended comments:
-        lineOfText = lineOfText.replaceAll("\\/\\/((?!\\*\\/).)*", ""); // Remove comments appended to code (like this one!)
+            // STEP 3: FETCH DATA RELATING TO CODE STATEMENTS, SUCH AS PACKAGE, IMPORTS, ETC.
+            sourceFileTextData = StringParser.getWithoutLineBreaks(sourceFileTextData);
+            this.importStatements = StringParser.getImportStatementsOf(sourceFileTextData);
+            this.assertStatements = StringParser.getAssertStatementsOf(sourceFileTextData);
+            this.packageName = StringParser.getPackageNameOf(sourceFileTextData);
 
-        // Docstring detection (multiline comments, i,e. /*)
-        int indexOfStart = lineOfText.indexOf("/*");
-        int indexOfEnd = lineOfText.indexOf("*/");
-        boolean isStartingDocstring = indexOfStart > indexOfEnd;
-        boolean isEndingDocstring = indexOfEnd > indexOfStart;
-        this.wasDocstringStarted = (this.wasDocstringStarted || isStartingDocstring) && !isEndingDocstring;
+            // STEP 4: BUILD CODE TREE AND CLASSES
+            this.codeTree = new CodeTree(sourceFileTextData);
+            this.classes = this.codeTree.getListOfClasses(this.packageName, this.filePath, this.importStatements);
 
-        // If the code opened a multi-line comment, we need to check if it was closed;
-        if(this.wasDocstringStarted) {
-            this.numLinesDocstring += 1;
-            this.textData += lineOfText;
-        }
-        // If the line is a single-line comment (like this one!):
-        else if(lineOfText.matches("\\s*\\/{2,}(.|\\s)*"))
-            this.numLinesComments += 1;
-
-        // If the line is just empty:
-        else if (lineOfText.matches("\\A[[:blank:]]*\\Z"))
-            this.numLinesEmpty += 1;
-
-        // If the line is made up of code, then we add it to the text to later be processed into code statements;
-        else this.textData += lineOfText;
+        } catch (IOException e) {
+            System.out.println("ERROR. Unable to read file " + path);
+            e.printStackTrace();
+        };
     }
 
-
-    public LinkedList<String[]> getCode(){
-        if(this.codeBlocks == null && this.textData != "") this.generateCodeFromTextData();
-        return this.codeBlocks;
+    public int getNumLinesEmpty() {
+        return numLinesEmpty;
     }
 
-    private void generateCodeFromTextData(){
-        this.cleanUpTextData();
-        // Split the code into "blocks", i.e. blocks of code seperated by curly brackets:
-        this.codeBlocks = new LinkedList<>();
-        for (String nestedCodeBlock : this.textData.split("[\\{\\}]")) {
-            // Split the code blocks into individual statements:
-            codeBlocks.add(nestedCodeBlock.split(";"));
-        }
+    public int getNumLines() {
+        return numLines;
     }
 
-    private void cleanUpTextData(){
-
-        // Remove null chars:
-        this.textData = textData.replaceAll("\0", " ");
-
-        // Remove multiline comments:
-        this.textData = textData.replaceAll("(\\/\\*).*(\\*\\/)", " ");
-
-        // Remove extra spaces:
-        this.textData = textData.replaceAll("\\s+", " ");
-        this.textData = textData.replaceAll("\\s\\{", "{");
-        this.textData = textData.replaceAll("\\s;", ";");
+    public int getNumLinesCode() {
+        return numLinesCode;
     }
 
-    public String getApproxClassSignature(String className) {
+    public int getNumLinesComments(){
+        return numLinesComments;
+    }
 
-        // We have the className of the class being referenced, but we need its package
-        // to be able to add its signature to the ArrayList.
+    public String getPackageName() {
+        return packageName;
+    }
 
-        // If the class was referenced in the import statements, we can find its packageName there:
-        String[] importStatementsArray = this.importStatements.toArray(String[]::new);
-        for (String signature : importStatementsArray) {
-            if(signature.endsWith(className)) return signature;
-        }
+    public Path getFilePath() {
+        return filePath;
+    }
 
-        // Otherwise, it (very likely) means the class in the same package as current:
-        return this.packageName + "." + className;
+    public int getNumAssertStatements() {
+        return assertStatements.length;
+    }
+
+    public ParsedClass[] getClasses() {
+        return classes.toArray(new ParsedClass[classes.size()]);
     }
 }

@@ -11,9 +11,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Done.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file.">
+      <change afterPath="$PROJECT_DIR$/artifacts/JLS/JLS.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/artifacts/LSEC/LSEC.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/artifacts/NVLOC/NVLOC.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/artifacts/jars.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/artifacts/readme.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/Visibility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/Visibility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +38,17 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -357,7 +376,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664596504293</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file.">
+      <created>1665011942281</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1665011942281</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -372,7 +398,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Tweaks and some bug fixes." />
     <MESSAGE value="More tweaks, lol" />
     <MESSAGE value="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository." />
     <MESSAGE value="Correction: NOW pretty much complete. I missed a nullpointer issue." />
@@ -397,6 +422,17 @@
     <MESSAGE value="LSEC and JLS should, theoretically, have CSV outputs now. God help me" />
     <MESSAGE value="COMPILEEEE" />
     <MESSAGE value="Done." />
-    <option name="LAST_COMMIT_MESSAGE" value="Done." />
+    <MESSAGE value="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.StackOverflowError" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
