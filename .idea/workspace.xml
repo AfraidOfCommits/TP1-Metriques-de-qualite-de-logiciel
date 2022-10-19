@@ -11,17 +11,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Typo">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!">
       <change afterPath="$PROJECT_DIR$/artifacts/JLS/JLS.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/LSEC/LSEC.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/NVLOC/NVLOC.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/jars.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,13 +73,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00001" summary="First commit! Adding the backbones and structure for file parsing, which will be used by the .JAR programs to get info out of the repository given.">
-      <created>1663778037651</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1663778037651</updated>
     </task>
     <task id="LOCAL-00002" summary="Added skeleton for parser and source file analysis.">
       <created>1663881162305</created>
@@ -419,7 +410,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666201400486</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!">
+      <created>1666203753251</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1666203753251</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -434,7 +432,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="JavaSourceFileParser is DONE (2)" />
     <MESSAGE value="Small tweaks to the code, and bug fixes. Regex patterns now compile, and classes referenced as variables are now detectable." />
     <MESSAGE value="No more self-referrals. When adding the signature of a class or object being referenced to a ParsedClass, we now check if the signature is the same as the current class." />
     <MESSAGE value="Using proper Path class instead of strings. Will make input handling a lot more reliable." />
@@ -459,7 +456,8 @@
     <MESSAGE value="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values." />
     <MESSAGE value="Ok, now the error is ACTUALLY fixed!" />
     <MESSAGE value="Typo" />
-    <option name="LAST_COMMIT_MESSAGE" value="Typo" />
+    <MESSAGE value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

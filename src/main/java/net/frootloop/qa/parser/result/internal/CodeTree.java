@@ -65,6 +65,8 @@ public class CodeTree implements StringParser {
         System.out.println(root.toString());
     }
 
+    public String toString() {return this.root.toString();}
+
     public int getCyclomaticComplexity() {
         return 1 + root.getCyclomaticComplexity();
     }

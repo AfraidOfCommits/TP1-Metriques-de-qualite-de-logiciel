@@ -63,6 +63,10 @@ public class ParsedClass extends CodeTree {
         return packageName;
     }
 
+    public String toString() {
+        return this.getSignature();
+    }
+
     public Path getFilePath() {
         if(this.filePath == null) return Path.of("./" + this.getSignature().replace(".", "/") + ".java");
         return filePath;
