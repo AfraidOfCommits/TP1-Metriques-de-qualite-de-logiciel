@@ -16,8 +16,9 @@ public interface StringParser {
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
     Pattern rxNewClassObject = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
 
-    Pattern rxPrimitiveVariable = Pattern.compile("(^|\\s+|\\(|,)(int|short|long|float|double|byte|boolean|char)\\s+(\\w*)\\s*(,\\s*(\\w*))*\\s*[=|*=|\\-=|+=|\\|!=|\\^=|;|\\{]");
-    Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w*))*\\s*[=|*=|\\-=|+=|\\|!=|\\^=|;|\\{]");
+    Pattern rxPrimitiveVariable = Pattern.compile("(^|\\s+|\\(|,)(int|short|long|float|double|byte|boolean|char)\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
+    Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
+    Pattern rxVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
     Pattern rxDeclaredClassName = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
 
@@ -31,9 +32,9 @@ public interface StringParser {
         sourceFileTextData = StringParser.getWithoutNullChars(sourceFileTextData);
         sourceFileTextData = StringParser.getWithoutExtraSpaces(sourceFileTextData);
         sourceFileTextData = StringParser.getWithoutUnnecessarySemicolons(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithGenericStringValues(sourceFileTextData, "\"text\"");
-        sourceFileTextData = StringParser.getWithGenericVariableNames(sourceFileTextData);
-        return StringParser.getWithSingleBracketTryCatch(sourceFileTextData);
+        sourceFileTextData = StringParser.getWithGenericStringValues(sourceFileTextData);
+        sourceFileTextData = StringParser.getWithSingleBracketTryCatch(sourceFileTextData);
+        return sourceFileTextData;
     }
 
     static boolean isClassDeclaration(String codeStatement) {
@@ -58,31 +59,13 @@ public interface StringParser {
         inputStr = inputStr.replaceAll("( |\t)+$", ""); // Removes spaces at the end of inputStr
         inputStr = inputStr.replaceAll("( |\t)*\n( |\t)*", "\n"); // Removes spaces around line breaks
         inputStr = inputStr.replaceAll("( |\t)*\\{( |\t)*", "{"); // Removes spaces that surround a '{' char
-        return inputStr.replaceAll("( |\t)*;( |\t)*", ";"); // Removes spaces that surround a ';' char
-    }
-
-    static String getWithGenericVariableNames(String inputStr) {
-        List<String> variableNames = new ArrayList<>();
-
-        // Check declarations of class variables, i.e. 'String varName', or 'Matcher regexClassVariableDetector'
-        Matcher regexClassVariableDetector = rxClassVariable.matcher(inputStr);
-        while(regexClassVariableDetector.find()) {
-            variableNames.add(regexClassVariableDetector.group(8));
-            variableNames.add(regexClassVariableDetector.group(10));
-        }
-
-        // Check declarations of primitive type variables, i.e. 'int i', or 'float v'
-        Matcher regexPrimitiveVariableDetector = rxPrimitiveVariable.matcher(inputStr);
-        while(regexClassVariableDetector.find()) {
-            variableNames.add(regexClassVariableDetector.group(8));
-            variableNames.add(regexClassVariableDetector.group(10));
-        }
-
+        inputStr = inputStr.replaceAll("( |\t)*;( |\t)*", ";"); // Removes spaces that surround a ';' char
         return inputStr;
     }
 
-    static String getWithGenericStringValues(String inputStr, String valueToReplaceWith) {
-        return inputStr.replaceAll("\\\"(\\/\\\"|.)*\\\"", valueToReplaceWith); // Replace strings by a generic value, i.e. "text"
+    static String getWithGenericStringValues(String inputStr) {
+        inputStr = inputStr.replaceAll("\\\'(.)\\\'", "\'char\'");
+        return inputStr.replaceAll("\\\"(\\/\\\"|.)*\\\"", "text");
     }
 
     static String getWithoutComments(String inputStr) {
