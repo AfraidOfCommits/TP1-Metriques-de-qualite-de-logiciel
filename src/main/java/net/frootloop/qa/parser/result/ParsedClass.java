@@ -45,7 +45,7 @@ public class ParsedClass extends CodeTree {
     private String getSignatureOfReferencedClass(String className, String[] importStatements) {
         // Check if the class was imported from another package:
         for(String importedClassSignature : importStatements)
-            if(StringParser.isStatementImportingClass(importedClassSignature, className))
+            if (StringParser.isStatementImportingClass(importedClassSignature, className))
                 return importedClassSignature;
         // Otherwise, we can assume the class shares the same package as us:
         return this.packageName + "." + className;

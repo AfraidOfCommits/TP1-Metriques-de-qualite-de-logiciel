@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public interface StringParser {
 
     Pattern rxAssertStatements = Pattern.compile("(^|;|})(assert\\([^;]*\\));");
-    Pattern rxImportStatements = Pattern.compile("(^|;)\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
+    Pattern rxImportStatements = Pattern.compile("(^|;)?\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
     Pattern rxNewClassObject = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
@@ -140,6 +140,9 @@ public interface StringParser {
      * @return If the statement is importing the class 'className'
      */
     static boolean isStatementImportingClass(String importStatement, String className) {
+        if(importStatement.matches("^(\\w+\\.)*\\w+$"))
+            importStatement = "import " + importStatement;
+
         Matcher regexImportDetector = rxImportStatements.matcher(importStatement);
         while (regexImportDetector.find()) return className.equals(regexImportDetector.group(5));
         return false;

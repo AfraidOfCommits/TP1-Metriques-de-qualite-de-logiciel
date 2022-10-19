@@ -99,6 +99,7 @@ public class ParsedRepository {
             }
         }
         this.mapNumTimesReferencedDirectly.put(classSignature, numReferences);
+        this.incrementNumReferencesTotal(classSignature);
 
         // Update the repo's class with the most amount of references:
         if(numReferences > mostAmountDirectReferences && classMap.containsKey(classSignature)) {
@@ -113,7 +114,9 @@ public class ParsedRepository {
         int numReferences = 1;
         if(this.mapNumTimesReferencedIndirectly.containsKey(classSignature))
             numReferences = this.mapNumTimesReferencedIndirectly.get(classSignature) + 1;
+
         this.mapNumTimesReferencedIndirectly.put(classSignature, numReferences);
+        this.incrementNumReferencesTotal(classSignature);
 
         // Recursively add indirect references to the class's ancestors:
         if(classMap.containsKey(classSignature)) {
