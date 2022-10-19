@@ -109,7 +109,7 @@ public class CodeTree implements StringParser {
         private void generateParsedClasses(ArrayList<ParsedClass> listOfClasses, String packageName, Path filePath, String[] importStatements) {
 
             if(StringParser.isClassDeclaration(this.leadingStatement)) {
-                listOfClasses.add(new ParsedClass(this, packageName, filePath, importStatements));
+                listOfClasses.add(new ParsedClass(this, packageName, importStatements, filePath));
                 packageName = packageName + "." + StringParser.getDeclaredClassName(this.leadingStatement);
             }
             for(BlockOfCode child: this.children)

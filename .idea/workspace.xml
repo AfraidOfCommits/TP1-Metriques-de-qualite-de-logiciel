@@ -11,7 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="More big strides; added new features, and fixed bugs or improved existing ones. &#10;&#10; - CLASS REFERENCES : Now able to get the most referenced class overall, and now 'most referenced' classes will only be in the repository queried. Otherwise, it always returns 'String', lol.&#10; &#10; - REFERENCE DETECTION : Hugely improved detection of classes in source code, now including references hidden in collections such as &lt;T&gt; or List&lt;Integer&gt;.&#10; &#10; - PRINT METHODS : You can now print out a file's parsed source code, or a class' parsed source code. Very useful for debugging, and was fun to implement.&#10; &#10; - CYCLOMATIC COMPLEXITY : I still need to improve it somewhat, but for now approximation of complexity is fairly close to calculations made by CKJM. I've removed counts for boolean expressions, and also moved most of the detection to 'StringParser' (except for switch statements).">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values.">
       <change afterPath="$PROJECT_DIR$/artifacts/JLS/JLS.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/LSEC/LSEC.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/NVLOC/NVLOC.jar" afterDir="false" />
@@ -19,7 +19,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -396,7 +399,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666199163261</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values.">
+      <created>1666199867432</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1666199867432</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -411,7 +421,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="&quot;sPEciFy CoMmIt MesSaGE&quot;" />
     <MESSAGE value="Improved some class detection regexes" />
     <MESSAGE value="JavaSourceFileParser is DONE" />
     <MESSAGE value="JavaSourceFileParser is DONE (2)" />
@@ -436,7 +445,8 @@
     <MESSAGE value="Huge improvements to the codebase. &#10;&#10;I've switched the data structure of code representation to a proper tree, allowing for an accurate cyclomatic complexity algorithm and for much simpler parsing and inheritance/scope detection, and eventually parsing methods and functions if required. &#10;&#10;I've hugely improved comment detection and line counting, making it so that docstrings can now be properly included in the number of lines of comments.&#10;&#10;'JavaSourceFileParser' was bloated and hard to read, so I've gutted it and gave its functionality to its subclasses. Especially now that we have a tree, parsing no longer needs to be linear, but rather it is now dynamically programmed through recursive node calls in 'ParsedClass' and 'CodeTree' constructors.&#10;&#10;I've also allocated all regex calls to the StringParser class and just in general made things more modular. Huge quality of life improvement for myself with just that." />
     <MESSAGE value="Add getters for most directly and indirectly referenced classes of a repo." />
     <MESSAGE value="More big strides; added new features, and fixed bugs or improved existing ones. &#10;&#10; - CLASS REFERENCES : Now able to get the most referenced class overall, and now 'most referenced' classes will only be in the repository queried. Otherwise, it always returns 'String', lol.&#10; &#10; - REFERENCE DETECTION : Hugely improved detection of classes in source code, now including references hidden in collections such as &lt;T&gt; or List&lt;Integer&gt;.&#10; &#10; - PRINT METHODS : You can now print out a file's parsed source code, or a class' parsed source code. Very useful for debugging, and was fun to implement.&#10; &#10; - CYCLOMATIC COMPLEXITY : I still need to improve it somewhat, but for now approximation of complexity is fairly close to calculations made by CKJM. I've removed counts for boolean expressions, and also moved most of the detection to 'StringParser' (except for switch statements)." />
-    <option name="LAST_COMMIT_MESSAGE" value="More big strides; added new features, and fixed bugs or improved existing ones. &#10;&#10; - CLASS REFERENCES : Now able to get the most referenced class overall, and now 'most referenced' classes will only be in the repository queried. Otherwise, it always returns 'String', lol.&#10; &#10; - REFERENCE DETECTION : Hugely improved detection of classes in source code, now including references hidden in collections such as &lt;T&gt; or List&lt;Integer&gt;.&#10; &#10; - PRINT METHODS : You can now print out a file's parsed source code, or a class' parsed source code. Very useful for debugging, and was fun to implement.&#10; &#10; - CYCLOMATIC COMPLEXITY : I still need to improve it somewhat, but for now approximation of complexity is fairly close to calculations made by CKJM. I've removed counts for boolean expressions, and also moved most of the detection to 'StringParser' (except for switch statements)." />
+    <MESSAGE value="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

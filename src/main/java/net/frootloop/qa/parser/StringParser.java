@@ -154,7 +154,7 @@ public interface StringParser {
      */
     static String getPackageClass(String packageName) {
         Matcher regexPackageDetector = rxImbeddedPackage.matcher(packageName);
-        while (regexPackageDetector.find()) return regexPackageDetector.group(7);
+        while (regexPackageDetector.find()) return regexPackageDetector.group(2);
         return null;
     }
 

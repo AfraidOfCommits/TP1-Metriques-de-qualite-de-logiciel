@@ -17,16 +17,16 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
 
-    public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements){
+    public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
+        this.filePath = filePath;
         this.packageName = packageName;
         this.className = StringParser.getDeclaredClassName(this.root.leadingStatement);
         this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
 
         // Check if the package name we're given refers to a class we'd be imbedded in:
-        String enclosingClass = StringParser.getPackageClass(packageName);
-        if(enclosingClass != null) this.addParent(packageName);
+        if(StringParser.getPackageClass(packageName) != null) this.addParent(packageName);
 
         // Set inheritance:
         for(String name : StringParser.getDeclaredClassInheritance(this.root.leadingStatement))
@@ -38,9 +38,8 @@ public class ParsedClass extends CodeTree {
             this.addReferenceTo(this.getSignatureOfReferencedClass(name, importStatements));
     }
 
-    public ParsedClass(BlockOfCode classCodeBlock, String packageName, Path filePath, String[] importStatements){
-        this(classCodeBlock,packageName,importStatements);
-        this.filePath = filePath;
+    public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements){
+        this(classCodeBlock,packageName,importStatements, null);
     }
 
     private String getSignatureOfReferencedClass(String className, String[] importStatements) {

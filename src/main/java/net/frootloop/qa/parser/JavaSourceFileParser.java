@@ -32,10 +32,7 @@ public class JavaSourceFileParser implements StringParser {
     public static ParsedSourceFile parse(Path filePath) {
 
         // Read the file and extract the source code's list of statements;
-        if(!filePath.toString().endsWith(".java")) {
-            System.out.println("[ ERROR ] \nFile at given location does not end with \'.java\'!");
-            return null;
-        }
+        if(!filePath.toString().endsWith(".java")) return null;
         ParsedSourceFile parsedFile = new ParsedSourceFile(filePath);
         return parsedFile;
     }
