@@ -3,17 +3,19 @@ package net.frootloop.qa.parser;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public interface StringParser {
 
     Pattern rxAssertStatements = Pattern.compile("(^|;|})(assert\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
-    Pattern rxPackageStatement = Pattern.compile("(^|;)(package\\s+((\\w+\\.)*\\w+));");
+    Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))\\s*;");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
     Pattern rxNewClassObject = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
-    Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s\\w*");
+    Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w*))*\\s*[=|*=|\\-=|+=|\\|!=|\\^=|;|\\{]");
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
     Pattern rxDeclaredClassName = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
 
@@ -54,6 +56,19 @@ public interface StringParser {
         inputStr = inputStr.replaceAll("( |\t)*\n( |\t)*", "\n"); // Removes spaces around line breaks
         inputStr = inputStr.replaceAll("( |\t)*\\{( |\t)*", "{"); // Removes spaces that surround a '{' char
         return inputStr.replaceAll("( |\t)*;( |\t)*", ";"); // Removes spaces that surround a ';' char
+    }
+
+    static String getWithGenericVariableNames(String inputStr) {
+        List<String> variableNames = new ArrayList<>();
+
+        // Check declarations of class variables, i.e. 'String varName', or 'Matcher regexClassVariableDetector'
+        Matcher regexClassVariableDetector = rxClassVariable.matcher(inputStr);
+        while(regexClassVariableDetector.find()) {
+            variableNames.add(regexClassVariableDetector.group(8));
+            variableNames.add(regexClassVariableDetector.group(10));
+        }
+
+        return inputStr;
     }
 
     static String getWithGenericStringValues(String inputStr, String valueToReplaceWith) {
@@ -129,7 +144,7 @@ public interface StringParser {
      */
     static String getPackageClass(String packageName) {
         Matcher regexPackageDetector = rxImbeddedPackage.matcher(packageName);
-        while (regexPackageDetector.find()) return regexPackageDetector.group(2);
+        while (regexPackageDetector.find()) return regexPackageDetector.group(7);
         return null;
     }
 
@@ -140,53 +155,82 @@ public interface StringParser {
      */
     static String getPackageNameOf(String cleanSourceFileTextData) {
         Matcher regexPackageDetector = rxPackageStatement.matcher(cleanSourceFileTextData);
-        while (regexPackageDetector.find()) return regexPackageDetector.group(1);
-        return "";
+        while (regexPackageDetector.find()) return regexPackageDetector.group(3);
+        return null;
     }
 
     static String getDeclaredClassName(String codeStatement) {
-
-        System.out.println("[ Fetching class name... ]");
-
         Matcher regexClassNameDetector = rxDeclaredClassName.matcher(codeStatement);
         while(regexClassNameDetector.find()) return regexClassNameDetector.group(4);
-        return "";
+        return null;
     }
 
-    static ArrayList<String> getDeclaredClassInheritance(String codeStatement) {
-
-        System.out.println("[ Fetching class inheritance... ]");
-
-        ArrayList<String> inherited = new ArrayList<>();
+    static List<String> getDeclaredClassInheritance(String codeStatement) {
+        List<String> inherited = new ArrayList<>();
         Matcher regexInheritedClassesDetector = rxInheritedClasses.matcher(codeStatement);
         while(regexInheritedClassesDetector.find()) {
             for(String className : regexInheritedClassesDetector.group(2).split(";"))
                 inherited.add(className.replace(" ", ""));
         }
-        return inherited;
+        // Filter out duplicates and empty matches, then return:
+        return inherited.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());
     }
 
     static Visibility getDeclaredClassVisibility(String codeStatement) {
         Matcher regexClassNameDetector = rxDeclaredClassName.matcher(codeStatement);
         while(regexClassNameDetector.find()) {
             String v = regexClassNameDetector.group(2);
+            if(v == null) return Visibility.PUBLIC;
             if(v.equals("final")) return Visibility.FINAL;
             if(v.equals("abstract")) return Visibility.ABSTRACT;
         }
         return Visibility.PUBLIC;
     }
 
-    static ArrayList<String> getInitializedClassNames(ArrayList<String> codeStatements) {
-        ArrayList<String> referenced = new ArrayList<>();
+    static List<String> getInitializedClassNames(ArrayList<String> codeStatements) {
+        return getInitializedClassNames(String.join(";", codeStatements));
+    }
 
-        String code = String.join(";", codeStatements);
+    static List<String> getInitializedClassNames(String code) {
+        List<String> referenced = new ArrayList<>();
 
+        // Get names of classes that were referenced by a 'new' heap allocation:
         Matcher regexNewKeywordDetector = rxNewClassObject.matcher(code);
         while(regexNewKeywordDetector.find()) referenced.add(regexNewKeywordDetector.group(1));
 
+        // Get names of classes that were references as variable types, or in a type <T> collection:
         Matcher regexClassVariableDetector = rxClassVariable.matcher(code);
-        while(regexClassVariableDetector.find()) referenced.add(regexClassVariableDetector.group(2));
+        while(regexClassVariableDetector.find()) {
+            referenced.add(regexClassVariableDetector.group(2));
+            referenced.add(regexClassVariableDetector.group(5));
+            referenced.add(regexClassVariableDetector.group(7));
+        }
 
-        return referenced;
+        // Filter out duplicates and empty matches, then return:
+        return referenced.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());
+    }
+
+    /***
+     * @param codeStatement
+     * @return Whether it's a conditional branching statement ( for, if, else, while, etc. )
+     */
+    static boolean isBranchingStatement(String codeStatement) {
+        return codeStatement.matches("(if|else if|while|for).*");
+    }
+
+    /***
+     * @param codeStatement
+     * @return Whether it's a ternary operator ( condition ? if-true : if-false; )
+     */
+    static boolean isTernaryStatement(String codeStatement) {
+        return codeStatement.matches("\\w+ +\\w+ +=.+\\?.+:.+");
+    }
+
+    /**
+     * @param codeStatement
+     * @return Whether the statement contains simple predicates ( ==, !=, >=, <=, |=, &=, etc. )
+     */
+    static boolean containsBooleanOperator(String codeStatement) {
+        return codeStatement.matches(".*(.*(==|!=|>=|<=|&&|\\|\\||&=|\\|\\^).*).*");
     }
 }

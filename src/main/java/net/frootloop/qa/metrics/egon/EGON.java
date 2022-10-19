@@ -63,7 +63,7 @@ public class EGON {
     public static String getValueForClass(ParsedClass parsedClass, ParsedRepository repo) {
         String nvloc = "" + NVLOC.getAmountOfEmptyLines(parsedClass.getFilePath().toString());
         String jls = JLS.getValueForClass(parsedClass);
-        String csec = "" + repo.getNumTimesReferenced(parsedClass);
+        String csec = "" + repo.getNumTimesReferencedDirectly(parsedClass);
         return jls + ", " + csec;
     }
 

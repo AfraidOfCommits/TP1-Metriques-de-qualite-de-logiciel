@@ -44,7 +44,7 @@ public class NVLOC {
             System.out.println("Le fichier donné en input à nvloc n'est pas un fichier .java : " + filePath);
             return 0;
         }
-        else return parsedFile.numLinesEmpty;
+        else return parsedFile.getNumLinesEmpty();
     }
 
     /***

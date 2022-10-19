@@ -29,13 +29,12 @@ public class ParsedClass extends CodeTree {
         if(enclosingClass != null) this.addParent(packageName);
 
         // Set inheritance:
-        ArrayList<String> parentClassNames = StringParser.getDeclaredClassInheritance(this.root.leadingStatement);
-        for(String name : parentClassNames)
+        for(String name : StringParser.getDeclaredClassInheritance(this.root.leadingStatement))
             this.addParent(this.getSignatureOfReferencedClass(name, importStatements));
 
         // Set references to other classes:
-        ArrayList<String> referencedClassNames = StringParser.getInitializedClassNames(this.root.codeStatements);
-        for(String name : referencedClassNames)
+        String codeOfClass = this.root.getCodeAsString(false).replace("\n", "");
+        for(String name : StringParser.getInitializedClassNames(codeOfClass))
             this.addReferenceTo(this.getSignatureOfReferencedClass(name, importStatements));
     }
 

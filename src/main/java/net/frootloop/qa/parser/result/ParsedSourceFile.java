@@ -71,9 +71,16 @@ public class ParsedSourceFile {
             this.classes = this.codeTree.getListOfClasses(this.packageName, this.filePath, this.importStatements);
 
         } catch (IOException e) {
-            System.out.println("ERROR. Unable to read file " + path);
+            System.out.println("[ ERROR ] Unable to read file " + path.toFile().getAbsolutePath() + "!");
             e.printStackTrace();
         };
+    }
+
+    public void print() {
+        System.out.println("[ PRINTING CONTENTS OF SOURCE FILE ]\nLocation: " + this.filePath.toFile().getAbsolutePath() + "\n");
+        System.out.println("(PACKAGE)\n" + this.packageName + "\n");
+        System.out.println("(IMPORTED CLASSES)\n" + String.join(";\n", this.importStatements));
+        codeTree.print();
     }
 
     public int getNumLinesEmpty() {

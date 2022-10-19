@@ -61,7 +61,7 @@ public class LSEC {
 
     public static String getValueForClass(ParsedClass parsedClass, ParsedRepository repo) {
         String jls = JLS.getValueForClass(parsedClass);
-        String csec = "" + repo.getNumTimesReferenced(parsedClass);
+        String csec = "" + repo.getNumTimesReferencedDirectly(parsedClass);
         return jls + ", " + csec;
     }
 

@@ -5,6 +5,7 @@ import net.frootloop.qa.parser.result.ParsedClass;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CodeTree implements StringParser {
 
@@ -86,15 +87,13 @@ public class CodeTree implements StringParser {
         }
 
         public int getCyclomaticComplexity() {
-            int complexity = leadingStatement.matches("(if|else if|while|for).*") ? 1 : 0;
-            boolean isBranchingStatement;
+            int complexity = StringParser.isBranchingStatement(leadingStatement) ? 1 : 0;
 
             for(String codeLine : codeStatements) {
-                isBranchingStatement = codeLine.matches(".*(if|else|while|for).*"); // Check for conditional statements
-                isBranchingStatement |= codeLine.matches("\\w+ +\\w+ +=.+\\?.+:.+"); // Check for ternary operators
-                isBranchingStatement |= codeLine.matches(".*(.*(==|!=|>=|<=).*).*"); // Check for simple predicates
-                isBranchingStatement |= (leadingStatement.matches("switch.*") && codeLine.matches("(default|case\\s*\\w+\\s*):.*")); // Switch cases
-                if(isBranchingStatement) complexity += 1;
+                if(StringParser.isBranchingStatement(codeLine) || StringParser.isTernaryStatement(codeLine))
+                    complexity += 1;
+                else if(leadingStatement.matches("switch.*") && codeLine.matches("(default|case\\s*\\w+\\s*):.*"))
+                    complexity += 1;
             }
 
             for (BlockOfCode child : children) complexity += child.getCyclomaticComplexity();
@@ -108,6 +107,7 @@ public class CodeTree implements StringParser {
         }
 
         private void generateParsedClasses(ArrayList<ParsedClass> listOfClasses, String packageName, Path filePath, String[] importStatements) {
+
             if(StringParser.isClassDeclaration(this.leadingStatement)) {
                 listOfClasses.add(new ParsedClass(this, packageName, filePath, importStatements));
                 packageName = packageName + "." + StringParser.getDeclaredClassName(this.leadingStatement);
@@ -116,24 +116,30 @@ public class CodeTree implements StringParser {
                 child.generateParsedClasses(listOfClasses, packageName, filePath, importStatements);
         }
 
-        public String toString() {
-            return this.toString("");
+        public String getCodeAsString(boolean shouldBeautify) {
+            return this.toString("", shouldBeautify);
         }
 
-        private String toString(String indentation) {
+        public String toString() {
+            return this.toString("", true);
+        }
+
+        private String toString(String indentation, boolean shouldBeautify) {
             String str = "";
-            if(StringParser.isClassDeclaration(this.leadingStatement)){
+
+            if(shouldBeautify && StringParser.isClassDeclaration(this.leadingStatement)){
                 str += "\n\n" + indentation + "(CLASS: " + StringParser.getDeclaredClassName(leadingStatement);
-                ArrayList<String> inheritance = StringParser.getDeclaredClassInheritance(leadingStatement);
+                List<String> inheritance = StringParser.getDeclaredClassInheritance(leadingStatement);
                 if(inheritance.size() > 0) str += ", with parents: " + String.join(",", inheritance);
                 str += ")";
             }
 
+            String childIndentation = shouldBeautify ? indentation + "    " : "";
+            indentation = shouldBeautify ? indentation : "";
+
             str += "\n" + indentation + this.leadingStatement + " {";
-            for(String s : this.codeStatements)
-                str += "\n" + indentation + "    "  + s + ";";
-            for(BlockOfCode c : this.children)
-                str += c.toString(indentation + "    ");
+            for(String s : this.codeStatements) str += "\n" + childIndentation  + s + ";";
+            for(BlockOfCode c : this.children) str += c.toString(childIndentation, shouldBeautify);
             str += "\n" + indentation + "}";
             return str;
         }

@@ -6,17 +6,9 @@ import java.util.HashMap;
 public class ParsedRepository {
 
     private Path rootFilePath;
-    private int totalLines;
-    private int totalLinesComments;
-    private int totalLinesEmpty;
-    private int totalLinesCode;
-    private int numAssertStatements;
-    private int cyclomaticComplexity;
-    private ParsedClass mostComplexClass;
-    private ParsedClass mostReferencedClass;
-    private int mostAmountReferences;
-    private ParsedClass mostIndirectlyReferencedClass;
-    private int mostAmountIndirectReferences;
+    private int totalLines, totalLinesComments, totalLinesEmpty, totalLinesCode, numAssertStatements, numSourceFiles, numClasses, cyclomaticComplexity = 1;
+    private ParsedClass mostComplexClass, mostReferencedClass, mostDirectlyReferencedClass, mostIndirectlyReferencedClass;
+    private int mostAmountReferences, mostAmountDirectReferences, mostAmountIndirectReferences;
 
     /***
      * Map to store and fetch ParsedClass instances by their signature.
@@ -24,31 +16,40 @@ public class ParsedRepository {
     private HashMap<String, ParsedClass> classMap;
 
     /***
+     * Map to store and fetch the amount of times a class has been referred (directly or indirectly) to by
+     * another class, with the key being the class's signature.
+     */
+    private HashMap<String, Integer> mapNumTimesReferenced;
+
+    /***
      * Map to store and fetch the amount of times a class has been directly referred to by
      * another class, with the key being the class's signature.
      */
-    private HashMap<String, Integer> numTimesReferenced;
+    private HashMap<String, Integer> mapNumTimesReferencedDirectly;
 
     /***
      * Map to store and fetch the amount of times a parent class has been indirectly referred to by
      * a child class, with the key being the parent's signature.
      */
-    private HashMap<String, Integer> NumTimesReferencedIndirectly;
+    private HashMap<String, Integer> mapNumTimesReferencedIndirectly;
 
     public ParsedRepository(Path filePath){
         this.rootFilePath = filePath;
         this.classMap = new HashMap<String, ParsedClass>();
-        this.numTimesReferenced = new HashMap<String, Integer>();
-        this.NumTimesReferencedIndirectly = new HashMap<String, Integer>();
+        this.mapNumTimesReferenced = new HashMap<String, Integer>();
+        this.mapNumTimesReferencedDirectly = new HashMap<String, Integer>();
+        this.mapNumTimesReferencedIndirectly = new HashMap<String, Integer>();
     }
 
     public void addParsedFile(ParsedSourceFile parsedFile) {
         for (ParsedClass c: parsedFile.getClasses()) {
             classMap.put(c.getSignature(), c);
-            this.cyclomaticComplexity += c.getCyclomaticComplexity();
+            this.numClasses += 1;
+            this.cyclomaticComplexity += c.getCyclomaticComplexity() - 1;
             if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < c.getCyclomaticComplexity())
                 mostComplexClass = c;
         }
+        this.numSourceFiles += 1;
         this.totalLines += parsedFile.getNumLines();
         this.totalLinesComments += parsedFile.getNumLinesComments();
         this.totalLinesEmpty += parsedFile.getNumLinesEmpty();
@@ -69,21 +70,27 @@ public class ParsedRepository {
         }
     }
 
-    public int getNumTimesReferenced(ParsedClass parsedClass) {
-        if(!this.numTimesReferenced.containsKey(parsedClass.getSignature()))
-            return 0;
-        else
-            return this.numTimesReferenced.get(parsedClass.getSignature());
+    private void incrementNumReferencesTotal(String classSignature) {
+
+        // Increment total number of references:
+        int numReferences = 1;
+        if(this.mapNumTimesReferenced.containsKey(classSignature))
+            numReferences = this.mapNumTimesReferenced.get(classSignature) + 1;
+        this.mapNumTimesReferenced.put(classSignature, numReferences);
+
+        // Update the repo's class with the most amount of references:
+        if(numReferences > mostAmountReferences && classMap.containsKey(classSignature)) {
+            mostAmountReferences = numReferences;
+            mostReferencedClass = this.classMap.get(classSignature);
+        }
     }
 
     private void addDirectReferenceTo(String classSignature) {
 
         // Increment number of direct references:
-        int numReferences;
-        if(!this.numTimesReferenced.containsKey(classSignature))
-            numReferences = 1;
-        else {
-            numReferences = this.numTimesReferenced.get(classSignature) + 1;
+        int numReferences = 1;
+        if(this.mapNumTimesReferencedDirectly.containsKey(classSignature)) {
+            numReferences = this.mapNumTimesReferencedDirectly.get(classSignature) + 1;
 
             // Increment parents' number of indirect references:
             if(classMap.containsKey(classSignature)) {
@@ -91,22 +98,22 @@ public class ParsedRepository {
                     this.addIndirectReferenceTo(parentSignature);
             }
         }
-        this.numTimesReferenced.put(classSignature, numReferences);
+        this.mapNumTimesReferencedDirectly.put(classSignature, numReferences);
 
-        // Update the class with the most amount of references:
-        if(numReferences > mostAmountReferences) {
-            mostAmountReferences = numReferences;
-            mostReferencedClass = this.classMap.get(classSignature);
+        // Update the repo's class with the most amount of references:
+        if(numReferences > mostAmountDirectReferences && classMap.containsKey(classSignature)) {
+            mostAmountDirectReferences = numReferences;
+            mostDirectlyReferencedClass = this.classMap.get(classSignature);
         }
     }
 
     private void addIndirectReferenceTo(String classSignature) {
 
         // Increment number of indirect references:
-        int numReferences;
-        if(!this.NumTimesReferencedIndirectly.containsKey(classSignature)) numReferences = 1;
-        else numReferences = this.NumTimesReferencedIndirectly.get(classSignature) + 1;
-        this.NumTimesReferencedIndirectly.put(classSignature, numReferences);
+        int numReferences = 1;
+        if(this.mapNumTimesReferencedIndirectly.containsKey(classSignature))
+            numReferences = this.mapNumTimesReferencedIndirectly.get(classSignature) + 1;
+        this.mapNumTimesReferencedIndirectly.put(classSignature, numReferences);
 
         // Recursively add indirect references to the class's ancestors:
         if(classMap.containsKey(classSignature)) {
@@ -114,11 +121,26 @@ public class ParsedRepository {
                 this.addIndirectReferenceTo(parentSignature);
         }
 
-        // Update the class with the most amount of indirect references:
-        if(numReferences > mostAmountIndirectReferences) {
+        // Update the repo's class with the most amount of indirect references:
+        if(numReferences > mostAmountIndirectReferences  && classMap.containsKey(classSignature)) {
             mostAmountIndirectReferences = numReferences;
             mostIndirectlyReferencedClass = this.classMap.get(classSignature);
         }
+    }
+
+    public int getNumTimesReferenced(ParsedClass parsedClass) {
+        if(!this.mapNumTimesReferenced.containsKey(parsedClass.getSignature())) return 0;
+        else return this.mapNumTimesReferenced.get(parsedClass.getSignature());
+    }
+
+    public int getNumTimesReferencedDirectly(ParsedClass parsedClass) {
+        if(!this.mapNumTimesReferencedDirectly.containsKey(parsedClass.getSignature())) return 0;
+        else return this.mapNumTimesReferencedDirectly.get(parsedClass.getSignature());
+    }
+
+    public int getNumTimesReferencedIndirectly(ParsedClass parsedClass) {
+        if(!this.mapNumTimesReferencedIndirectly.containsKey(parsedClass.getSignature())) return 0;
+        else return this.mapNumTimesReferencedIndirectly.get(parsedClass.getSignature());
     }
 
     public ParsedClass[] getClasses(){
@@ -131,6 +153,10 @@ public class ParsedRepository {
 
     public ParsedClass getMostReferencedClass() {
         return mostReferencedClass;
+    }
+
+    public ParsedClass getMostDirectlyReferencedClass() {
+        return mostDirectlyReferencedClass;
     }
 
     public ParsedClass getMostIndirectlyReferencedClass() {

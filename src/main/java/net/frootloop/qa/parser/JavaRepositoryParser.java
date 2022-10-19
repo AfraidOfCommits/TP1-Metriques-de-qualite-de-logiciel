@@ -17,7 +17,8 @@ public class JavaRepositoryParser {
      * @return ParsedRepository instance
      */
     public static ParsedRepository parse(String pathString){
-        Path path = Path.of(pathString.replace('/', '\\').replace(":",""));
+        Path path = Path.of(pathString.replace('/', '\\').replace("\"", ""));
+        System.out.println("[ Parsing Repository ] \nLocation given: " + path.toFile().getAbsolutePath() + "\n");
         return parse(path);
     }
 
