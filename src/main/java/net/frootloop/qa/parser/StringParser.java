@@ -12,9 +12,11 @@ public interface StringParser {
 
     Pattern rxAssertStatements = Pattern.compile("(^|;|})(assert\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
-    Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))\\s*;");
+    Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
     Pattern rxNewClassObject = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
+
+    Pattern rxPrimitiveVariable = Pattern.compile("(^|\\s+|\\(|,)(int|short|long|float|double|byte|boolean|char)\\s+(\\w*)\\s*(,\\s*(\\w*))*\\s*[=|*=|\\-=|+=|\\|!=|\\^=|;|\\{]");
     Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w*))*\\s*[=|*=|\\-=|+=|\\|!=|\\^=|;|\\{]");
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
     Pattern rxDeclaredClassName = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
@@ -30,6 +32,7 @@ public interface StringParser {
         sourceFileTextData = StringParser.getWithoutExtraSpaces(sourceFileTextData);
         sourceFileTextData = StringParser.getWithoutUnnecessarySemicolons(sourceFileTextData);
         sourceFileTextData = StringParser.getWithGenericStringValues(sourceFileTextData, "\"text\"");
+        sourceFileTextData = StringParser.getWithGenericVariableNames(sourceFileTextData);
         return StringParser.getWithSingleBracketTryCatch(sourceFileTextData);
     }
 
@@ -63,6 +66,13 @@ public interface StringParser {
 
         // Check declarations of class variables, i.e. 'String varName', or 'Matcher regexClassVariableDetector'
         Matcher regexClassVariableDetector = rxClassVariable.matcher(inputStr);
+        while(regexClassVariableDetector.find()) {
+            variableNames.add(regexClassVariableDetector.group(8));
+            variableNames.add(regexClassVariableDetector.group(10));
+        }
+
+        // Check declarations of primitive type variables, i.e. 'int i', or 'float v'
+        Matcher regexPrimitiveVariableDetector = rxPrimitiveVariable.matcher(inputStr);
         while(regexClassVariableDetector.find()) {
             variableNames.add(regexClassVariableDetector.group(8));
             variableNames.add(regexClassVariableDetector.group(10));
