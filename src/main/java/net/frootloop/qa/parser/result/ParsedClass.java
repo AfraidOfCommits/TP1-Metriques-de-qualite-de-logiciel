@@ -25,7 +25,7 @@ public class ParsedClass extends CodeTree {
         this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
 
-        // Check if the package name we're given refers to a class we'd be imbedded in:
+        // Check if the package name we're given refers to a class we'd be embedded in:
         if(StringParser.getPackageClass(packageName) != null) this.addParent(packageName);
 
         // Set inheritance:
