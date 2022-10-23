@@ -7,8 +7,8 @@ public class ParsedRepository {
 
     private Path rootFilePath;
     private int totalLines, totalLinesComments, totalLinesEmpty, totalLinesCode, numAssertStatements, numSourceFiles, numClasses, cyclomaticComplexity = 1;
-    private ParsedClass mostComplexClass, mostReferencedClass, mostDirectlyReferencedClass, mostIndirectlyReferencedClass;
-    private int mostAmountReferences, mostAmountDirectReferences, mostAmountIndirectReferences;
+    private ParsedClass mostComplexClass, mostReferencedClass, mostDirectlyReferencedClass, mostIndirectlyReferencedClass, leastCohesiveClass, classWithHighestMethodComplexity;
+    private int mostAmountReferences, mostAmountDirectReferences, mostAmountIndirectReferences, averageLackOfCohesion, averageWeightedMethodsPerClass;
 
     /***
      * Map to store and fetch ParsedClass instances by their signature.
@@ -45,9 +45,18 @@ public class ParsedRepository {
         for (ParsedClass c: parsedFile.getClasses()) {
             classMap.put(c.getSignature(), c);
             this.numClasses += 1;
+
             this.cyclomaticComplexity += c.getCyclomaticComplexity() - 1;
             if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < c.getCyclomaticComplexity())
                 mostComplexClass = c;
+
+            this.averageLackOfCohesion = (c.getLackOfCohesionInMethods() + this.averageLackOfCohesion) / this.numClasses;
+            if(leastCohesiveClass == null || c.getLackOfCohesionInMethods() > this.leastCohesiveClass.getLackOfCohesionInMethods())
+                this.leastCohesiveClass = c;
+
+            this.averageWeightedMethodsPerClass = (c.getWeightedMethods() + this.averageWeightedMethodsPerClass) / this.numClasses;
+            if(classWithHighestMethodComplexity == null || c.getWeightedMethods() > this.classWithHighestMethodComplexity.getWeightedMethods())
+                this.classWithHighestMethodComplexity = c;
         }
         this.numSourceFiles += 1;
         this.totalLines += parsedFile.getNumLines();

@@ -21,6 +21,7 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> classesReferenced = new ArrayList<>();
 
     private ArrayList<String> attributesDeclared;
+    private int lcom = -1, wmc = -1;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -79,8 +80,18 @@ public class ParsedClass extends CodeTree {
         return numMethods;
     }
 
+    public int getWeightedMethods() {
+        if(this.wmc >= 0) return this.wmc;
+        this.wmc = 0;
+        for(ParsedMethod m: this.methods)
+            this.wmc += m.getCyclomaticComplexity();
+        return this.wmc;
+    }
+
     public int getLackOfCohesionInMethods() {
-        return Math.max(0, this.getNumMethodPairsAccessingDifferentAttributes() - this.getNumMethodPairsSharingAttributes());
+        if(this.lcom >= 0) return this.lcom;
+        this.lcom = Math.max(0, this.getNumMethodPairsAccessingDifferentAttributes() - this.getNumMethodPairsSharingAttributes());
+        return this.lcom;
     }
 
     private int getNumMethodPairsAccessingDifferentAttributes() {
