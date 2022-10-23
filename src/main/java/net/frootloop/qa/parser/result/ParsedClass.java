@@ -6,6 +6,7 @@ import net.frootloop.qa.parser.result.internal.Visibility;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ParsedClass extends CodeTree {
 
@@ -13,13 +14,13 @@ public class ParsedClass extends CodeTree {
     private String packageName;
     private Visibility visibility;
     private String className;
-    private int cyclomaticComplexity = 1;
+    private int cohesionValue, cyclomaticComplexity = 1;
 
     private ArrayList<ParsedMethod> methods = new ArrayList<>();
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
 
-    private ArrayList<String> attributesDeclared = new ArrayList<>();
+    private ArrayList<String> attributesDeclared;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -28,7 +29,11 @@ public class ParsedClass extends CodeTree {
         this.className = StringParser.getDeclaredClassName(this.root.leadingStatement);
         this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
-        this.methods = this.getListOfMethods();
+
+        // Get list of methods"
+        for (BlockOfCode child: this.root.children)
+            if(StringParser.isMethodDeclaration(child.leadingStatement))
+                this.methods.add(new ParsedMethod(child, this));
 
         // Set attributes:
         this.attributesDeclared = this.root.getDeclaredVariables();
@@ -54,6 +59,10 @@ public class ParsedClass extends CodeTree {
         if(method != null) this.methods.add(method);
     }
 
+    public boolean hasAttributeCalled(String variableName) {
+        return this.attributesDeclared.contains(variableName);
+    }
+
     private String getSignatureOfReferencedClass(String className, String[] importStatements) {
         // Check if the class was imported from another package:
         for(String importedClassSignature : importStatements)
@@ -61,6 +70,35 @@ public class ParsedClass extends CodeTree {
                 return importedClassSignature;
         // Otherwise, we can assume the class shares the same package as us:
         return this.packageName + "." + className;
+    }
+
+    private int getNumMethods() {
+        int numMethods = this.methods.size();
+        for(ParsedMethod m: this.methods)
+            if(m.isStatic()) numMethods--;
+        return numMethods;
+    }
+
+    public int getLackOfCohesionInMethods() {
+        return Math.max(0, this.getNumMethodPairsAccessingDifferentAttributes() - this.getNumMethodPairsSharingAttributes());
+    }
+
+    private int getNumMethodPairsAccessingDifferentAttributes() {
+        return this.getNumMethods() - this.getNumMethodPairsSharingAttributes();
+    }
+
+    private int getNumMethodPairsSharingAttributes() {
+        if(this.methods.size() < 2) return 0;
+
+        int number = 0;
+        for(ParsedMethod m1 : this.methods) {
+            for(ParsedMethod m2 : this.methods) {
+                if(m1 == m2) continue;
+                boolean bothAccessSameAttributes = new HashSet<>(m1.getReferencedAttributes()).equals(new HashSet<>(m2.getReferencedAttributes()));
+                if(bothAccessSameAttributes) number++;
+            }
+        }
+        return number;
     }
 
     public String getSignature() {

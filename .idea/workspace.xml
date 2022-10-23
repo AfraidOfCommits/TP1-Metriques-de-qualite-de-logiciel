@@ -11,13 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcom/LCOM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcom/LCOM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,13 +74,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Porgress on the parser, still. Added some comments">
-      <created>1664390394702</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1664390394702</updated>
     </task>
     <task id="LOCAL-00006" summary="Porgress on the parser! Almost done being able to parse source files and nested classed.">
       <created>1664402713811</created>
@@ -420,7 +411,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666537952461</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches.">
+      <created>1666549550969</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1666549550969</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -435,7 +433,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!" />
     <MESSAGE value="Docstrings!" />
     <MESSAGE value="Added some overloads for path types (String or Path now works, and inputting a String will format it as well!)" />
     <MESSAGE value="Same as last commit, but this time for File Parser as well as Repo Parser." />
@@ -460,7 +457,8 @@
     <MESSAGE value="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)" />
     <MESSAGE value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
     <MESSAGE value="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here." />
-    <option name="LAST_COMMIT_MESSAGE" value="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here." />
+    <MESSAGE value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
+    <option name="LAST_COMMIT_MESSAGE" value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

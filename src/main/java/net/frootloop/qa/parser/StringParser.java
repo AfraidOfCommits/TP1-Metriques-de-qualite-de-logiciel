@@ -3,6 +3,7 @@ package net.frootloop.qa.parser;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,7 @@ public interface StringParser {
     Pattern rxDeclaredVariable = Pattern.compile("(((public|private|protected|final)\\s+)?)(int|short|long|float|double|byte|boolean|char|[A-Z]\\w+(\\[\\s*\\]|\\.\\w+|<\\w+(\\s*,\\s*\\w+)*>)?)\\s+((\\w+)\\s*((\\s*,\\s*\\w+)*))($|[;=])");
 
     Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
-    Pattern rxReferencedVariable = Pattern.compile("[^\\w]([a-z]\\w+)[^\\(\\{\\w]");
+    Pattern rxLowerCaseWords = Pattern.compile("(?=[^\\w]([a-z]\\w+)[^\\(\\{\\w])");
 
     /***
      * Remove unnecessary spaces and symbols, null chars, normalize line breaks, and replace string values with "text".
@@ -228,6 +229,10 @@ public interface StringParser {
         return rxDeclaredMethod.matcher(codeStatement).find();
     }
 
+    static boolean isMethodDeclarationStatic(String codeStatement) {
+        return codeStatement.matches("([^(]+\\s+)*static(\\s+[^(]+)*\\(.*\\)\\s*");
+    }
+
     static String getDeclaredMethodName(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
@@ -238,6 +243,23 @@ public interface StringParser {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(3);
         return "void";
+    }
+
+    static ArrayList<String> getDeclaredMethodArguments(String codeStatement) {
+        Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
+        while(regexMethodNameDetector.find())
+
+            // If the method declaration has arguments, we add their names individually to the list:
+            if(regexMethodNameDetector.group(5) != null || regexMethodNameDetector.group(5).matches("\\s+")) {
+
+                String[] arguments = regexMethodNameDetector.group(5).replaceAll("\\s*,\\s*", ",").split(",");
+                ArrayList<String> argumentNames = new ArrayList<>();
+                for (String arg:arguments)
+                    argumentNames.addAll(Arrays.asList(StringParser.getDeclaredVariableNames(arg)));
+
+                return argumentNames;
+            }
+        return null;
     }
 
     static Visibility getDeclaredMethodVisibility(String codeStatement) {
@@ -254,6 +276,25 @@ public interface StringParser {
             }
         }
         return Visibility.PUBLIC;
+    }
+
+    static List<String> getLowerCaseWordsOf(String code) {
+        ArrayList<String> words = new ArrayList<>();
+        Matcher regexLowerCaseWordsDetector = rxLowerCaseWords.matcher(code);
+        while(regexLowerCaseWordsDetector.find()) {
+            boolean isLikelyVariable = !regexLowerCaseWordsDetector.group(1).matches("(int|short|long|float|double|byte|boolean|char|for|if|else|do|while|public|private|protected|static|final|abstract)");
+            if (isLikelyVariable) words.add(regexLowerCaseWordsDetector.group(1));
+        }
+
+        // Filter out duplicates and empty matches, then return:
+        return words.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());
+    }
+
+    static ArrayList<String> getObviousReferencedAttributes(String code) {
+        ArrayList<String> referencedAttributes = new ArrayList<>();
+        Matcher regexThisKeyordDetector = rxReferencedAttributeWithThis.matcher(code);
+        while(regexThisKeyordDetector.find()) referencedAttributes.add(regexThisKeyordDetector.group(1));
+        return referencedAttributes;
     }
 
     /***

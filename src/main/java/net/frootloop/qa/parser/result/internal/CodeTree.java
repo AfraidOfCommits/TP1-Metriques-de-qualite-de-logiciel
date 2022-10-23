@@ -2,7 +2,6 @@ package net.frootloop.qa.parser.result.internal;
 
 import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.parser.result.ParsedClass;
-import net.frootloop.qa.parser.result.ParsedMethod;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -77,10 +76,6 @@ public class CodeTree implements StringParser {
         return this.root.generateParsedClasses(packageName, filePath, importStatements);
     }
 
-    public ArrayList<ParsedMethod> getListOfMethods() {
-        return this.root.generateParsedMethods();
-    }
-
     public class BlockOfCode {
 
         public BlockOfCode parent = null;
@@ -134,12 +129,6 @@ public class CodeTree implements StringParser {
             // Recursive call:
             for(BlockOfCode child: this.children)
                 child.generateParsedClasses(listOfClasses, packageName, filePath, importStatements);
-        }
-
-        public ArrayList<ParsedMethod> generateParsedMethods() {
-            ArrayList<ParsedMethod> listOfMethods = new ArrayList<>();
-
-            return listOfMethods;
         }
 
 
