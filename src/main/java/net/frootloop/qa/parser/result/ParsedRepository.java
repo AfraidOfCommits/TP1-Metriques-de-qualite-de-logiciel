@@ -46,17 +46,25 @@ public class ParsedRepository {
             classMap.put(c.getSignature(), c);
             this.numClasses += 1;
 
+            // Add class' cyclomatic complexity:
             this.cyclomaticComplexity += c.getCyclomaticComplexity() - 1;
             if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < c.getCyclomaticComplexity())
                 mostComplexClass = c;
 
+            // Add class' LCOM:
             this.averageLackOfCohesion = (c.getLackOfCohesionInMethods() + this.averageLackOfCohesion) / this.numClasses;
             if(leastCohesiveClass == null || c.getLackOfCohesionInMethods() > this.leastCohesiveClass.getLackOfCohesionInMethods())
                 this.leastCohesiveClass = c;
 
+            // Add class' WMC:
             this.averageWeightedMethodsPerClass = (c.getWeightedMethods() + this.averageWeightedMethodsPerClass) / this.numClasses;
             if(classWithHighestMethodComplexity == null || c.getWeightedMethods() > this.classWithHighestMethodComplexity.getWeightedMethods())
                 this.classWithHighestMethodComplexity = c;
+
+            // Add class' CBO:
+
+            // Add class' DIT:
+
         }
         this.numSourceFiles += 1;
         this.totalLines += parsedFile.getNumLines();
