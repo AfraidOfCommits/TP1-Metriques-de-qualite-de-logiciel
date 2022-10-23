@@ -15,12 +15,15 @@ public interface StringParser {
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
     Pattern rxNewClassObject = Pattern.compile(".*new ([A-Z]\\w*)\\(.*\\).*");
-
-    Pattern rxPrimitiveVariable = Pattern.compile("(^|\\s+|\\(|,)(int|short|long|float|double|byte|boolean|char)\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
     Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
-    Pattern rxVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
-    Pattern rxDeclaredClassName = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
+    Pattern rxDeclaredClass = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
+    Pattern rxDeclaredMethod = Pattern.compile("(?:((?:public|private|protected|static|final|native|synchronized|abstract|transient)+)\\s+)+(([$_\\w<>\\[\\]\\s]*)\\s+([\\$_\\w]+)\\(([^\\)]*)\\)?\\s*)");
+
+    Pattern rxDeclaredVariable = Pattern.compile("(((public|private|protected|final)\\s+)?)(int|short|long|float|double|byte|boolean|char|[A-Z]\\w+(\\[\\s*\\]|\\.\\w+|<\\w+(\\s*,\\s*\\w+)*>)?)\\s+((\\w+)\\s*((\\s*,\\s*\\w+)*))($|[;=])");
+
+    Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
+    Pattern rxReferencedVariable = Pattern.compile("[^\\w]([a-z]\\w+)[^\\(\\{\\w]");
 
     /***
      * Remove unnecessary spaces and symbols, null chars, normalize line breaks, and replace string values with "text".
@@ -35,10 +38,6 @@ public interface StringParser {
         sourceFileTextData = StringParser.getWithGenericStringValues(sourceFileTextData);
         sourceFileTextData = StringParser.getWithSingleBracketTryCatch(sourceFileTextData);
         return sourceFileTextData;
-    }
-
-    static boolean isClassDeclaration(String codeStatement) {
-        return rxDeclaredClassName.matcher(codeStatement).find();
     }
 
     static int getLineCountOf(String inputStr) {
@@ -155,8 +154,12 @@ public interface StringParser {
         return null;
     }
 
+    static boolean isClassDeclaration(String codeStatement) {
+        return rxDeclaredClass.matcher(codeStatement).find();
+    }
+
     static String getDeclaredClassName(String codeStatement) {
-        Matcher regexClassNameDetector = rxDeclaredClassName.matcher(codeStatement);
+        Matcher regexClassNameDetector = rxDeclaredClass.matcher(codeStatement);
         while(regexClassNameDetector.find()) return regexClassNameDetector.group(4);
         return null;
     }
@@ -173,12 +176,9 @@ public interface StringParser {
     }
 
     static Visibility getDeclaredClassVisibility(String codeStatement) {
-        Matcher regexClassNameDetector = rxDeclaredClassName.matcher(codeStatement);
+        Matcher regexClassNameDetector = rxDeclaredClass.matcher(codeStatement);
         while(regexClassNameDetector.find()) {
-            String v = regexClassNameDetector.group(2);
-            if(v == null) return Visibility.PUBLIC;
-            if(v.equals("final")) return Visibility.FINAL;
-            if(v.equals("abstract")) return Visibility.ABSTRACT;
+            if(regexClassNameDetector.group(2) == "abstract") return Visibility.ABSTRACT;
         }
         return Visibility.PUBLIC;
     }
@@ -204,6 +204,56 @@ public interface StringParser {
 
         // Filter out duplicates and empty matches, then return:
         return referenced.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());
+    }
+
+    static boolean isVariableDeclaration(String codeStatement) {
+         return rxDeclaredVariable.matcher(codeStatement).find();
+    }
+
+    static String[] getDeclaredVariableNames(String codeStatement) {
+        Matcher regexAttributeNameDetector = rxDeclaredVariable.matcher(codeStatement);
+        while(regexAttributeNameDetector.find())
+            if(regexAttributeNameDetector.group(7) != null)
+                return regexAttributeNameDetector.group(7).split(", *");
+        return null;
+    }
+
+    static String getDeclaredVariableType(String codeStatement) {
+        Matcher regexAttributeNameDetector = rxDeclaredVariable.matcher(codeStatement);
+        while(regexAttributeNameDetector.find()) return regexAttributeNameDetector.group(4);
+        return null;
+    }
+
+    static boolean isMethodDeclaration(String codeStatement) {
+        return rxDeclaredMethod.matcher(codeStatement).find();
+    }
+
+    static String getDeclaredMethodName(String codeStatement) {
+        Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
+        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
+        return null;
+    }
+
+    static String getDeclaredMethodReturnType(String codeStatement) {
+        Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
+        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(3);
+        return "void";
+    }
+
+    static Visibility getDeclaredMethodVisibility(String codeStatement) {
+        Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
+        while(regexMethodNameDetector.find()) {
+            if(regexMethodNameDetector.group(1) == null) return Visibility.PUBLIC;
+            switch(regexMethodNameDetector.group(1)) {
+                case "private":
+                    return Visibility.PRIVATE;
+                case "protected":
+                    return Visibility.PROTECTED;
+                case "abstract":
+                    return Visibility.ABSTRACT;
+            }
+        }
+        return Visibility.PUBLIC;
     }
 
     /***

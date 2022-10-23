@@ -2,9 +2,11 @@ package net.frootloop.qa.parser.result.internal;
 
 import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.parser.result.ParsedClass;
+import net.frootloop.qa.parser.result.ParsedMethod;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CodeTree implements StringParser {
@@ -75,6 +77,10 @@ public class CodeTree implements StringParser {
         return this.root.generateParsedClasses(packageName, filePath, importStatements);
     }
 
+    public ArrayList<ParsedMethod> getListOfMethods() {
+        return this.root.generateParsedMethods();
+    }
+
     public class BlockOfCode {
 
         public BlockOfCode parent = null;
@@ -86,6 +92,15 @@ public class CodeTree implements StringParser {
             int numChildren = children.size(); // i.e. degree
             for (BlockOfCode child : children) numChildren += child.getNumChildren();
             return numChildren;
+        }
+
+        public ArrayList<String> getDeclaredVariables() {
+            ArrayList<String> listOfVariables = new ArrayList<>();
+            for (String codeStatement:this.codeStatements)
+                if(StringParser.isVariableDeclaration(codeStatement))
+                    listOfVariables.addAll(Arrays.asList(StringParser.getDeclaredVariableNames(codeStatement)));
+
+            return listOfVariables;
         }
 
         public int getCyclomaticComplexity() {
@@ -102,7 +117,7 @@ public class CodeTree implements StringParser {
             return complexity;
         }
 
-        public ArrayList<ParsedClass> generateParsedClasses(String packageName, Path filePath, String[] importStatements) {
+        protected ArrayList<ParsedClass> generateParsedClasses(String packageName, Path filePath, String[] importStatements) {
             ArrayList<ParsedClass> listOfClasses = new ArrayList<>();
             root.generateParsedClasses(listOfClasses, packageName, filePath, importStatements);
             return listOfClasses;
@@ -110,17 +125,33 @@ public class CodeTree implements StringParser {
 
         private void generateParsedClasses(ArrayList<ParsedClass> listOfClasses, String packageName, Path filePath, String[] importStatements) {
 
+            // If the current block is a class:
             if(StringParser.isClassDeclaration(this.leadingStatement)) {
                 listOfClasses.add(new ParsedClass(this, packageName, importStatements, filePath));
                 packageName = packageName + "." + StringParser.getDeclaredClassName(this.leadingStatement);
             }
+
+            // Recursive call:
             for(BlockOfCode child: this.children)
                 child.generateParsedClasses(listOfClasses, packageName, filePath, importStatements);
         }
 
+        public ArrayList<ParsedMethod> generateParsedMethods() {
+            ArrayList<ParsedMethod> listOfMethods = new ArrayList<>();
+
+            return listOfMethods;
+        }
+
+
+        public String getCodeAsString() {
+            return this.toString("", false);
+        }
+
+
         public String getCodeAsString(boolean shouldBeautify) {
             return this.toString("", shouldBeautify);
         }
+
 
         public String toString() {
             return this.toString("", true);
@@ -131,8 +162,13 @@ public class CodeTree implements StringParser {
 
             if(shouldBeautify && StringParser.isClassDeclaration(this.leadingStatement)){
                 str += "\n\n" + indentation + "(CLASS: " + StringParser.getDeclaredClassName(leadingStatement);
+
                 List<String> inheritance = StringParser.getDeclaredClassInheritance(leadingStatement);
-                if(inheritance.size() > 0) str += ", with parents: " + String.join(",", inheritance);
+                if(inheritance.size() > 0) str += "\n" + indentation + " --> with parents: " + String.join(",", inheritance);
+
+                List<String> attributes = this.getDeclaredVariables();
+                if(attributes.size() > 0) str += "\n" + indentation + " --> with attributes: " + String.join(",", attributes);
+
                 str += ")";
             }
 

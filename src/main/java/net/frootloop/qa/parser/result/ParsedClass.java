@@ -14,8 +14,12 @@ public class ParsedClass extends CodeTree {
     private Visibility visibility;
     private String className;
     private int cyclomaticComplexity = 1;
+
+    private ArrayList<ParsedMethod> methods = new ArrayList<>();
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
+
+    private ArrayList<String> attributesDeclared = new ArrayList<>();
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -24,6 +28,10 @@ public class ParsedClass extends CodeTree {
         this.className = StringParser.getDeclaredClassName(this.root.leadingStatement);
         this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
+        this.methods = this.getListOfMethods();
+
+        // Set attributes:
+        this.attributesDeclared = this.root.getDeclaredVariables();
 
         // Check if the package name we're given refers to a class we'd be embedded in:
         if(StringParser.getPackageClass(packageName) != null) this.addParent(packageName);
@@ -33,13 +41,17 @@ public class ParsedClass extends CodeTree {
             this.addParent(this.getSignatureOfReferencedClass(name, importStatements));
 
         // Set references to other classes:
-        String codeOfClass = this.root.getCodeAsString(false).replace("\n", "");
+        String codeOfClass = this.root.getCodeAsString().replace("\n", "");
         for(String name : StringParser.getInitializedClassNames(codeOfClass))
             this.addReferenceTo(this.getSignatureOfReferencedClass(name, importStatements));
     }
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements){
         this(classCodeBlock,packageName,importStatements, null);
+    }
+
+    public void addMethod(ParsedMethod method) {
+        if(method != null) this.methods.add(method);
     }
 
     private String getSignatureOfReferencedClass(String className, String[] importStatements) {
