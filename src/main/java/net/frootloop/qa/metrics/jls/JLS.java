@@ -1,6 +1,5 @@
 package net.frootloop.qa.metrics.jls;
 
-import net.frootloop.qa.metrics.lcsec.LSEC;
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;

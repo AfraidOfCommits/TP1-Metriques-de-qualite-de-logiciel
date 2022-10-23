@@ -11,15 +11,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain.">
       <change afterPath="$PROJECT_DIR$/artifacts/JLS/JLS.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/LSEC/LSEC.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/NVLOC/NVLOC.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/artifacts/jars.zip" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcom/LCOM.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/jls/JLS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +29,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -73,13 +72,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path.">
-      <created>1664301665653</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1664301665653</updated>
     </task>
     <task id="LOCAL-00004" summary="Added clean-up for the file parser and finalized the datastructure. What's left is to generate a list of parsed classes from a file, and then to recursively generate a repo from a single folder path.">
       <created>1664301750780</created>
@@ -417,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666203961487</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain.">
+      <created>1666208276892</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1666208276892</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -432,7 +431,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="No more self-referrals. When adding the signature of a class or object being referenced to a ParsedClass, we now check if the signature is the same as the current class." />
     <MESSAGE value="Using proper Path class instead of strings. Will make input handling a lot more reliable." />
     <MESSAGE value="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!" />
     <MESSAGE value="Docstrings!" />
@@ -457,7 +455,8 @@
     <MESSAGE value="Typo" />
     <MESSAGE value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
     <MESSAGE value="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)" />
+    <MESSAGE value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
+    <option name="LAST_COMMIT_MESSAGE" value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
