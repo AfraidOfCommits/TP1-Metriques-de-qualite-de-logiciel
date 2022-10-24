@@ -34,18 +34,17 @@ public class ParsedMethod extends CodeTree {
         String code = this.root.getCodeAsString();
 
         // Get a list of our class' attributes that were referred to by using the "this.attributeName" format;
-        ArrayList<String> referencedAttributeList = StringParser.getObviousReferencedAttributes(code);
-        for(String attribute: referencedAttributeList) {
-            if(!this.homeClass.hasAttributeCalled(attribute))
-                referencedAttributeList.remove(attribute);
-        }
+        ArrayList<String> referencedAttributeList = new ArrayList<>();
+        for(String attribute: StringParser.getObviousReferencedAttributes(code))
+            if(this.homeClass.hasAttributeCalled(attribute))
+                referencedAttributeList.add(attribute);
 
         // Try to find other times the class
         ArrayList<String> declaredVariables = this.root.getDeclaredVariables();
         for(String word:StringParser.getLowerCaseWordsOf(code)) {
             if(this.homeClass.hasAttributeCalled(word)) {
                 boolean isDeclaredInMethod = declaredVariables.contains(word);
-                boolean isArgument = this.arguments.contains(word);
+                boolean isArgument = (this.arguments != null) && (this.arguments.contains(word));
                 if(!isArgument & isDeclaredInMethod) referencedAttributeList.add(word);
             }
         }

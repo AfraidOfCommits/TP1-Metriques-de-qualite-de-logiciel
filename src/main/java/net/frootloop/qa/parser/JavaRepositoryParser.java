@@ -1,5 +1,6 @@
 package net.frootloop.qa.parser;
 
+import net.frootloop.qa.parser.inputhandling.InputHandler;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
@@ -7,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JavaRepositoryParser {
+public class JavaRepositoryParser extends InputHandler {
 
     /***
      * Builds and returns a data container for information relating to the given repository, including

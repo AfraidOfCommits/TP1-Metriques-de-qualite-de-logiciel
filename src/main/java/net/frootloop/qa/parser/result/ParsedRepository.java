@@ -42,36 +42,39 @@ public class ParsedRepository {
     }
 
     public void addParsedFile(ParsedSourceFile parsedFile) {
-        for (ParsedClass c: parsedFile.getClasses()) {
-            classMap.put(c.getSignature(), c);
-            this.numClasses += 1;
+        for (ParsedClass c: parsedFile.getClasses())
+            this.addParsedClass(c);
 
-            // Add class' cyclomatic complexity:
-            this.cyclomaticComplexity += c.getCyclomaticComplexity() - 1;
-            if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < c.getCyclomaticComplexity())
-                mostComplexClass = c;
-
-            // Add class' LCOM:
-            this.averageLackOfCohesion = (c.getLackOfCohesionInMethods() + this.averageLackOfCohesion) / this.numClasses;
-            if(leastCohesiveClass == null || c.getLackOfCohesionInMethods() > this.leastCohesiveClass.getLackOfCohesionInMethods())
-                this.leastCohesiveClass = c;
-
-            // Add class' WMC:
-            this.averageWeightedMethodsPerClass = (c.getWeightedMethods() + this.averageWeightedMethodsPerClass) / this.numClasses;
-            if(classWithHighestMethodComplexity == null || c.getWeightedMethods() > this.classWithHighestMethodComplexity.getWeightedMethods())
-                this.classWithHighestMethodComplexity = c;
-
-            // Add class' CBO:
-
-            // Add class' DIT:
-
-        }
         this.numSourceFiles += 1;
         this.totalLines += parsedFile.getNumLines();
         this.totalLinesComments += parsedFile.getNumLinesComments();
         this.totalLinesEmpty += parsedFile.getNumLinesEmpty();
         this.totalLinesCode += parsedFile.getNumLinesCode();
         this.numAssertStatements += parsedFile.getNumAssertStatements();
+    }
+
+    private void addParsedClass(ParsedClass parsedClass) {
+        classMap.put(parsedClass.getSignature(), parsedClass);
+        this.numClasses += 1;
+
+        // (Complexity) Add class' cyclomatic complexity:
+        this.cyclomaticComplexity += parsedClass.getCyclomaticComplexity() - 1;
+        if(mostComplexClass == null || mostComplexClass.getCyclomaticComplexity() < parsedClass.getCyclomaticComplexity())
+            mostComplexClass = parsedClass;
+
+        // (Complexity) Add class' WMC:
+        this.averageWeightedMethodsPerClass = (parsedClass.getWeightedMethods() + this.averageWeightedMethodsPerClass) / this.numClasses;
+        if(classWithHighestMethodComplexity == null || parsedClass.getWeightedMethods() > this.classWithHighestMethodComplexity.getWeightedMethods())
+            this.classWithHighestMethodComplexity = parsedClass;
+
+        // (Modularity) Add class' LCOM:
+        this.averageLackOfCohesion = (parsedClass.getLackOfCohesionInMethods() + this.averageLackOfCohesion) / this.numClasses;
+        if(leastCohesiveClass == null || parsedClass.getLackOfCohesionInMethods() > this.leastCohesiveClass.getLackOfCohesionInMethods())
+            this.leastCohesiveClass = parsedClass;
+
+        // (Modularity) Add class' CBO:
+
+
     }
 
     public ParsedClass getClassDataOf(String signature){
@@ -205,5 +208,9 @@ public class ParsedRepository {
 
     public int getNumAssertStatements() {
         return numAssertStatements;
+    }
+
+    public Path getFilePath() {
+        return this.rootFilePath;
     }
 }

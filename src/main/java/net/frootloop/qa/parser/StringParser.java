@@ -250,8 +250,7 @@ public interface StringParser {
         while(regexMethodNameDetector.find())
 
             // If the method declaration has arguments, we add their names individually to the list:
-            if(regexMethodNameDetector.group(5) != null || regexMethodNameDetector.group(5).matches("\\s+")) {
-
+            if(regexMethodNameDetector.group(5) != null && !regexMethodNameDetector.group(5).matches("\\s*")) {
                 String[] arguments = regexMethodNameDetector.group(5).replaceAll("\\s*,\\s*", ",").split(",");
                 ArrayList<String> argumentNames = new ArrayList<>();
                 for (String arg:arguments)

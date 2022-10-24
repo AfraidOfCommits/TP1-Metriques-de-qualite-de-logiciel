@@ -11,8 +11,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathParser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcom/LCOM.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,13 +81,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Source file parse done, need to test it to be sure its behavior is all good.">
-      <created>1664417540756</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1664417540756</updated>
     </task>
     <task id="LOCAL-00009" summary="Tweaks to FileParser">
       <created>1664418145569</created>
@@ -415,7 +418,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666558638205</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention">
+      <created>1666558955212</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1666558955212</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -430,7 +440,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Same as last commit, but this time for File Parser as well as Repo Parser." />
     <MESSAGE value="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements." />
     <MESSAGE value="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser." />
     <MESSAGE value="- Added LSEC!" />
@@ -455,7 +464,8 @@
     <MESSAGE value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
     <MESSAGE value="Added LCOM1 and LCOM2 calculations in ParsedClass! Was a lot of work, and still needs testing." />
     <MESSAGE value="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository." />
+    <MESSAGE value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
+    <option name="LAST_COMMIT_MESSAGE" value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

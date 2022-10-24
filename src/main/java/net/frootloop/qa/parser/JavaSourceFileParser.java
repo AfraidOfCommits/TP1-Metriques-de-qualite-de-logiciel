@@ -1,10 +1,11 @@
 package net.frootloop.qa.parser;
 
+import net.frootloop.qa.parser.inputhandling.InputHandler;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
 import java.nio.file.Path;
 
-public class JavaSourceFileParser implements StringParser {
+public class JavaSourceFileParser extends InputHandler implements StringParser {
 
     /***
      * (Vocally) Reads a .java given .java file and parses its code to extract information about
