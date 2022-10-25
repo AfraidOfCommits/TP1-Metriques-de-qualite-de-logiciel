@@ -12,7 +12,7 @@ public class ParsedMethod extends CodeTree {
 
     private ParsedClass homeClass;
     private Visibility visibility;
-    private Boolean isStatic;
+    private Boolean isStatic, isAbstract;
     private String methodName;
     private String returnType;
 
@@ -26,6 +26,7 @@ public class ParsedMethod extends CodeTree {
         this.returnType = StringParser.getDeclaredMethodReturnType(blockOfCode.leadingStatement);
         this.arguments = StringParser.getDeclaredMethodArguments(blockOfCode.leadingStatement);
         this.isStatic = StringParser.isMethodDeclarationStatic(blockOfCode.leadingStatement);
+        this.isAbstract = StringParser.isMethodDeclarationAbstract(blockOfCode.leadingStatement);
     }
 
     public List<String> getReferencedAttributes() {
@@ -55,5 +56,25 @@ public class ParsedMethod extends CodeTree {
 
     public boolean isStatic() {
         return this.isStatic;
+    }
+
+    public String getMethodName() {
+        return this.methodName;
+    }
+
+    public boolean isPrivate() {
+        return this.visibility == Visibility.PRIVATE;
+    }
+
+    public String getMethodSignature() {
+        String methodSignature = "\n" + this.homeClass.getSignature() + " {\n    ";
+        if(this.visibility == Visibility.PUBLIC) methodSignature += "public ";
+        if(this.visibility == Visibility.PRIVATE) methodSignature += "private ";
+        if(this.visibility == Visibility.PROTECTED) methodSignature += "protected ";
+        if(this.isStatic) methodSignature += "static ";
+        if(this.isAbstract) methodSignature += "abstract ";
+
+        methodSignature += this.returnType + " " + this.methodName + "(" + String.join(", ", this.arguments) + ");\n}\n";
+        return methodSignature;
     }
 }

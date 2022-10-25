@@ -112,6 +112,23 @@ public class ParsedClass extends CodeTree {
         return number;
     }
 
+    /***
+     * Loops over the functions and methods within the class, and the first one found that isn't abstract
+     * and that shares the same name as input will be returned. As such, this method doesn't care about
+     * overloading.
+     *
+     * @param fctName Name of searched function or method, such as 'getFunctionByName'.
+     * @param isAskingFromOutsideScope Whether to consider private methods or not.
+     * @return (ParsedMethod) First function or method in the class with a matching name. Null if none.
+     */
+    public ParsedMethod getFunctionByName(String fctName, boolean isAskingFromOutsideScope) {
+        for(ParsedMethod m:this.methods) {
+            if (isAskingFromOutsideScope && m.isPrivate()) continue;
+            if (m.getMethodName() == fctName) return m;
+        }
+        return null;
+    }
+
     public String getSignature() {
         return packageName + "." + className;
     }

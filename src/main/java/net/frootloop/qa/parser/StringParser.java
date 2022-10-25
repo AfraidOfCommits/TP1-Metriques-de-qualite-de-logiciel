@@ -179,7 +179,8 @@ public interface StringParser {
     static Visibility getDeclaredClassVisibility(String codeStatement) {
         Matcher regexClassNameDetector = rxDeclaredClass.matcher(codeStatement);
         while(regexClassNameDetector.find()) {
-            if(regexClassNameDetector.group(2) == "abstract") return Visibility.ABSTRACT;
+            if(regexClassNameDetector.group(2) == "private") return Visibility.PRIVATE;
+            if(regexClassNameDetector.group(2) == "abstract") return Visibility.PROTECTED; // Functionally the same thing
         }
         return Visibility.PUBLIC;
     }
@@ -233,6 +234,10 @@ public interface StringParser {
         return codeStatement.matches("([^(]+\\s+)*static(\\s+[^(]+)*\\(.*\\)\\s*");
     }
 
+    static boolean isMethodDeclarationAbstract(String codeStatement) {
+        return codeStatement.matches("([^(]+\\s+)*abstract(\\s+[^(]+)*\\(.*\\)\\s*");
+    }
+
     static String getDeclaredMethodName(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
@@ -264,14 +269,14 @@ public interface StringParser {
     static Visibility getDeclaredMethodVisibility(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) {
-            if(regexMethodNameDetector.group(1) == null) return Visibility.PUBLIC;
+            if(regexMethodNameDetector.group(1) == null)
+                return Visibility.PUBLIC;
+
             switch(regexMethodNameDetector.group(1)) {
                 case "private":
                     return Visibility.PRIVATE;
                 case "protected":
                     return Visibility.PROTECTED;
-                case "abstract":
-                    return Visibility.ABSTRACT;
             }
         }
         return Visibility.PUBLIC;

@@ -11,10 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Refactoring. I might as well">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Created a proper main function for submission.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/Visibility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/Visibility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,9 +29,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -72,13 +74,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Fixed a good amount of bugs with the parser. Statements are now all properly parsed.">
-      <created>1664425362309</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1664425362309</updated>
     </task>
     <task id="LOCAL-00014" summary="BUUUUGS">
       <created>1664427409227</created>
@@ -416,7 +411,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666674994397</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Created a proper main function for submission.">
+      <created>1666708279774</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1666708279774</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +433,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Added NVLOC. I got mixed up with the names, LSEC was never added." />
     <MESSAGE value="Refactor and LSEC getting started." />
     <MESSAGE value="LSEC's logic is done, now I need to generate a CSV." />
     <MESSAGE value="LSEC and JLS should, theoretically, have CSV outputs now. God help me" />
@@ -456,7 +457,8 @@
     <MESSAGE value="- Added and tested FilePathParser and GitGudder. I can now search for files, search for local git repositories, and tell you how many commits were made in that repo's lifetime. Hoorah!!&#10;- UX added for searching for source files and repositories, with a cute lil' console progress bar. Teehee" />
     <MESSAGE value="Added some pretty, pretty cool input handling for fetching source files or local repositories from user responses. The project's coming together, so now what's left;&#10;  - 1 out of 2 measures of codebase maturity are implemented;&#10;  - 1 out of 2 measures of codebase testability are implemented;&#10;&#10;Next steps should go towards figuring out the two metrics I'm missing if I want to be able to provide an answer to 'Is this codebase easily maintanable? Why or why not?'" />
     <MESSAGE value="Refactoring. I might as well" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactoring. I might as well" />
+    <MESSAGE value="Created a proper main function for submission." />
+    <option name="LAST_COMMIT_MESSAGE" value="Created a proper main function for submission." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
