@@ -10,6 +10,12 @@ import java.util.concurrent.TimeUnit;
 
 public interface InputHandler extends GitGudder, FilePathHandler {
 
+    enum RequestType {
+        ANALYSE_SOURCE_FILE,
+        ANALYSE_GIT_REPO,
+        PRINT_SOURCE_FILE_CONTENTS
+    }
+
     static void wait(int milliseconds) {
         try {
             TimeUnit.MILLISECONDS.sleep(milliseconds);
@@ -18,7 +24,17 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         }
     }
 
-    static void promptWelcome() {
+    static String readInputLine() {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            return reader.readLine();
+        } catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static RequestType promptWelcome() {
 
         String weclome = "[ JAVA BOOTLEG SOFTWARE METRICS ]";
         String dots = new String(new char[weclome.length()]).replace('\0', '.');
@@ -33,16 +49,22 @@ public interface InputHandler extends GitGudder, FilePathHandler {
                 "\nparses and analyses the quality of Java source code. The goal is to measure complexity, " +
                 "\nmaintainability and more of uncompiled Java source files and repositories, and to do it " +
                 "\nall from scratch!");
-    }
 
-    static String readInputLine() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            return reader.readLine();
-        } catch(IOException e) {
-            e.printStackTrace();
-            return null;
+        System.out.println("\nPlease select an option:" +
+                "\n1 - Parse and analyse a local Java source file" +
+                "\n2 - Parse and analyse a local Java git repository" +
+                "\n3 - Print the parsed contents of a local Java source file");
+
+        String input = InputHandler.readInputLine();
+        while(!input.equals("1") && !input.equals("2")) {
+            System.out.println("Please select an option between either 1 and 2.\r");
+            input = InputHandler.readInputLine();
         }
+
+        if(input.equals("1")) return RequestType.ANALYSE_SOURCE_FILE;
+        if(input.equals("2")) return RequestType.ANALYSE_GIT_REPO;
+        if(input.equals("3")) return RequestType.PRINT_SOURCE_FILE_CONTENTS;
+        return RequestType.ANALYSE_GIT_REPO;
     }
 
     static Path promptForSourceFilePath() {
