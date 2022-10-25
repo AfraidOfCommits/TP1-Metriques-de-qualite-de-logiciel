@@ -21,7 +21,7 @@ public interface GitGudder extends FilePathParser {
         ArrayList<Path> locationsOfRepositories = new ArrayList<>();
         Path workingDirectoryRoot = FilePathParser.getWorkingDirectoryRoot();
 
-        System.out.println("\n\n[ SEARCHING FOR FILE ]\nSearching for local git repositories in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
+        System.out.println("\n[ SEARCHING FOR REPOSITORIES ]\nSearching for local git repositories in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
         try {
             Files.walkFileTree(workingDirectoryRoot,
                     new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
@@ -52,8 +52,8 @@ public interface GitGudder extends FilePathParser {
             System.out.println("[ ERROR ]\nSomething went horribly wrong when trying to find all repositories in interface method \'GitGudder.getLocalGitRepositories()\'.\n");
             e.printStackTrace();
         }
-
-        System.out.println("...Done! " + locationsOfRepositories.size() + " repositories have been found throughout the working directory.");
+        if(locationsOfRepositories.size() == 1) System.out.println("...Done! 1 git repository has been found throughout the working directory.");
+        else System.out.println("...Done! " + locationsOfRepositories.size() + " git repositories have been found throughout the working directory.");
         return locationsOfRepositories;
     }
 

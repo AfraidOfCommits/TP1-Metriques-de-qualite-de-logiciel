@@ -5,14 +5,14 @@ import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.parser.inputhandling.FilePathParser;
 import net.frootloop.qa.parser.inputhandling.GitGudder;
+import net.frootloop.qa.parser.inputhandling.InputHandler;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 // test;
 
-public class Test extends JavaSourceFileParser implements StringParser, GitGudder, FilePathParser {
+public class Test extends JavaSourceFileParser implements StringParser, GitGudder, FilePathParser, InputHandler {
 
     private String test1;
     private String test2;
@@ -39,9 +39,12 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
 
         //System.out.println(FilePathParser.getWorkingDirectoryRoot());
 
-        GitGudder.getLocalGitRepositories();
+        //GitGudder.getLocalGitRepositories();
 
-        Path testPath = Path.of("C:\\Users\\Alex\\Documents\\GitHub\\TP1-Metriques-de-qualite-de-logiciel");
+        InputHandler.promptWelcome();
+        InputHandler.promptForRepositoryPath();
+
+        //Path testPath = Path.of("C:\\Users\\Alex\\Documents\\GitHub\\TP1-Metriques-de-qualite-de-logiciel");
 
 
         if(1 != 2) return;
@@ -51,6 +54,7 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
         System.out.println("Number of classes: " + repo.getClasses().length);
         System.out.println("Number of tests: " + repo.getNumAssertStatements());
         System.out.println("Number of lines:\n    " + repo.getTotalLinesCode() + " are code, " + repo.getTotalLinesComments() + " are comments, " + repo.getTotalLinesEmpty() + " are empty.\n    " + repo.getTotalLines() + " in total.");
+
         System.out.println("\n\n[ CLASSES ]");
         System.out.println("Most Complex: " + repo.getMostComplexClass().getSignature() + " with a cyclomatic complexity of " + repo.getMostComplexClass().getCyclomaticComplexity() + ".");
         System.out.println("Most Referenced (Total): " + repo.getMostReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostReferencedClass()) + " other classes.");

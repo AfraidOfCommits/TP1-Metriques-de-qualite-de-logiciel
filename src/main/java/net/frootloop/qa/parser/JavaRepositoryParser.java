@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JavaRepositoryParser extends InputHandler {
+public class JavaRepositoryParser implements InputHandler {
 
     /***
      * Builds and returns a data container for information relating to the given repository, including
