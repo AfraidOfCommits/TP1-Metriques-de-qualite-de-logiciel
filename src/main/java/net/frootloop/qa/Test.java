@@ -9,7 +9,6 @@ import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 // test;
 
@@ -36,10 +35,14 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
         //Path root = new File("C:\\").toPath();
         //System.out.println("Path: "  + root.toString());
 
-        ArrayList<Path> occurrencesOf = FilePathParser.getPathsToFile("picture");
-        System.out.println();
+        //ArrayList<Path> occurrencesOf = FilePathParser.getPathsToFile("picture");
 
-        System.out.println(FilePathParser.getWorkingDirectoryRoot());
+        //System.out.println(FilePathParser.getWorkingDirectoryRoot());
+
+        GitGudder.getLocalGitRepositories();
+
+        Path testPath = Path.of("C:\\Users\\Alex\\Documents\\GitHub\\TP1-Metriques-de-qualite-de-logiciel");
+
 
         if(1 != 2) return;
         ParsedRepository repo = JavaRepositoryParser.parse("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel");

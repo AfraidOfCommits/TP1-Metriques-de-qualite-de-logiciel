@@ -11,19 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathParser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/metrics/lcom/LCOM.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,13 +74,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Tweaks to FileParser">
-      <created>1664418145569</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1664418145569</updated>
     </task>
     <task id="LOCAL-00010" summary="Added test for line count in Main.">
       <created>1664419351006</created>
@@ -425,7 +411,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666558955212</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository.">
+      <created>1666630553148</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1666630553148</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -440,7 +433,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements." />
     <MESSAGE value="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser." />
     <MESSAGE value="- Added LSEC!" />
     <MESSAGE value="- Improved LSEC!" />
@@ -465,7 +457,8 @@
     <MESSAGE value="Added LCOM1 and LCOM2 calculations in ParsedClass! Was a lot of work, and still needs testing." />
     <MESSAGE value="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository." />
     <MESSAGE value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
-    <option name="LAST_COMMIT_MESSAGE" value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
+    <MESSAGE value="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository." />
+    <option name="LAST_COMMIT_MESSAGE" value="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

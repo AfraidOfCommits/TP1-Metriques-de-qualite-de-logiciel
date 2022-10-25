@@ -1,4 +1,7 @@
 package net.frootloop.qa.parser.inputhandling;
 
-public class InputHandler {
+public class InputHandler implements GitGudder, FilePathParser {
+
+
+
 }

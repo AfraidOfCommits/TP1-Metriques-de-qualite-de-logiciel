@@ -18,9 +18,11 @@ public interface FilePathParser {
     }
 
     static Path getWorkingDirectoryRoot() {
-        String currentDirectory = FilePathParser.getWorkingDirectoryStr();
-        String subFolders = currentDirectory.replaceAll("(^(C:\\\\|\\\\[^\\\\]+)(([^\\\\]+)(\\\\)?)?(\\\\([^\\\\]+)?)?)", "");
-        return Path.of(currentDirectory.replace(subFolders, ""));
+        Path workingDir = FilePathParser.getWorkingDirectory();
+        while(workingDir.getParent() != null && workingDir.getParent().getParent() != null)
+            workingDir = workingDir.getParent();
+
+        return workingDir;
     }
 
     static ArrayList<Path> getPathsToFile(String fileName) {
@@ -30,8 +32,7 @@ public interface FilePathParser {
         System.out.println("\n\n[ SEARCHING FOR FILE ]\nSearching for occurences of file \'" + fileName + "\' in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
         try {
             Files.walkFileTree(workingDirectoryRoot,
-                    new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)),
-                    Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+                    new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
                 int progressBarDots = 0;
 
                 @Override
@@ -53,7 +54,7 @@ public interface FilePathParser {
             });
         }
         catch (IOException e) {
-            System.out.println("[ ERROR ]\nSomething went horribly wrong when trying to find all occurrences of " + fileName + " in abstract method \'FilePathParser.getPathsOfFile()\'.\n");
+            System.out.println("[ ERROR ]\nSomething went horribly wrong when trying to find all occurrences of " + fileName + " in interface method \'FilePathParser.getPathsOfFile()\'.\n");
             e.printStackTrace();
         }
 
