@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.inputhandling;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public interface InputHandler extends GitGudder, FilePathParser {
+public interface InputHandler extends GitGudder, FilePathHandler {
 
     static void wait(int milliseconds) {
         try {
@@ -69,7 +69,7 @@ public interface InputHandler extends GitGudder, FilePathParser {
         System.out.println("No Java source file found at location: " + input);
         System.out.println("Searching instead for files with similar names to: " + fileName);
 
-        ArrayList<Path> candidates = FilePathParser.getPathsToFile(fileName);
+        ArrayList<Path> candidates = FilePathHandler.getPathsToFile(fileName);
         if(candidates.size() == 0) {
             System.out.println("\nSorry, I couldn't find anything matching the input you've given me. Make sure to check your capitalization and spaces.\nLet's try again.");
             return InputHandler.promptForSourceFilePath();

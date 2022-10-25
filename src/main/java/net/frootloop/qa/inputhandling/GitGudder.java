@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.inputhandling;
 
 import net.frootloop.qa.parser.result.ParsedRepository;
 import org.eclipse.jgit.api.Git;
@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public interface GitGudder extends FilePathParser {
+public interface GitGudder extends FilePathHandler {
 
     static ArrayList<Path> getLocalGitRepositories() {
         ArrayList<Path> locationsOfRepositories = new ArrayList<>();
-        Path workingDirectoryRoot = FilePathParser.getWorkingDirectoryRoot();
+        Path workingDirectoryRoot = FilePathHandler.getWorkingDirectoryRoot();
 
         System.out.println("\n[ SEARCHING FOR REPOSITORIES ]\nSearching for local git repositories in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
         try {

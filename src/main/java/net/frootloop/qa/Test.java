@@ -3,16 +3,16 @@ package net.frootloop.qa;
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.StringParser;
-import net.frootloop.qa.parser.inputhandling.FilePathParser;
-import net.frootloop.qa.parser.inputhandling.GitGudder;
-import net.frootloop.qa.parser.inputhandling.InputHandler;
+import net.frootloop.qa.inputhandling.FilePathHandler;
+import net.frootloop.qa.inputhandling.GitGudder;
+import net.frootloop.qa.inputhandling.InputHandler;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.io.IOException;
 
 // test;
 
-public class Test extends JavaSourceFileParser implements StringParser, GitGudder, FilePathParser, InputHandler {
+public class Test extends JavaSourceFileParser implements StringParser, GitGudder, FilePathHandler, InputHandler {
 
     private String test1;
     private String test2;
@@ -35,9 +35,9 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
         //Path root = new File("C:\\").toPath();
         //System.out.println("Path: "  + root.toString());
 
-        //ArrayList<Path> occurrencesOf = FilePathParser.getPathsToFile("picture");
+        //ArrayList<Path> occurrencesOf = FilePathHandler.getPathsToFile("picture");
 
-        //System.out.println(FilePathParser.getWorkingDirectoryRoot());
+        //System.out.println(FilePathHandler.getWorkingDirectoryRoot());
 
         //GitGudder.getLocalGitRepositories();
 

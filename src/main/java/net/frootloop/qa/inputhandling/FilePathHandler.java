@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.inputhandling;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public interface FilePathParser {
+public interface FilePathHandler {
 
     static String getWorkingDirectoryStr() {
         return System.getProperty("user.dir");
@@ -18,7 +18,7 @@ public interface FilePathParser {
     }
 
     static Path getWorkingDirectoryRoot() {
-        Path workingDir = FilePathParser.getWorkingDirectory();
+        Path workingDir = FilePathHandler.getWorkingDirectory();
         while(workingDir.getParent() != null && workingDir.getParent().getParent() != null)
             workingDir = workingDir.getParent();
 
@@ -27,7 +27,7 @@ public interface FilePathParser {
 
     static ArrayList<Path> getPathsToFile(String fileName) {
         ArrayList<Path> locationsOfFile = new ArrayList<>();
-        Path workingDirectoryRoot = FilePathParser.getWorkingDirectoryRoot();
+        Path workingDirectoryRoot = FilePathHandler.getWorkingDirectoryRoot();
 
         System.out.println("\n[ SEARCHING FOR FILE ]\nSearching for occurences of file \'" + fileName + "\' in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
         try {
@@ -53,7 +53,7 @@ public interface FilePathParser {
             });
         }
         catch (IOException e) {
-            System.out.println("[ ERROR ]\nSomething went horribly wrong when trying to find all occurrences of " + fileName + " in interface method \'FilePathParser.getPathsOfFile()\'.\n");
+            System.out.println("[ ERROR ]\nSomething went horribly wrong when trying to find all occurrences of " + fileName + " in interface method \'FilePathHandler.getPathsOfFile()\'.\n");
             e.printStackTrace();
         }
         if(locationsOfFile.size() == 1) System.out.println("...Done! 1 occurrence has been found throughout the working directory.");
