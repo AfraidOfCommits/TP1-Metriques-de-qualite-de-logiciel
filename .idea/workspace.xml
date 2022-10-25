@@ -11,12 +11,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Created a proper main function for submission.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/Visibility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/Visibility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,13 +77,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00014" summary="BUUUUGS">
-      <created>1664427409227</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1664427409227</updated>
     </task>
     <task id="LOCAL-00015" summary="My relationship with regex is one of hate and toxic abuse">
       <created>1664427662567</created>
@@ -418,7 +414,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666708279774</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)">
+      <created>1666710256288</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1666710256288</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -433,7 +436,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactor and LSEC getting started." />
     <MESSAGE value="LSEC's logic is done, now I need to generate a CSV." />
     <MESSAGE value="LSEC and JLS should, theoretically, have CSV outputs now. God help me" />
     <MESSAGE value="COMPILEEEE" />
@@ -458,7 +460,8 @@
     <MESSAGE value="Added some pretty, pretty cool input handling for fetching source files or local repositories from user responses. The project's coming together, so now what's left;&#10;  - 1 out of 2 measures of codebase maturity are implemented;&#10;  - 1 out of 2 measures of codebase testability are implemented;&#10;&#10;Next steps should go towards figuring out the two metrics I'm missing if I want to be able to provide an answer to 'Is this codebase easily maintanable? Why or why not?'" />
     <MESSAGE value="Refactoring. I might as well" />
     <MESSAGE value="Created a proper main function for submission." />
-    <option name="LAST_COMMIT_MESSAGE" value="Created a proper main function for submission." />
+    <MESSAGE value="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

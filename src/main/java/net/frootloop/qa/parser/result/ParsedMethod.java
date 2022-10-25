@@ -10,13 +10,16 @@ import java.util.stream.Collectors;
 
 public class ParsedMethod extends CodeTree {
 
+    public int numDedicatedUnitTests = 0;
     private ParsedClass homeClass;
     private Visibility visibility;
-    private Boolean isStatic, isAbstract;
+    private Boolean isStatic, isAbstract, isTest;
     private String methodName;
     private String returnType;
-
+    private String[] assertStatements;
     private ArrayList<String> arguments;
+    private ArrayList<ParsedMethod> methodsReferencedInScope = new ArrayList<>();
+    private ArrayList<String> methodsNamesReferencedOutsideScope = new ArrayList<>();
 
     public ParsedMethod(BlockOfCode blockOfCode, ParsedClass parsedClass) {
         super(blockOfCode);
@@ -27,34 +30,55 @@ public class ParsedMethod extends CodeTree {
         this.arguments = StringParser.getDeclaredMethodArguments(blockOfCode.leadingStatement);
         this.isStatic = StringParser.isMethodDeclarationStatic(blockOfCode.leadingStatement);
         this.isAbstract = StringParser.isMethodDeclarationAbstract(blockOfCode.leadingStatement);
+        this.isTest = StringParser.isMethodDeclarationTest(blockOfCode.leadingStatement);
+        this.assertStatements = StringParser.getAssertStatementsOf(blockOfCode.getCodeAsString());
+        this.setReferencedMethods();
+    }
+
+    private void setReferencedMethods() {
+        for (String methodName : StringParser.getReferencedMethodNames(this.root.getCodeAsString())) {
+            ParsedMethod referenced = this.homeClass.getMethodByName(methodName, false);
+            if (referenced != null) {
+                if (!methodsReferencedInScope.contains(referenced)) methodsReferencedInScope.add(referenced);
+                else methodsNamesReferencedOutsideScope.add(methodName);
+            }
+        }
     }
 
     public List<String> getReferencedAttributes() {
-        if(isStatic) return new ArrayList<>();
+        if (isStatic) return new ArrayList<>();
 
         String code = this.root.getCodeAsString();
 
         // Get a list of our class' attributes that were referred to by using the "this.attributeName" format;
         ArrayList<String> referencedAttributeList = new ArrayList<>();
-        for(String attribute: StringParser.getObviousReferencedAttributes(code))
-            if(this.homeClass.hasAttributeCalled(attribute))
+        for (String attribute : StringParser.getObviousReferencedAttributes(code))
+            if (this.homeClass.hasAttributeCalled(attribute))
                 referencedAttributeList.add(attribute);
 
         // Try to find other times the class
         ArrayList<String> declaredVariables = this.root.getDeclaredVariables();
-        for(String word:StringParser.getLowerCaseWordsOf(code)) {
-            if(this.homeClass.hasAttributeCalled(word)) {
+        for (String word : StringParser.getLowerCaseWordsOf(code)) {
+            if (this.homeClass.hasAttributeCalled(word)) {
                 boolean isDeclaredInMethod = declaredVariables.contains(word);
                 boolean isArgument = (this.arguments != null) && (this.arguments.contains(word));
-                if(!isArgument & isDeclaredInMethod) referencedAttributeList.add(word);
+                if (!isArgument & isDeclaredInMethod) referencedAttributeList.add(word);
             }
         }
 
         // Filter out duplicates and empty matches, then return:
-        return referencedAttributeList.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());
+        return referencedAttributeList.stream().distinct().filter(item -> item != null && !item.isEmpty()).collect(Collectors.toList());
     }
 
     public boolean isStatic() {
+        return this.isStatic;
+    }
+
+    public boolean isAbstract() {
+        return this.isAbstract;
+    }
+
+    public boolean isTest() {
         return this.isStatic;
     }
 
@@ -68,13 +92,41 @@ public class ParsedMethod extends CodeTree {
 
     public String getMethodSignature() {
         String methodSignature = "\n" + this.homeClass.getSignature() + " {\n    ";
-        if(this.visibility == Visibility.PUBLIC) methodSignature += "public ";
-        if(this.visibility == Visibility.PRIVATE) methodSignature += "private ";
-        if(this.visibility == Visibility.PROTECTED) methodSignature += "protected ";
-        if(this.isStatic) methodSignature += "static ";
-        if(this.isAbstract) methodSignature += "abstract ";
+        if (this.visibility == Visibility.PUBLIC) methodSignature += "public ";
+        if (this.visibility == Visibility.PRIVATE) methodSignature += "private ";
+        if (this.visibility == Visibility.PROTECTED) methodSignature += "protected ";
+        if (this.isStatic) methodSignature += "static ";
+        if (this.isAbstract) methodSignature += "abstract ";
 
         methodSignature += this.returnType + " " + this.methodName + "(" + String.join(", ", this.arguments) + ");\n}\n";
         return methodSignature;
+    }
+
+    public ArrayList<ParsedMethod> getTestedMethodsOfClass() {
+        if (this.isTest) return this.methodsReferencedInScope;
+        else if (this.assertStatements == null || this.assertStatements.length == 0) return new ArrayList<>();
+
+        ArrayList<ParsedMethod> testedMethods = new ArrayList<>();
+        for (String unitTest : this.assertStatements) {
+            for (String name : StringParser.getReferencedMethodNames(unitTest)) {
+                for (ParsedMethod m : this.methodsReferencedInScope) {
+                    if (m.getMethodName().equals(name)) testedMethods.add(m);
+                    m.numDedicatedUnitTests++;
+                }
+            }
+        }
+        return testedMethods;
+    }
+
+    public ArrayList<String> getTestedMethodNamesOutsideClass() {
+        if(this.isTest) return this.methodsNamesReferencedOutsideScope;
+        else if(this.assertStatements == null || this.assertStatements.length == 0) return new ArrayList<>();
+
+        ArrayList<String> testedMethods = new ArrayList<>();
+        for(String unitTest: this.assertStatements)
+            for(String name : StringParser.getReferencedMethodNames(unitTest))
+                if(this.methodsNamesReferencedOutsideScope.contains(name)) testedMethods.add(name);
+
+        return testedMethods;
     }
 }

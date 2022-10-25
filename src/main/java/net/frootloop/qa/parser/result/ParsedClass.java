@@ -15,13 +15,12 @@ public class ParsedClass extends CodeTree {
     private Visibility visibility;
     private String className;
     private int cohesionValue, cyclomaticComplexity = 1;
-
     private ArrayList<ParsedMethod> methods = new ArrayList<>();
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
 
     private ArrayList<String> attributesDeclared;
-    private int lcom = -1, wmc = -1;
+    private int numAssertStatements, numTestMethods, lcom = -1, wmc = -1;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -73,10 +72,21 @@ public class ParsedClass extends CodeTree {
         return this.packageName + "." + className;
     }
 
-    private int getNumMethods() {
+    public int getNumMethods() {
         int numMethods = this.methods.size();
         for(ParsedMethod m: this.methods)
             if(m.isStatic()) numMethods--;
+        return numMethods;
+    }
+
+    public int getNumFunctions() {
+        return this.methods.size() - this.getNumMethods();
+    }
+
+    public int getNumAbstractMethods() {
+        int numMethods = this.methods.size();
+        for(ParsedMethod m: this.methods)
+            if(m.isAbstract()) numMethods--;
         return numMethods;
     }
 
@@ -112,19 +122,23 @@ public class ParsedClass extends CodeTree {
         return number;
     }
 
+    public ArrayList<ParsedMethod> getMethods() {
+        return this.methods;
+    }
+
     /***
      * Loops over the functions and methods within the class, and the first one found that isn't abstract
      * and that shares the same name as input will be returned. As such, this method doesn't care about
      * overloading.
      *
-     * @param fctName Name of searched function or method, such as 'getFunctionByName'.
+     * @param name Name of searched function or method, such as 'getFunctionByName'.
      * @param isAskingFromOutsideScope Whether to consider private methods or not.
      * @return (ParsedMethod) First function or method in the class with a matching name. Null if none.
      */
-    public ParsedMethod getFunctionByName(String fctName, boolean isAskingFromOutsideScope) {
+    public ParsedMethod getMethodByName(String name, boolean isAskingFromOutsideScope) {
         for(ParsedMethod m:this.methods) {
             if (isAskingFromOutsideScope && m.isPrivate()) continue;
-            if (m.getMethodName() == fctName) return m;
+            if (m.getMethodName() == name) return m;
         }
         return null;
     }
@@ -166,6 +180,28 @@ public class ParsedClass extends CodeTree {
 
     public ArrayList<String> getClassesReferencedDirectly() {
         return classesReferenced;
+    }
+
+    public ArrayList<ParsedMethod> getMethodsTestedInClass() {
+        ArrayList<ParsedMethod> testedMethods = new ArrayList<>();
+        for(ParsedMethod m: this.methods)
+            if(m.numDedicatedUnitTests > 0) testedMethods.add(m);
+        return testedMethods;
+    }
+
+    public ArrayList<String> getMethodNamesTestedOutsideClass() {
+        ArrayList<String> testedMethods = new ArrayList<>();
+        for(ParsedMethod m: this.methods)
+            testedMethods.addAll(m.getTestedMethodNamesOutsideClass());
+        return testedMethods;
+    }
+
+    public float getAverageUnitTestsPerMethod() {
+        float average = 0.0f;
+        for(ParsedMethod m : this.methods)
+            average += (float)m.numDedicatedUnitTests;
+
+        return average/ (float)(this.methods.size() - this.getNumAbstractMethods());
     }
 
     public int getCyclomatcComplexity() {return cyclomaticComplexity;}

@@ -1,11 +1,10 @@
 package net.frootloop.qa;
 
-import net.frootloop.qa.parser.JavaRepositoryParser;
-import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.inputhandling.FilePathHandler;
 import net.frootloop.qa.inputhandling.GitGudder;
 import net.frootloop.qa.inputhandling.InputHandler;
+import net.frootloop.qa.parser.JavaSourceFileParser;
+import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
 
 
         if(1 != 2) return;
-        ParsedRepository repo = JavaRepositoryParser.parse("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel");
+        ParsedRepository repo; // = JavaRepositoryParser.parse("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel");
         System.out.println("\n[ STATISTICS OF REPOSITORY ]");
         System.out.println("Total Cyclomatic Complexity of the Project: " + repo.getTotalCyclomaticComplexity());
         System.out.println("Number of classes: " + repo.getClasses().length);

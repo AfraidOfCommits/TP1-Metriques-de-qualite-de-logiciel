@@ -63,7 +63,6 @@ public class ParsedSourceFile {
             // STEP 3: FETCH DATA RELATING TO CODE STATEMENTS, SUCH AS PACKAGE, IMPORTS, ETC.
             sourceFileTextData = StringParser.getWithoutLineBreaks(sourceFileTextData);
             this.importStatements = StringParser.getImportStatementsOf(sourceFileTextData);
-            this.assertStatements = StringParser.getAssertStatementsOf(sourceFileTextData);
             this.packageName = StringParser.getPackageNameOf(sourceFileTextData);
 
             // STEP 4: BUILD CODE TREE AND CLASSES
@@ -113,5 +112,33 @@ public class ParsedSourceFile {
 
     public ParsedClass[] getClasses() {
         return classes.toArray(new ParsedClass[classes.size()]);
+    }
+
+    public ArrayList<String> getMethodsReferencedInUnitTests() {
+        ArrayList<String> methodNames = new ArrayList<>();
+
+        // Terribly optimized, but gets the job done
+        for(String unitTest : this.assertStatements) {
+            for(String name : StringParser.getReferencedMethodNames(unitTest))
+                if(!methodNames.contains(name)) methodNames.add(name);
+        }
+        return methodNames;
+    }
+
+    /***
+     * Loops over the functions and methods within the file, and the first one found that isn't abstract
+     * and that shares the same name as input will be returned. As such, this method doesn't care about
+     * overloading.
+     *
+     * @param name Name of searched function or method, such as 'getFunctionByName'.
+     * @param isAskingFromOutsideScope Whether to consider private methods or not.
+     * @return (ParsedMethod) First function or method in the class with a matching name. Null if none.
+     */
+    public ParsedMethod getMethodByName(String name, boolean isAskingFromOutsideScope) {
+        for(ParsedClass c : this.classes) {
+            ParsedMethod m = c.getMethodByName(name, isAskingFromOutsideScope);
+            if(m != null) return m;
+        }
+        return null;
     }
 }

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public interface StringParser {
 
-    Pattern rxAssertStatements = Pattern.compile("(^|;|})(assert\\([^;]*\\));");
+    Pattern rxAssertStatements = Pattern.compile("(^|;|})((Assert\\.)?(assert[A-Z]\\w+)\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)?\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
@@ -20,9 +20,8 @@ public interface StringParser {
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
     Pattern rxDeclaredClass = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
     Pattern rxDeclaredMethod = Pattern.compile("(?:((?:public|private|protected|static|final|native|synchronized|abstract|transient)+)\\s+)+(([$_\\w<>\\[\\]\\s]*)\\s+([\\$_\\w]+)\\(([^\\)]*)\\)?\\s*)");
-
     Pattern rxDeclaredVariable = Pattern.compile("(((public|private|protected|final)\\s+)?)(int|short|long|float|double|byte|boolean|char|[A-Z]\\w+(\\[\\s*\\]|\\.\\w+|<\\w+(\\s*,\\s*\\w+)*>)?)\\s+((\\w+)\\s*((\\s*,\\s*\\w+)*))($|[;=])");
-
+    Pattern rxReferencedMethod = Pattern.compile("[\\. ](\\w[A-z_]*)\\(");
     Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
     Pattern rxLowerCaseWords = Pattern.compile("(?=[^\\w]([a-z]\\w+)[^\\(\\{\\w])");
 
@@ -238,6 +237,10 @@ public interface StringParser {
         return codeStatement.matches("([^(]+\\s+)*abstract(\\s+[^(]+)*\\(.*\\)\\s*");
     }
 
+    static boolean isMethodDeclarationTest(String codeStatement) {
+        return codeStatement.matches("^(@[A-Z]\\w+\\s)*@Test[\\s\\n]*.*");
+    }
+
     static String getDeclaredMethodName(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
@@ -280,6 +283,16 @@ public interface StringParser {
             }
         }
         return Visibility.PUBLIC;
+    }
+
+    static ArrayList<String> getReferencedMethodNames(String unitTest) {
+        ArrayList<String> methodNames = new ArrayList<>();
+        Matcher regexReferencedMethodDetector = rxReferencedMethod.matcher(unitTest);
+        while(regexReferencedMethodDetector.find())
+            if(regexReferencedMethodDetector.group(1) != null && !methodNames.contains(regexReferencedMethodDetector.group(1)))
+                methodNames.add(regexReferencedMethodDetector.group(1));
+
+        return methodNames;
     }
 
     static List<String> getLowerCaseWordsOf(String code) {

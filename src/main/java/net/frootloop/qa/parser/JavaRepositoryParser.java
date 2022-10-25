@@ -1,6 +1,5 @@
 package net.frootloop.qa.parser;
 
-import net.frootloop.qa.inputhandling.InputHandler;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
@@ -8,32 +7,24 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JavaRepositoryParser implements InputHandler {
+public class JavaRepositoryParser {
 
-    /***
-     * Builds and returns a data container for information relating to the given repository, including
-     * class references, number of lines, etc.
-     *
-     * @param pathString : (String) directory from which .java files will be analyzed and parsed.
-     * @return ParsedRepository instance
-     */
-    public static ParsedRepository parse(String pathString){
-        Path path = Path.of(pathString.replace('/', '\\').replace("\"", ""));
-        System.out.println("[ Parsing Repository ] \nLocation given: " + path.toFile().getAbsolutePath() + "\n");
-        return parse(path);
+    public void analyseRepositoryAt(Path directory) {
+        ParsedRepository repo = JavaRepositoryParser.parse(directory);
+
     }
 
     /***
      * Builds and returns a data container for information relating to the given repository, including
      * class references, number of lines, etc.
      *
-     * @param filePath : (Path) directory from which .java files will be analyzed and parsed.
+     * @param directory : (Path) directory from which .java files will be analyzed and parsed.
      * @return ParsedRepository instance
      */
-    public static ParsedRepository parse(Path filePath){
-        ParsedRepository repo = new ParsedRepository(filePath);
-        JavaRepositoryParser.walk(filePath, repo);
-        repo.buildReferenceMaps();
+    private static ParsedRepository parse(Path directory){
+        ParsedRepository repo = new ParsedRepository(directory);
+        JavaRepositoryParser.walk(directory, repo);
+        repo.buildReferences();
         return repo;
     }
 
