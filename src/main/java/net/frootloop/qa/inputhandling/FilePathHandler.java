@@ -25,6 +25,12 @@ public interface FilePathHandler {
         return workingDir;
     }
 
+    static Path getSystemRoot() {
+        Path rootDir = FilePathHandler.getWorkingDirectory();
+        while(rootDir.getParent() != null) rootDir = rootDir.getParent();
+        return rootDir;
+    }
+
     static ArrayList<Path> getPathsToFile(String fileName) {
         ArrayList<Path> locationsOfFile = new ArrayList<>();
         Path workingDirectoryRoot = FilePathHandler.getWorkingDirectoryRoot();

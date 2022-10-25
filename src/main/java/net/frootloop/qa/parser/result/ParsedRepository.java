@@ -7,7 +7,6 @@ public class ParsedRepository {
 
     private Path rootFilePath;
     private int totalLines, totalLinesComments, totalLinesEmpty, totalLinesCode, numAssertStatements, numSourceFiles, numMethods, numClasses, cyclomaticComplexity = 1;
-    private float averageLackOfCohesion, averageWeightedMethodsPerClass, averageUnitTestsPerMethod;
     private ParsedClass mostComplexClass, mostReferencedClass, mostDirectlyReferencedClass, mostIndirectlyReferencedClass, leastCohesiveClass, classWithHighestMethodComplexity;
     private int mostAmountReferences, mostAmountDirectReferences, mostAmountIndirectReferences;
 
@@ -52,7 +51,6 @@ public class ParsedRepository {
         this.totalLinesComments += parsedFile.getNumLinesComments();
         this.totalLinesEmpty += parsedFile.getNumLinesEmpty();
         this.totalLinesCode += parsedFile.getNumLinesCode();
-        this.numAssertStatements += parsedFile.getNumAssertStatements();
     }
 
     private void addParsedClass(ParsedClass parsedClass) {
@@ -61,6 +59,7 @@ public class ParsedRepository {
         // Add to repo's stats (NOM, NOC):
         this.numClasses += 1;
         this.numMethods += parsedClass.getNumMethods() + parsedClass.getNumFunctions();
+        this.numAssertStatements += parsedClass.getNumAssertStatements();
 
         // (Complexity) Add class' cyclomatic complexity:
         this.cyclomaticComplexity += parsedClass.getCyclomaticComplexity() - 1;
@@ -68,18 +67,12 @@ public class ParsedRepository {
             mostComplexClass = parsedClass;
 
         // (Complexity) Add class' WMC:
-        this.averageWeightedMethodsPerClass = (float)(parsedClass.getWeightedMethods() + this.averageWeightedMethodsPerClass) / (float)this.numClasses;
         if(classWithHighestMethodComplexity == null || parsedClass.getWeightedMethods() > this.classWithHighestMethodComplexity.getWeightedMethods())
             this.classWithHighestMethodComplexity = parsedClass;
 
         // (Modularity) Add class' LCOM:
-        this.averageLackOfCohesion = (float)(parsedClass.getLackOfCohesionInMethods() + this.averageLackOfCohesion) / (float)this.numClasses;
         if(leastCohesiveClass == null || parsedClass.getLackOfCohesionInMethods() > this.leastCohesiveClass.getLackOfCohesionInMethods())
             this.leastCohesiveClass = parsedClass;
-
-        // (Modularity) Add class' CBO:
-
-
     }
 
     public ParsedClass getClassDataOf(String signature){
@@ -101,11 +94,6 @@ public class ParsedRepository {
                 }
             }
         }
-
-        // Finally, get the average tests per class:
-        for (ParsedClass c : this.classMap.values())
-            this.averageUnitTestsPerMethod += c.getAverageUnitTestsPerMethod();
-        this.averageUnitTestsPerMethod /= (float)this.numMethods;
     }
 
     private void incrementNumReferencesTotal(String classSignature) {
@@ -204,6 +192,10 @@ public class ParsedRepository {
         return mostIndirectlyReferencedClass;
     }
 
+    public ParsedClass getLeastCohesiveClass() {
+        return leastCohesiveClass;
+    }
+
     public int getTotalCyclomaticComplexity() {
         return cyclomaticComplexity;
     }
@@ -232,15 +224,60 @@ public class ParsedRepository {
         return this.rootFilePath;
     }
 
-    public float getAverageLackOfCohesion() {
-        return averageLackOfCohesion;
+    public float getAverageLackOfCohesionInMethods() {
+        float average = 0;
+        for (ParsedClass c : this.classMap.values())
+            average += c.getLackOfCohesionInMethods();
+
+        return average / (float)this.numClasses;
     }
 
     public float getAverageUnitTestsPerMethod() {
-        return averageUnitTestsPerMethod;
+        float average = 0.0f;
+        for (ParsedClass c : this.classMap.values())
+            average += c.getAverageUnitTestsPerMethod();
+
+        return average/  (float)this.numMethods;
     }
 
-    public float getAverageWeightedMethodsPerClass() {
-        return averageWeightedMethodsPerClass;
+    public float getAverageWeightedMethods() {
+        float average = 0;
+        for (ParsedClass c : this.classMap.values())
+            average += c.getWeightedMethods();
+
+        return average / (float)this.numClasses;
+    }
+
+    public float getPercentageMethodsUntested() {
+        int numMethodsUntested = 0;
+        for (ParsedClass c : this.classMap.values())
+            for(ParsedMethod m : c.getMethods())
+                if(m.numDedicatedUnitTests == 0) numMethodsUntested++;
+
+        return 100 * (float)numMethodsUntested / (float)this.numMethods;
+    }
+
+    public float getPercentageCodeDedicatedForTests() {
+        float percentage = 0;
+        for (ParsedClass c : this.classMap.values())
+            percentage += c.getPercentageCodeDedicatedToTests();
+
+        return percentage / (float)this.numClasses;
+    }
+
+    public float getCommentDensity() {
+        return (float)this.totalLinesComments / (float)(this.totalLinesCode + totalLinesComments);
+    }
+
+    public int getNumClasses() {
+        return numClasses;
+    }
+
+    public int getNumMethods() {
+        return numMethods;
+    }
+
+    public int getNumSourceFiles(){
+        return numSourceFiles;
     }
 }

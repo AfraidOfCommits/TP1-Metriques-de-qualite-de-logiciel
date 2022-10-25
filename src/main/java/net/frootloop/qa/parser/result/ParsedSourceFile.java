@@ -26,8 +26,6 @@ public class ParsedSourceFile {
      */
     private ArrayList<ParsedClass> classes = new ArrayList<>();
 
-    private String[] assertStatements;
-
     private String[] importStatements;
 
 
@@ -106,23 +104,8 @@ public class ParsedSourceFile {
         return filePath;
     }
 
-    public int getNumAssertStatements() {
-        return assertStatements.length;
-    }
-
     public ParsedClass[] getClasses() {
         return classes.toArray(new ParsedClass[classes.size()]);
-    }
-
-    public ArrayList<String> getMethodsReferencedInUnitTests() {
-        ArrayList<String> methodNames = new ArrayList<>();
-
-        // Terribly optimized, but gets the job done
-        for(String unitTest : this.assertStatements) {
-            for(String name : StringParser.getReferencedMethodNames(unitTest))
-                if(!methodNames.contains(name)) methodNames.add(name);
-        }
-        return methodNames;
     }
 
     /***

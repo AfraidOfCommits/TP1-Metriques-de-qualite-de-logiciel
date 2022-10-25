@@ -5,7 +5,6 @@ import net.frootloop.qa.inputhandling.GitGudder;
 import net.frootloop.qa.inputhandling.InputHandler;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.StringParser;
-import net.frootloop.qa.parser.result.ParsedRepository;
 
 import java.io.IOException;
 
@@ -45,9 +44,9 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
 
         //Path testPath = Path.of("C:\\Users\\Alex\\Documents\\GitHub\\TP1-Metriques-de-qualite-de-logiciel");
 
-
+        /*
         if(1 != 2) return;
-        ParsedRepository repo; // = JavaRepositoryParser.parse("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel");
+        ParsedRepository repo = JavaRepositoryParser.parse("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel");
         System.out.println("\n[ STATISTICS OF REPOSITORY ]");
         System.out.println("Total Cyclomatic Complexity of the Project: " + repo.getTotalCyclomaticComplexity());
         System.out.println("Number of classes: " + repo.getClasses().length);
@@ -60,6 +59,7 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
         System.out.println("Most Referenced (Directly): " + repo.getMostDirectlyReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostDirectlyReferencedClass()) + " other classes.");
         System.out.println("Most Referenced (Indirectly): " + repo.getMostIndirectlyReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostIndirectlyReferencedClass()) + " other classes.");
 
-        System.out.println(GitGudder.getCommitCountTo(repo.getFilePath()));
+
+        System.out.println(GitGudder.getCommitCountTo(repo.getFilePath()));*/
     }
 }

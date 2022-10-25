@@ -19,11 +19,11 @@ public interface GitGudder extends FilePathHandler {
 
     static ArrayList<Path> getLocalGitRepositories() {
         ArrayList<Path> locationsOfRepositories = new ArrayList<>();
-        Path workingDirectoryRoot = FilePathHandler.getWorkingDirectoryRoot();
+        Path directoryRoot = FilePathHandler.getSystemRoot();
 
-        System.out.println("\n[ SEARCHING FOR REPOSITORIES ]\nSearching for local git repositories in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
+        System.out.println("\n[ SEARCHING FOR REPOSITORIES ]\nSearching for local git repositories in directory \'" + directoryRoot + "\'\nSit tight! This may take up to a minute or two.");
         try {
-            Files.walkFileTree(workingDirectoryRoot,
+            Files.walkFileTree(directoryRoot,
                     new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
                         int progressBarDots = 0;
 

@@ -20,7 +20,7 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> classesReferenced = new ArrayList<>();
 
     private ArrayList<String> attributesDeclared;
-    private int numAssertStatements, numTestMethods, lcom = -1, wmc = -1;
+    private int numAssertStatements, lcom = -1, wmc = -1;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -31,9 +31,13 @@ public class ParsedClass extends CodeTree {
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
 
         // Get list of methods"
-        for (BlockOfCode child: this.root.children)
-            if(StringParser.isMethodDeclaration(child.leadingStatement))
-                this.methods.add(new ParsedMethod(child, this));
+        for (BlockOfCode child: this.root.children) {
+            if (StringParser.isMethodDeclaration(child.leadingStatement)) {
+                ParsedMethod method = new ParsedMethod(child, this);
+                this.methods.add(method);
+                this.numAssertStatements += method.getNumAssertStatements();
+            }
+        }
 
         // Set attributes:
         this.attributesDeclared = this.root.getDeclaredVariables();
@@ -197,12 +201,28 @@ public class ParsedClass extends CodeTree {
     }
 
     public float getAverageUnitTestsPerMethod() {
-        float average = 0.0f;
-        for(ParsedMethod m : this.methods)
-            average += (float)m.numDedicatedUnitTests;
+        int numConcreteMethods = this.methods.size() - this.getNumAbstractMethods();
+        if(numConcreteMethods == 0) return 0.0f;
 
-        return average/ (float)(this.methods.size() - this.getNumAbstractMethods());
+        float average = 0.0f;
+        for(ParsedMethod m : this.methods) average += (float)m.numDedicatedUnitTests;
+        return average / (float)numConcreteMethods;
     }
 
-    public int getCyclomatcComplexity() {return cyclomaticComplexity;}
+    public float getPercentageCodeDedicatedToTests() {
+        int numStatementsForTesting = 0;
+        for(ParsedMethod m : this.methods) {
+            if (m.isTest()) numStatementsForTesting += m.getNumStatements();
+            else numStatementsForTesting += m.getNumAssertStatements();
+        }
+        return 100 * (float)numStatementsForTesting / (float)root.getNumStatements();
+    }
+
+    public int getCyclomatcComplexity() {
+        return cyclomaticComplexity;
+    }
+
+    public int getNumAssertStatements() {
+        return this.numAssertStatements;
+    }
 }

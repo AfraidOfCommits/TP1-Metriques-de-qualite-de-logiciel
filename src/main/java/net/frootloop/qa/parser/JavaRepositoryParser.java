@@ -1,5 +1,6 @@
 package net.frootloop.qa.parser;
 
+import net.frootloop.qa.inputhandling.GitGudder;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
@@ -9,8 +10,38 @@ import java.nio.file.Path;
 
 public class JavaRepositoryParser {
 
-    public void analyseRepositoryAt(Path directory) {
+    public static void analyseRepositoryAt(Path directory) {
+
+        System.out.println("\n[ PARSING LOCAL REPOSITORY ]\nParsing the source files of repository at: \'" + directory + "\'...");
         ParsedRepository repo = JavaRepositoryParser.parse(directory);
+        System.out.println("...Done!");
+
+        System.out.println("\n[ LINKING ]\nBuilding the reference maps between methods, classes, functions...");
+        repo.buildReferences();
+        System.out.println("...Done!");
+
+        System.out.println("\n============================\n          ANALYSIS          \n============================");
+
+        System.out.println("\n[ STATISTICS OF REPOSITORY ]");
+        System.out.println("Consists of " + repo.getNumSourceFiles() + " Source Files, " + repo.getNumClasses() + " Classes, " + repo.getNumMethods() + " Methods, " + repo.getNumAssertStatements() + " Unit Tests.");
+        System.out.println("Number of lines: " + repo.getTotalLinesCode() + " are code, " + repo.getTotalLinesComments() + " are comments, " + repo.getTotalLinesEmpty() + " are empty.\nIn total: " + repo.getTotalLines() + " lines.");
+
+        System.out.println("\n[ COMPLEXITY ]");
+        System.out.println("Percentage of code dedicated to documentation (CD): " + String.format("%.1f", 100 * repo.getCommentDensity()) + "%" );
+        System.out.println("Weighted Methods per Class (WMC): " + String.format("%.1f", repo.getAverageWeightedMethods()));
+        System.out.println("The most complex class is \'" + repo.getMostComplexClass().getSignature() + "\', with a WMC of " + repo.getMostComplexClass().getWeightedMethods() + " and a total cyclomatic complexity of " + repo.getMostComplexClass().getCyclomatcComplexity() + ".");
+
+        System.out.println("\n[ MODULARITY ]");
+        System.out.println("Average Lack Of Cohesion in Methods (LCOM): " + String.format("%.1f", repo.getAverageLackOfCohesionInMethods()));
+        System.out.println("The least cohesive class is \'" + repo.getLeastCohesiveClass().getSignature() + "\', with an LCOM of " + repo.getLeastCohesiveClass().getLackOfCohesionInMethods() + ".");
+
+        System.out.println("\n[ MATURITY ]");
+        System.out.println("Commits made to the project: " + GitGudder.getCommitCountTo(repo.getFilePath()));
+
+        System.out.println("\n[ RELIABILITY ]");
+        System.out.println("Average Unit Tests per method : " + repo.getAverageUnitTestsPerMethod());
+        System.out.println("Percentage of non-abstract methods not tested (PMNT) : " + String.format("%.1f", repo.getPercentageMethodsUntested()) + "%");
+        System.out.println("Percentage of code statements dedicated to tests : " + String.format("%.1f", repo.getPercentageCodeDedicatedForTests()) + "%  (Including \'@Test\' Functions)");
 
     }
 

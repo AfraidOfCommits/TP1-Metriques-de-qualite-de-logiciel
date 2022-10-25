@@ -1,6 +1,7 @@
 package net.frootloop.qa;
 
 import net.frootloop.qa.inputhandling.InputHandler;
+import net.frootloop.qa.parser.JavaRepositoryParser;
 
 import java.nio.file.Path;
 
@@ -18,6 +19,7 @@ public class SoftwareMetricsMain implements InputHandler {
 
         } else if (userIntention == RequestType.ANALYSE_GIT_REPO) {
             Path repositoryPath = InputHandler.promptForRepositoryPath();
+            JavaRepositoryParser.analyseRepositoryAt(repositoryPath);
         }
     }
 }

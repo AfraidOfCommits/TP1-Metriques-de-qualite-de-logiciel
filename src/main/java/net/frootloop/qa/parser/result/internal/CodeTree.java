@@ -89,6 +89,12 @@ public class CodeTree implements StringParser {
             return numChildren;
         }
 
+        public int getNumStatements(){
+            int numStatements = 1 + this.codeStatements.size();
+            for (BlockOfCode child : children) numStatements += child.getNumStatements();
+            return numStatements;
+        }
+
         public ArrayList<String> getDeclaredVariables() {
             ArrayList<String> listOfVariables = new ArrayList<>();
             for (String codeStatement:this.codeStatements)

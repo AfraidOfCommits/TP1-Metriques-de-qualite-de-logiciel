@@ -127,7 +127,6 @@ public interface InputHandler extends GitGudder, FilePathHandler {
             return null;
         }
         else if(candidates.size() == 1) {
-            System.out.println("\nI've found the following git repo: \'" + candidates.get(0) + "\'");
             return candidates.get(0);
         }
         else {

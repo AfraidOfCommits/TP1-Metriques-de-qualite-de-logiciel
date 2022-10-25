@@ -79,7 +79,7 @@ public class ParsedMethod extends CodeTree {
     }
 
     public boolean isTest() {
-        return this.isStatic;
+        return this.isTest;
     }
 
     public String getMethodName() {
@@ -128,5 +128,14 @@ public class ParsedMethod extends CodeTree {
                 if(this.methodsNamesReferencedOutsideScope.contains(name)) testedMethods.add(name);
 
         return testedMethods;
+    }
+
+    public int getNumAssertStatements() {
+        if(this.assertStatements == null) return 0;
+        return this.assertStatements.length;
+    }
+
+    public int getNumStatements() {
+        return this.root.getNumStatements();
     }
 }
