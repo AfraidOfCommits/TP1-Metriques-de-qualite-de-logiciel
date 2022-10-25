@@ -25,9 +25,13 @@ public class CodeTree implements StringParser {
         String statement;
         int statementIndex = 0;
 
+        BlockOfCode newBlock= new BlockOfCode();
         BlockOfCode currentCodeBlock = new BlockOfCode();
         this.root = currentCodeBlock;
         this.root.leadingStatement = codeStatements[0];
+
+        ArrayList<BlockOfCode> blocksBackup = new ArrayList<>();
+        blocksBackup.add(this.root);
 
         for(int i = 0; i < cleanSourceFileTextData.length(); i++) {
             char c = cleanSourceFileTextData.charAt(i);
@@ -38,8 +42,11 @@ public class CodeTree implements StringParser {
                 else statement = "";
 
                 if(c == '{') {
+
                     // Start a new code block, imbedded in the previous one:
-                    BlockOfCode newBlock = new BlockOfCode();
+                    newBlock = new BlockOfCode();
+                    blocksBackup.add(newBlock);
+
                     currentCodeBlock.children.add(newBlock);
                     newBlock.parent = currentCodeBlock;
                     currentCodeBlock = newBlock;
@@ -49,10 +56,13 @@ public class CodeTree implements StringParser {
                 }
                 else {
                     // Add the statement to the current block of code:
-                    if(!statement.matches("\\s*")) currentCodeBlock.codeStatements.add(statement);
+                    if(!statement.matches("\\s*"))
+                        currentCodeBlock.codeStatements.add(statement);
 
                     // End the current code block:
-                    if(c == '}') currentCodeBlock = currentCodeBlock.parent;
+                    if(currentCodeBlock == null) System.out.println("WTF!! " + this.root.getCodeAsString());
+                    if(c == '}')
+                        currentCodeBlock = currentCodeBlock.parent;
                 }
             }
         }

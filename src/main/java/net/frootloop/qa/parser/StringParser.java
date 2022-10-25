@@ -3,14 +3,12 @@ package net.frootloop.qa.parser;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface StringParser {
-
     Pattern rxAssertStatements = Pattern.compile("(^|;|})((Assert\\.)?(assert[A-Z]\\w+)\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)?\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
@@ -19,7 +17,7 @@ public interface StringParser {
     Pattern rxClassVariable = Pattern.compile("(^|\\s+|\\(|,)([A-Z]\\w*)\\s*(<(([A-Z]\\w*)(,([A-Z]\\w*))*)>)?\\s+(\\w*)\\s*(,\\s*(\\w+))?(,\\s*(\\w+))?(,\\s*(\\w+))*\\s*(,|=|\\*=|\\-=|\\+=|\\|!=|\\^=|;|\\{|\\))");
     Pattern rxInheritedClasses = Pattern.compile("(extends|implements)\\s(\\w+((\\s)*,\\s\\w+)*)*");
     Pattern rxDeclaredClass = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
-    Pattern rxDeclaredMethod = Pattern.compile("(?:((?:public|private|protected|static|final|native|synchronized|abstract|transient)+)\\s+)+(([$_\\w<>\\[\\]\\s]*)\\s+([\\$_\\w]+)\\(([^\\)]*)\\)?\\s*)");
+    Pattern rxDeclaredMethod = Pattern.compile("(@[A-Z]\\w+)?(?:((?:public|private|protected|static|final|native|synchronized|abstract|transient)+)\\s+)+(([$_\\w<>\\[\\]\\s]*)\\s+([\\$_\\w]+)\\(([^\\)]*)\\)?\\s*)");
     Pattern rxDeclaredVariable = Pattern.compile("(((public|private|protected|final)\\s+)?)(int|short|long|float|double|byte|boolean|char|[A-Z]\\w+(\\[\\s*\\]|\\.\\w+|<\\w+(\\s*,\\s*\\w+)*>)?)\\s+((\\w+)\\s*((\\s*,\\s*\\w+)*))($|[;=])");
     Pattern rxReferencedMethod = Pattern.compile("[\\. ](\\w[A-z_]*)\\(");
     Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
@@ -64,15 +62,50 @@ public interface StringParser {
 
     static String getWithGenericStringValues(String inputStr) {
         inputStr = inputStr.replaceAll("\\\'(.)\\\'", "\'char\'");
-        return inputStr.replaceAll("\\\"(\\/\\\"|.)*\\\"", "text");
+        return inputStr.replaceAll("\\\"([^\\\"]*(\\\\\\\")*)*\\\"", "text");
     }
 
     static String getWithoutComments(String inputStr) {
-        // Order is important here:
-        inputStr = inputStr.replaceAll("\\/\\/.*(\n|$)", ""); // Remove single-line
-        inputStr = inputStr.replaceAll("\\/\\*([^\\*]|\\*[^\\/]|[^\\*]\\/)*\\*\\/", ""); // Remove multiline comments & docstrings
-        inputStr = inputStr.replaceAll("\\/\\/((?!\\*\\/).)*\n", "\n"); // Remove comments appended to code (like this one!)
-        return inputStr.replaceAll("( |\t);", ";");
+        inputStr = getWithoutSingleLineComments(inputStr);
+        inputStr = getWithoutAppendedComments(inputStr);
+        inputStr = getWithoutDocstrings(inputStr);
+        return inputStr;
+    }
+
+    static String getWithoutSingleLineComments(String inputStr) {
+        return inputStr.replaceAll("\\/\\/.*(\n|$)", ""); // Remove single-line
+    }
+
+    static String getWithoutDocstrings(String inputStr) {
+        // Remove multiline comments & docstrings
+        // Avoid a stack overflow error! Some source files are so ridiculously well documented
+        // that using a replaceAll call takes up the entire goddamn stack.
+        if (inputStr.length() < 4096)
+            return inputStr.replaceAll("\\/\\*([^\\*]|\\*[^\\/]|[^\\*]\\/)*\\*\\/", "");
+
+        String withoutDocstrings = "";
+        int startOfCode = 0, startOfDocstring;
+        do {
+
+            // Find the start of a /* docstring:
+            startOfDocstring = inputStr.indexOf("/*", startOfCode);
+            if(startOfDocstring == -1) startOfDocstring = inputStr.length() - 1;
+
+            // Append:
+            withoutDocstrings += inputStr.substring(startOfCode, startOfDocstring);
+
+            // Find the end of the */ docstring:
+            startOfCode = inputStr.indexOf("*/", startOfDocstring);
+            if(startOfCode == -1) startOfCode = inputStr.length() - 1;
+            else startOfCode += 2;
+
+        } while(startOfCode < inputStr.length() - 1);
+
+        return withoutDocstrings;
+    }
+
+    static String getWithoutAppendedComments(String inputStr) {
+        return inputStr.replaceAll("\\/\\/((?!\\*\\/).)*\n", "\n"); // Remove comments appended to code (like this one!)
     }
 
     static String getWithoutEmptyLines(String inputStr) {
@@ -243,39 +276,44 @@ public interface StringParser {
 
     static String getDeclaredMethodName(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
-        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
+        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(5);
         return null;
     }
 
     static String getDeclaredMethodReturnType(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
-        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(3);
+        while(regexMethodNameDetector.find()) return regexMethodNameDetector.group(4);
         return "void";
     }
 
     static ArrayList<String> getDeclaredMethodArguments(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
-        while(regexMethodNameDetector.find())
+        while(regexMethodNameDetector.find()) {
 
             // If the method declaration has arguments, we add their names individually to the list:
-            if(regexMethodNameDetector.group(5) != null && !regexMethodNameDetector.group(5).matches("\\s*")) {
-                String[] arguments = regexMethodNameDetector.group(5).replaceAll("\\s*,\\s*", ",").split(",");
-                ArrayList<String> argumentNames = new ArrayList<>();
-                for (String arg:arguments)
-                    argumentNames.addAll(Arrays.asList(StringParser.getDeclaredVariableNames(arg)));
+            if (regexMethodNameDetector.group(6) != null && !regexMethodNameDetector.group(6).matches("\\s*")) {
 
-                return argumentNames;
+                // Split the arguments by commas:
+                String[] arguments = regexMethodNameDetector.group(6).replaceAll("\\s*,\\s*", ",").split(",");
+                ArrayList<String> argumentTypes = new ArrayList<>();
+
+                // For every argument, such as "String codeStatement", keep only the types, such as "String"
+                for (String arg : arguments)
+                    argumentTypes.add(arg.replaceAll(" .*", ""));
+
+                return argumentTypes;
             }
+        }
         return null;
     }
 
     static Visibility getDeclaredMethodVisibility(String codeStatement) {
         Matcher regexMethodNameDetector = rxDeclaredMethod.matcher(codeStatement);
         while(regexMethodNameDetector.find()) {
-            if(regexMethodNameDetector.group(1) == null)
+            if(regexMethodNameDetector.group(2) == null)
                 return Visibility.PUBLIC;
 
-            switch(regexMethodNameDetector.group(1)) {
+            switch(regexMethodNameDetector.group(2)) {
                 case "private":
                     return Visibility.PRIVATE;
                 case "protected":

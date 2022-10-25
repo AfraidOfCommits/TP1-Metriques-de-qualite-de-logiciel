@@ -36,19 +36,11 @@ public interface InputHandler extends GitGudder, FilePathHandler {
 
     static RequestType promptWelcome() {
 
-        String weclome = "[ JAVA BOOTLEG SOFTWARE METRICS ]";
-        String dots = new String(new char[weclome.length()]).replace('\0', '.');
-
-        System.out.println();
-        for(int i = 0; i < weclome.length(); i++) {
-            System.out.print(weclome.substring(0,i + 1) + dots.substring(i, dots.length())+ "\r");
-            InputHandler.wait(25);
-        }
         System.out.println("[ JAVA BOOTLEG SOFTWARE METRICS ]" +
                 "\nWelcome to JBSM, my software metrics project and homework on steroids that genuinely " +
                 "\nparses and analyses the quality of Java source code. The goal is to measure complexity, " +
                 "\nmaintainability and more of uncompiled Java source files and repositories, and to do it " +
-                "\nall from scratch!");
+                "\nall from scratch.");
 
         System.out.println("\nPlease select an option:" +
                 "\n1 - Parse and analyse a local Java source file" +
@@ -120,10 +112,35 @@ public interface InputHandler extends GitGudder, FilePathHandler {
 
     static Path promptForRepositoryPath() {
 
-        ArrayList<Path> candidates = GitGudder.getLocalGitRepositories();
+        // Ask the user from where we need to start looking for repositories:
+        System.out.println("\n[ INPUT EXPECTED ]\nFrom where should I start looking?");
+
+        // Generate a list of up to 5 options:
+        Path rootToStartFrom = FilePathHandler.getWorkingDirectory();
+        int numOptions;
+        for(numOptions = 1; numOptions < 8; numOptions++) {
+            System.out.println(numOptions + " - \'" + rootToStartFrom + "\'");
+            if(rootToStartFrom.getParent() == null) break;
+            else rootToStartFrom = rootToStartFrom.getParent();
+        }
+
+        // Read and validate what the user inputted;
+        String input = InputHandler.readInputLine();
+        while(!input.matches("[1-" + numOptions + "]")) {
+            System.out.println("Please select an option between 1 and " + numOptions + ".");
+            input = InputHandler.readInputLine();
+        }
+
+        // We now have a slightly more narrow path to search through:
+        rootToStartFrom = FilePathHandler.getWorkingDirectory();
+        for(int i = 1; i < Integer.parseInt(input); i++)
+            rootToStartFrom = rootToStartFrom.getParent();
+
+        // Get a list of Java Git Repositories hidden in the given folder/directory:
+        ArrayList<Path> candidates = GitGudder.getLocalGitRepositories(rootToStartFrom);
         if(candidates.size() == 0) {
             System.out.println("\nSorry, I couldn't find git repositories in the current working directory.");
-            System.out.println("\nAs a tip, we're simply looking for directories containing a \'\\.git\' subfolder and a \'\\src\' subfolder. If you have a codebase without these, make sure to create the necessary folders.");
+            System.out.println("As a tip, we're simply looking for .java files in directories containing a \'\\.git\' subfolder and a \'\\src\' subfolder. If you have a codebase without these, make sure to create the necessary folders.");
             return null;
         }
         else if(candidates.size() == 1) {
@@ -131,11 +148,11 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         }
         else {
             System.out.println("\nPlease select which of the following repositories you wish to parse by typing the number associated.\n");
-            int numOptions = Math.min(candidates.size(), 9);
+            numOptions = Math.min(candidates.size(), 9);
             for (int i = 0; i < numOptions; i++)
                 System.out.println((i + 1) + " : \'" + candidates.get(i) + "\'");
 
-            String input = InputHandler.readInputLine();
+            input = InputHandler.readInputLine();
             while (!input.matches("[1-" + numOptions + "]")) {
                 System.out.println("Please enter a number between 1 and " + numOptions + ".");
                 input = InputHandler.readInputLine();

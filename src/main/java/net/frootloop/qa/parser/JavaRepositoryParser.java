@@ -11,6 +11,7 @@ import java.nio.file.Path;
 public class JavaRepositoryParser {
 
     public static void analyseRepositoryAt(Path directory) {
+        if(directory == null) return;
 
         System.out.println("\n[ PARSING LOCAL REPOSITORY ]\nParsing the source files of repository at: \'" + directory + "\'...");
         ParsedRepository repo = JavaRepositoryParser.parse(directory);
@@ -53,6 +54,7 @@ public class JavaRepositoryParser {
      * @return ParsedRepository instance
      */
     private static ParsedRepository parse(Path directory){
+        if(directory == null) return null;
         ParsedRepository repo = new ParsedRepository(directory);
         JavaRepositoryParser.walk(directory, repo);
         repo.buildReferences();
@@ -70,7 +72,7 @@ public class JavaRepositoryParser {
      * @param path
      * @param repo
      */
-    private static void walk(Path path, ParsedRepository repo) {
+    public static void walk(Path path, ParsedRepository repo) {
         if(repo == null) return;
         try {
             Files.walk(path)

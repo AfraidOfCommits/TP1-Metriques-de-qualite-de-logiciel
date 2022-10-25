@@ -36,7 +36,6 @@ public class ParsedSourceFile {
      * @return Data contained in the file, in the form of a String.
      */
     public ParsedSourceFile(Path path) {
-
         if(!path.toString().endsWith(".java")) return;
         this.filePath = path;
 
