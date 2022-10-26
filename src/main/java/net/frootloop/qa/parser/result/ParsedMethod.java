@@ -33,6 +33,7 @@ public class ParsedMethod extends CodeTree {
         this.isTest = StringParser.isMethodDeclarationTest(blockOfCode.leadingStatement);
         this.assertStatements = StringParser.getAssertStatementsOf(blockOfCode.getCodeAsString());
         this.setReferencedMethods();
+        this.incrementTestedMethodsNumTests();
     }
 
     private void setReferencedMethods() {
@@ -43,6 +44,18 @@ public class ParsedMethod extends CodeTree {
                 else methodsNamesReferencedOutsideScope.add(methodName);
             }
         }
+    }
+
+    private void incrementTestedMethodsNumTests() {
+        if (this.isTest)
+            for(ParsedMethod testedMethod: this.methodsReferencedInScope)
+                testedMethod.numDedicatedUnitTests++;
+
+        else if(this.assertStatements != null && this.assertStatements.length > 0)
+            for (String unitTest : this.assertStatements)
+                for (String name : StringParser.getReferencedMethodNames(unitTest))
+                    for (ParsedMethod m : this.methodsReferencedInScope)
+                        if (m.getMethodName().equals(name)) m.numDedicatedUnitTests++;
     }
 
     public List<String> getReferencedAttributes() {
@@ -100,22 +113,6 @@ public class ParsedMethod extends CodeTree {
 
         methodSignature += this.returnType + " " + this.methodName + "(" + String.join(", ", this.arguments) + ");\n}\n";
         return methodSignature;
-    }
-
-    public ArrayList<ParsedMethod> getTestedMethodsOfClass() {
-        if (this.isTest) return this.methodsReferencedInScope;
-        else if (this.assertStatements == null || this.assertStatements.length == 0) return new ArrayList<>();
-
-        ArrayList<ParsedMethod> testedMethods = new ArrayList<>();
-        for (String unitTest : this.assertStatements) {
-            for (String name : StringParser.getReferencedMethodNames(unitTest)) {
-                for (ParsedMethod m : this.methodsReferencedInScope) {
-                    if (m.getMethodName().equals(name)) testedMethods.add(m);
-                    m.numDedicatedUnitTests++;
-                }
-            }
-        }
-        return testedMethods;
     }
 
     public ArrayList<String> getTestedMethodNamesOutsideClass() {
