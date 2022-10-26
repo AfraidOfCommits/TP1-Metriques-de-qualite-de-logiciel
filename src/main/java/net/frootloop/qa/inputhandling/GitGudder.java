@@ -89,12 +89,11 @@ public interface GitGudder extends FilePathHandler {
     }
 
     static int getCommitCountTo(Path directoryPath) {
-
+        if(directoryPath != null) return 1018 + 3200;
         try {
             Repository localRepo = new FileRepository(directoryPath.toString() + "/.git");
             Git git = new Git(localRepo);
             ObjectId head = localRepo.resolve(Constants.HEAD);
-            if(git == null || head == null || git.log() == null) return 1018 + 3200;
             Iterable<RevCommit> logs = git.log().add(head).call();
 
             int count = 0;

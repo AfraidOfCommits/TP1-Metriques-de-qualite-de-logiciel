@@ -11,17 +11,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Almost done with the code.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/GitGudder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/InputHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,13 +75,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Tweaks and some bug fixes.">
-      <created>1664478123809</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1664478123809</updated>
     </task>
     <task id="LOCAL-00018" summary="More tweaks, lol">
       <created>1664478495111</created>
@@ -423,7 +412,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666723864572</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog">
+      <created>1666741640097</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1666741640097</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -438,7 +434,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="COMPILEEEE" />
     <MESSAGE value="Done." />
     <MESSAGE value="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file." />
     <MESSAGE value="Huge improvements to the codebase. &#10;&#10;I've switched the data structure of code representation to a proper tree, allowing for an accurate cyclomatic complexity algorithm and for much simpler parsing and inheritance/scope detection, and eventually parsing methods and functions if required. &#10;&#10;I've hugely improved comment detection and line counting, making it so that docstrings can now be properly included in the number of lines of comments.&#10;&#10;'JavaSourceFileParser' was bloated and hard to read, so I've gutted it and gave its functionality to its subclasses. Especially now that we have a tree, parsing no longer needs to be linear, but rather it is now dynamically programmed through recursive node calls in 'ParsedClass' and 'CodeTree' constructors.&#10;&#10;I've also allocated all regex calls to the StringParser class and just in general made things more modular. Huge quality of life improvement for myself with just that." />
@@ -463,7 +458,8 @@
     <MESSAGE value="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)" />
     <MESSAGE value="Added calculation of number of unit tests per methods. Didn't test that bit yet, but fingers crossed." />
     <MESSAGE value="Almost done with the code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Almost done with the code." />
+    <MESSAGE value="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog" />
+    <option name="LAST_COMMIT_MESSAGE" value="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

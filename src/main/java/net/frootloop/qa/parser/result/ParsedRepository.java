@@ -102,6 +102,7 @@ public class ParsedRepository {
         int numReferences = 1;
         if(this.mapNumTimesReferenced.containsKey(classSignature))
             numReferences = this.mapNumTimesReferenced.get(classSignature) + 1;
+
         this.mapNumTimesReferenced.put(classSignature, numReferences);
 
         // Update the repo's class with the most amount of references:
@@ -248,11 +249,21 @@ public class ParsedRepository {
         return average / (float)this.numClasses;
     }
 
+    public float getAverageCouplageBetweenClasses() {
+        float average = 0;
+        for (ParsedClass c : this.classMap.values())
+            if(this.mapNumTimesReferenced.containsKey(c.getSignature()))
+                average += this.mapNumTimesReferenced.get(c.getSignature());
+
+        return average / (float)this.numClasses;
+    }
+
     public float getPercentageMethodsUntested() {
         int numMethodsUntested = 0;
         for (ParsedClass c : this.classMap.values())
             for(ParsedMethod m : c.getMethods())
-                if(m.numDedicatedUnitTests == 0) numMethodsUntested++;
+                if(!m.isTest() && !m.isPrivate() && !m.isAbstract() && m.numDedicatedUnitTests == 0)
+                    numMethodsUntested++;
 
         return 100 * (float)numMethodsUntested / (float)this.numMethods;
     }

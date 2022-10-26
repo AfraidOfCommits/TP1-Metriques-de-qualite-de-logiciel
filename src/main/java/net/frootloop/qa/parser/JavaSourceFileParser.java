@@ -7,6 +7,9 @@ import java.nio.file.Path;
 
 public class JavaSourceFileParser implements InputHandler, StringParser {
 
+    private static int numFilesParsed = 0;
+
+
     /***
      * Reads a .java given .java file and parses its code to extract information about
      * its classes, statements, number of lines, etc,
@@ -28,6 +31,10 @@ public class JavaSourceFileParser implements InputHandler, StringParser {
 
         ParsedSourceFile parsedFile = JavaSourceFileParser.parse(filePath);
         if(parsedFile != null) parsedFile.print();
+    }
+
+    public static void announceParsedFile() {
+        System.out.print("Parsed " + ++numFilesParsed + " files.\r");
     }
 }
 

@@ -1,5 +1,6 @@
 package net.frootloop.qa.parser.result;
 
+import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.StringParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
 
@@ -70,6 +71,7 @@ public class ParsedSourceFile {
             System.out.println("[ ERROR ] Unable to read file " + path.toFile().getAbsolutePath() + "!");
             e.printStackTrace();
         };
+        JavaSourceFileParser.announceParsedFile();
     }
 
     public void print() {

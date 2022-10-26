@@ -30,14 +30,20 @@ public class JavaRepositoryParser {
         System.out.println("\n[ COMPLEXITY ]");
         System.out.println("Percentage of code dedicated to documentation (CD): " + String.format("%.1f", 100 * repo.getCommentDensity()) + "%" );
         System.out.println("Weighted Methods per Class (WMC): " + String.format("%.1f", repo.getAverageWeightedMethods()));
-        System.out.println("The most complex class is \'" + repo.getMostComplexClass().getSignature() + "\', with a WMC of " + repo.getMostComplexClass().getWeightedMethods() + " and a total cyclomatic complexity of " + repo.getMostComplexClass().getCyclomatcComplexity() + ".");
+        System.out.println("    -> The most complex class is \'" + repo.getMostComplexClass().getSignature() + "\', with a WMC of " + repo.getMostComplexClass().getWeightedMethods() + " and a total cyclomatic complexity of " + repo.getMostComplexClass().getCyclomatcComplexity() + ".");
 
         System.out.println("\n[ MODULARITY ]");
         System.out.println("Average Lack Of Cohesion in Methods (LCOM): " + String.format("%.1f", repo.getAverageLackOfCohesionInMethods()));
-        System.out.println("The least cohesive class is \'" + repo.getLeastCohesiveClass().getSignature() + "\', with an LCOM of " + repo.getLeastCohesiveClass().getLackOfCohesionInMethods() + ".");
+        System.out.println("    -> The least cohesive class is \'" + repo.getLeastCohesiveClass().getSignature() + "\', with an LCOM of " + repo.getLeastCohesiveClass().getLackOfCohesionInMethods() + ".");
+        System.out.println("Average Couplage Between Objects (CBO): " + String.format("%.1f", repo.getAverageCouplageBetweenClasses()));
+        System.out.println("    -> Most Referenced Class (Total): " + repo.getMostReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostReferencedClass()) + " other classes.");
+        System.out.println("    -> Most Referenced Class (Directly): " + repo.getMostDirectlyReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostDirectlyReferencedClass()) + " other classes.");
+        System.out.println("    -> Most Referenced Class (Indirectly): " + repo.getMostIndirectlyReferencedClass().getSignature() + ", referenced by " + repo.getNumTimesReferenced(repo.getMostIndirectlyReferencedClass()) + " other classes.");
+
 
         System.out.println("\n[ MATURITY ]");
-        System.out.println("Commits made to the project: " + GitGudder.getCommitCountTo(repo.getFilePath()));
+        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(repo.getFilePath()) / repo.getNumClasses()));
+        System.out.println("Number of files in repository: " + repo.getNumSourceFiles());
 
         System.out.println("\n[ RELIABILITY ]");
         System.out.println("Average Unit Tests per method : " + repo.getAverageUnitTestsPerMethod());
