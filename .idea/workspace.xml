@@ -11,10 +11,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Oh my God. It works. IT'S ALIVEEEE">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/inputhandling/GitGudder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,13 +70,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Pretty much completed the file parser, and data container classes for ParsedClass and ParsedRepository.">
-      <created>1664478873213</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1664478873213</updated>
     </task>
     <task id="LOCAL-00020" summary="Correction: NOW pretty much complete. I missed a nullpointer issue.">
       <created>1664478971284</created>
@@ -416,7 +407,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666745498299</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now.">
+      <created>1666753562458</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1666753562458</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +429,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added some prelimenary groundwork for docstring detection. Eventually I will want to assign docstrings to their methods, but for now all it does is count the number of lines of docstrings there are in a given source file." />
     <MESSAGE value="Huge improvements to the codebase. &#10;&#10;I've switched the data structure of code representation to a proper tree, allowing for an accurate cyclomatic complexity algorithm and for much simpler parsing and inheritance/scope detection, and eventually parsing methods and functions if required. &#10;&#10;I've hugely improved comment detection and line counting, making it so that docstrings can now be properly included in the number of lines of comments.&#10;&#10;'JavaSourceFileParser' was bloated and hard to read, so I've gutted it and gave its functionality to its subclasses. Especially now that we have a tree, parsing no longer needs to be linear, but rather it is now dynamically programmed through recursive node calls in 'ParsedClass' and 'CodeTree' constructors.&#10;&#10;I've also allocated all regex calls to the StringParser class and just in general made things more modular. Huge quality of life improvement for myself with just that." />
     <MESSAGE value="Add getters for most directly and indirectly referenced classes of a repo." />
     <MESSAGE value="More big strides; added new features, and fixed bugs or improved existing ones. &#10;&#10; - CLASS REFERENCES : Now able to get the most referenced class overall, and now 'most referenced' classes will only be in the repository queried. Otherwise, it always returns 'String', lol.&#10; &#10; - REFERENCE DETECTION : Hugely improved detection of classes in source code, now including references hidden in collections such as &lt;T&gt; or List&lt;Integer&gt;.&#10; &#10; - PRINT METHODS : You can now print out a file's parsed source code, or a class' parsed source code. Very useful for debugging, and was fun to implement.&#10; &#10; - CYCLOMATIC COMPLEXITY : I still need to improve it somewhat, but for now approximation of complexity is fairly close to calculations made by CKJM. I've removed counts for boolean expressions, and also moved most of the detection to 'StringParser' (except for switch statements)." />
@@ -456,7 +453,8 @@
     <MESSAGE value="Almost done with the code." />
     <MESSAGE value="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog" />
     <MESSAGE value="Oh my God. It works. IT'S ALIVEEEE" />
-    <option name="LAST_COMMIT_MESSAGE" value="Oh my God. It works. IT'S ALIVEEEE" />
+    <MESSAGE value="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now." />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
