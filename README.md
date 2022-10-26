@@ -1,6 +1,6 @@
 # TP2-Metriques-de-qualite-de-logiciel
 
-IMPORTANT! VÉRIFIEZ LA BRANCHE
+***IMPORTANT! VÉRIFIEZ LA BRANCHE -> 'TP2'***
 
 Hey! 
 
