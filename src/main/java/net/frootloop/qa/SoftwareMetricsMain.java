@@ -17,9 +17,8 @@ public class SoftwareMetricsMain implements InputHandler {
             JavaSourceFileParser.printCodeOf(sourceFilePath);
 
         } else if (userIntention == RequestType.ANALYSE_SOURCE_FILE) {
-            //Path sourceFilePath = InputHandler.promptForSourceFilePath();
-            System.out.println("Sorry about that, this service is not completely implemented yet. Please pick another option.");
-            main(args);
+            Path sourceFilePath = InputHandler.promptForSourceFilePath();
+            JavaSourceFileParser.analyseFileAt(sourceFilePath);
 
         } else if (userIntention == RequestType.ANALYSE_GIT_REPO) {
             Path repositoryPath = InputHandler.promptForRepositoryPath();

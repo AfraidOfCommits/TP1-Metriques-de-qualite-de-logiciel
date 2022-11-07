@@ -97,6 +97,20 @@ public class ParsedSourceFile {
         return numLinesComments;
     }
 
+    public int getNumMethods(){
+        int numMethods = 0;
+        for (ParsedClass c:this.classes)
+            numMethods += c.getNumMethods();
+        return numMethods;
+    }
+
+    public int getNumAssertStatements(){
+        int numAsserts = 0;
+        for (ParsedClass c:this.classes)
+            numAsserts += c.getNumAssertStatements();
+        return numAsserts;
+    }
+
     public String getPackageName() {
         return packageName;
     }
@@ -108,6 +122,7 @@ public class ParsedSourceFile {
     public ParsedClass[] getClasses() {
         return classes.toArray(new ParsedClass[classes.size()]);
     }
+
 
     /***
      * Loops over the functions and methods within the file, and the first one found that isn't abstract
@@ -124,5 +139,38 @@ public class ParsedSourceFile {
             if(m != null) return m;
         }
         return null;
+    }
+
+    public float getCommentDensity() {
+        return (float)this.numLinesComments / (float)(this.numLinesCode + this.numLinesComments);
+    }
+
+    public float getAverageWeightedMethods() {
+        float average = 0.0f;
+        for (ParsedClass c : this.classes)
+            average += c.getWeightedMethods();
+        return average / (float)this.classes.size();
+    }
+
+    public float getAverageLackOfCohesionInMethods() {
+        float average = 0.0f;
+        for (ParsedClass c : this.classes)
+            average += c.getLackOfCohesionInMethods();
+        return average / (float)this.classes.size();
+    }
+
+    public ArrayList<ParsedMethod> getTestMethods() {
+        ArrayList<ParsedMethod> testMethods = new ArrayList<>();
+        for (ParsedClass c : this.classes)
+            for (ParsedMethod m : c.getMethods())
+                if(m.isTest()) testMethods.add(m);
+        return testMethods;
+    }
+
+    public ArrayList<String> getTestedMethods() {
+        ArrayList<String> testedMethods = new ArrayList<>();
+        for (ParsedClass c : this.classes)
+            testedMethods.addAll(c.getMethodNamesTestedOutsideClass());
+        return testedMethods;
     }
 }

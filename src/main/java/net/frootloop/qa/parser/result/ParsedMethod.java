@@ -38,11 +38,13 @@ public class ParsedMethod extends CodeTree {
 
     private void setReferencedMethods() {
         for (String methodName : StringParser.getReferencedMethodNames(this.root.getCodeAsString())) {
+            if(methodName.equals(this.methodName)) continue;
+
             ParsedMethod referenced = this.homeClass.getMethodByName(methodName, false);
-            if (referenced != null) {
-                if (!methodsReferencedInScope.contains(referenced)) methodsReferencedInScope.add(referenced);
-                else methodsNamesReferencedOutsideScope.add(methodName);
-            }
+            if (referenced != null)
+                if(!methodsReferencedInScope.contains(referenced))
+                    methodsReferencedInScope.add(referenced);
+            else methodsNamesReferencedOutsideScope.add(methodName);
         }
     }
 
@@ -113,6 +115,18 @@ public class ParsedMethod extends CodeTree {
 
         methodSignature += this.returnType + " " + this.methodName + "(" + String.join(", ", this.arguments) + ");\n}\n";
         return methodSignature;
+    }
+
+    public ArrayList<String> getReferencedMethodNames() {
+        if(this.isTest) return this.methodsNamesReferencedOutsideScope;
+        else if(this.assertStatements == null || this.assertStatements.length == 0) return new ArrayList<>();
+
+        ArrayList<String> testedMethods = new ArrayList<>();
+        for(String unitTest: this.assertStatements)
+            for(String name : StringParser.getReferencedMethodNames(unitTest))
+                if(this.methodsNamesReferencedOutsideScope.contains(name)) testedMethods.add(name);
+
+        return testedMethods;
     }
 
     public ArrayList<String> getTestedMethodNamesOutsideClass() {

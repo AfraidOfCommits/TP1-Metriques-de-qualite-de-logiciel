@@ -11,8 +11,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="New git branch.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,13 +77,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Improved some class detection regexes">
-      <created>1664489519930</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1664489519930</updated>
     </task>
     <task id="LOCAL-00023" summary="Improved some class detection regexes">
       <created>1664489596183</created>
@@ -414,7 +414,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667831499016</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way.">
+      <created>1667832597069</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1667832597069</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -429,7 +436,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="More big strides; added new features, and fixed bugs or improved existing ones. &#10;&#10; - CLASS REFERENCES : Now able to get the most referenced class overall, and now 'most referenced' classes will only be in the repository queried. Otherwise, it always returns 'String', lol.&#10; &#10; - REFERENCE DETECTION : Hugely improved detection of classes in source code, now including references hidden in collections such as &lt;T&gt; or List&lt;Integer&gt;.&#10; &#10; - PRINT METHODS : You can now print out a file's parsed source code, or a class' parsed source code. Very useful for debugging, and was fun to implement.&#10; &#10; - CYCLOMATIC COMPLEXITY : I still need to improve it somewhat, but for now approximation of complexity is fairly close to calculations made by CKJM. I've removed counts for boolean expressions, and also moved most of the detection to 'StringParser' (except for switch statements)." />
     <MESSAGE value="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values." />
     <MESSAGE value="Ok, now the error is ACTUALLY fixed!" />
     <MESSAGE value="Typo" />
@@ -454,7 +460,8 @@
     <MESSAGE value="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now." />
     <MESSAGE value="Done." />
     <MESSAGE value="New git branch." />
-    <option name="LAST_COMMIT_MESSAGE" value="New git branch." />
+    <MESSAGE value="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way." />
+    <option name="LAST_COMMIT_MESSAGE" value="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

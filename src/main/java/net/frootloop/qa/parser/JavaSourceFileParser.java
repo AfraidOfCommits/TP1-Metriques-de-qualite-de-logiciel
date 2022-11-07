@@ -10,6 +10,34 @@ public class JavaSourceFileParser implements InputHandler, StringParser {
     private static int numFilesParsed = 0;
 
 
+    public static void analyseFileAt(Path sourceFilePath) {
+        if(sourceFilePath == null) return;
+
+        System.out.println("\n[ PARSING SOURCE FILE ]\nParsing the source files of repository at: \'" + sourceFilePath + "\'...");
+        ParsedSourceFile sourceFile = JavaSourceFileParser.parse(sourceFilePath);
+        System.out.println("...Done!");
+
+        System.out.println("\n============================\n          ANALYSIS          \n============================");
+
+        System.out.println("\n[ STATISTICS OF FILE ]");
+        System.out.println("Consists of " + sourceFile.getClasses().length + " Classes, " + sourceFile.getNumMethods() + " Methods, " + sourceFile.getNumAssertStatements() + " Unit Tests.");
+        System.out.println("Number of lines: " + sourceFile.getNumLinesCode() + " are code, " + sourceFile.getNumLinesComments() + " are comments, " + sourceFile.getNumLinesEmpty() + " are empty.\nIn total: " + sourceFile.getNumLines() + " lines.");
+
+        System.out.println("\n[ COMPLEXITY ]");
+        System.out.println("Percentage of code dedicated to documentation (CD): " + String.format("%.1f", 100 * sourceFile.getCommentDensity()) + "%" );
+        System.out.println("Weighted Methods per Class (WMC): " + String.format("%.1f", sourceFile.getAverageWeightedMethods()));
+
+        /*
+        System.out.println("\n[ MATURITY ]");
+        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(sourceFile.getFilePath()) / sourceFile.getNumClasses()));
+        System.out.println("Number of files in repository: " + sourceFile.getNumSourceFiles());
+        */
+
+        System.out.println("\n[ RELIABILITY ]");
+        System.out.println("Number of @Test methods : " + sourceFile.getTestMethods().size());
+        System.out.println("Methods referenced in test code : " + String.join(",", sourceFile.getTestedMethods()));
+    }
+
     /***
      * Reads a .java given .java file and parses its code to extract information about
      * its classes, statements, number of lines, etc,

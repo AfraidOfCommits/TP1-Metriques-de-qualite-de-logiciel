@@ -27,5 +27,8 @@ public class Test extends JavaSourceFileParser implements StringParser, GitGudde
         //String pathString = "C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel\\src\\main\\java\\net\\frootloop\\qa\\Test.java";
         //String pathString = "C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel\\src\\main\\java\\net\\frootloop\\qa\\parser\\result\\internal\\CodeTree.java";
 
+        String pathString = "C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\jfreechart-master\\jfreechart-master\\src\\test\\java\\org\\jfree\\chart\\axis\\AxisLocationTest.java";
+
+
     }
 }

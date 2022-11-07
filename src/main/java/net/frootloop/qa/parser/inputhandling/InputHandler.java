@@ -66,6 +66,7 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         String input = InputHandler.readInputLine();
 
         // Step 1: Check if the given input is valid
+        input.replace("\"","");
         while(!input.matches("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)?([^\\\\\\/#%&\\{\\}\\<\\>\\*\\$\\!\\'\\+\\|\\=]+)")) {
             System.out.println("The file name you've entered, \'" + input + "\', doesn't seem valid. \nPlease try again.");
             input = InputHandler.readInputLine();
