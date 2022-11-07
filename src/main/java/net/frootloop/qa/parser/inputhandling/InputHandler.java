@@ -48,8 +48,8 @@ public interface InputHandler extends GitGudder, FilePathHandler {
                 "\n3 - Print the parsed contents of a local Java source file");
 
         String input = InputHandler.readInputLine();
-        while(!input.equals("1") && !input.equals("2")) {
-            System.out.println("Please select an option between either 1 and 2.\r");
+        while(!input.equals("1") && !input.equals("2") && !input.equals("3")) {
+            System.out.println("Please select an option between either 1 and 3.\r");
             input = InputHandler.readInputLine();
         }
 
@@ -66,7 +66,7 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         String input = InputHandler.readInputLine();
 
         // Step 1: Check if the given input is valid
-        input.replace("\"","");
+        input = input.replaceAll("\"","");
         while(!input.matches("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)?([^\\\\\\/#%&\\{\\}\\<\\>\\*\\$\\!\\'\\+\\|\\=]+)")) {
             System.out.println("The file name you've entered, \'" + input + "\', doesn't seem valid. \nPlease try again.");
             input = InputHandler.readInputLine();
@@ -75,14 +75,15 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         // Step 2: Check if file exists
         File file = new File(input);
         if(input.endsWith(".java") && file.exists() && !file.isDirectory()) {
-            System.out.println("Java source file found at location: " + input);
+            System.out.println("Java source file found at location: \'" + input + "\'");
             return Path.of(input);
         }
 
         // Step 3: List all similar
         String fileName = input.replaceAll("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)", "");
-        System.out.println("No Java source file found at location: " + input);
-        System.out.println("Searching instead for files with similar names to: " + fileName);
+        fileName = fileName.replaceAll("\\.\\w+$", "");
+        System.out.println("No Java source file found at location: \'" + input + "\'");
+        System.out.println("Searching instead for '.java' files with similar names to: \'" + fileName + "\'");
 
         ArrayList<Path> candidates = FilePathHandler.getPathsToFile(fileName);
         if(candidates.size() == 0) {

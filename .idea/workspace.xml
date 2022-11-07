@@ -11,15 +11,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,13 +71,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Improved some class detection regexes">
-      <created>1664489596183</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1664489596183</updated>
     </task>
     <task id="LOCAL-00024" summary="JavaSourceFileParser is DONE">
       <created>1664489962151</created>
@@ -421,7 +408,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667832597069</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted.">
+      <created>1667836639370</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1667836639370</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -436,7 +430,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values." />
     <MESSAGE value="Ok, now the error is ACTUALLY fixed!" />
     <MESSAGE value="Typo" />
     <MESSAGE value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
@@ -461,7 +454,8 @@
     <MESSAGE value="Done." />
     <MESSAGE value="New git branch." />
     <MESSAGE value="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way." />
-    <option name="LAST_COMMIT_MESSAGE" value="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way." />
+    <MESSAGE value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
