@@ -1,4 +1,4 @@
-package net.frootloop.qa.inputhandling;
+package net.frootloop.qa.parser.inputhandling;
 
 import net.frootloop.qa.parser.result.ParsedRepository;
 import org.eclipse.jgit.api.Git;

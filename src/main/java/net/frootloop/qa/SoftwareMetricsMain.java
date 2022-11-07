@@ -1,6 +1,6 @@
 package net.frootloop.qa;
 
-import net.frootloop.qa.inputhandling.InputHandler;
+import net.frootloop.qa.parser.inputhandling.InputHandler;
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 
