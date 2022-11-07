@@ -11,9 +11,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,13 +72,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00024" summary="JavaSourceFileParser is DONE">
-      <created>1664489962151</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1664489962152</updated>
     </task>
     <task id="LOCAL-00025" summary="JavaSourceFileParser is DONE (2)">
       <created>1664490049284</created>
@@ -415,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667836639370</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting.">
+      <created>1667837341277</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1667837341277</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -430,8 +431,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Ok, now the error is ACTUALLY fixed!" />
-    <MESSAGE value="Typo" />
     <MESSAGE value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
     <MESSAGE value="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)" />
     <MESSAGE value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
@@ -455,7 +454,9 @@
     <MESSAGE value="New git branch." />
     <MESSAGE value="Moved inputhandler package to be enclosed in the parser package. Makes much more sense that way." />
     <MESSAGE value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
+    <MESSAGE value="Improved input handler, and fixed small bugs." />
+    <MESSAGE value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

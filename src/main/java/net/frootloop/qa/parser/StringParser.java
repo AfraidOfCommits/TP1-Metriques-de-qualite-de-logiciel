@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface StringParser {
-    Pattern rxAssertStatements = Pattern.compile("(^|;|}|\\n\\s+)((Assert\\.)?(assert[A-Z]\\w+)\\([^;]*\\));");
+    Pattern rxAssertStatements = Pattern.compile("(^|;|})(\\n\\s*)?((Assert\\.)?(assert[A-Z]\\w+)\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)?\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
     Pattern rxImbeddedPackage = Pattern.compile("(\\w+\\.)*([A-Z]\\w+)");
@@ -132,7 +132,7 @@ public interface StringParser {
     static String[] getAssertStatementsOf(String cleanSourceFileTextData) {
         ArrayList<String> assertStatements = new ArrayList<>();
         Matcher regexAssertDetector = rxAssertStatements.matcher(cleanSourceFileTextData);
-        while (regexAssertDetector.find()) assertStatements.add(regexAssertDetector.group(1));
+        while (regexAssertDetector.find()) assertStatements.add(regexAssertDetector.group(3));
         return assertStatements.toArray(new String[0]);
     }
 
