@@ -32,23 +32,23 @@ public class ParsedMethod extends CodeTree {
         this.isAbstract = StringParser.isMethodDeclarationAbstract(blockOfCode.leadingStatement);
         this.isTest = StringParser.isMethodDeclarationTest(blockOfCode.leadingStatement);
         this.assertStatements = StringParser.getAssertStatementsOf(blockOfCode.getCodeAsString());
-        this.setReferencedMethods();
-        this.incrementTestedMethodsNumTests();
     }
 
-    private void setReferencedMethods() {
+    public void setReferencedMethods() {
         for (String methodName : StringParser.getReferencedMethodNames(this.root.getCodeAsString())) {
             if(methodName.equals(this.methodName)) continue;
 
             ParsedMethod referenced = this.homeClass.getMethodByName(methodName, false);
-            if (referenced != null)
-                if(!methodsReferencedInScope.contains(referenced))
-                    methodsReferencedInScope.add(referenced);
-            else methodsNamesReferencedOutsideScope.add(methodName);
+            if (referenced != null) {
+                if (!methodsReferencedInScope.contains(referenced)) methodsReferencedInScope.add(referenced);
+            }
+            else {
+                methodsNamesReferencedOutsideScope.add(methodName);
+            }
         }
     }
 
-    private void incrementTestedMethodsNumTests() {
+    public void incrementTestedMethodsNumTests() {
         if (this.isTest)
             for(ParsedMethod testedMethod: this.methodsReferencedInScope)
                 testedMethod.numDedicatedUnitTests++;
@@ -115,6 +115,13 @@ public class ParsedMethod extends CodeTree {
 
         methodSignature += this.returnType + " " + this.methodName + "(" + String.join(", ", this.arguments) + ");\n}\n";
         return methodSignature;
+    }
+
+    public List<String> getReferencedClasses() {
+        ArrayList<String> referencedClasses = new ArrayList<>();
+        for(String className: StringParser.getInitializedClassNames(this.root.getCodeAsString()))
+            referencedClasses.add(this.homeClass.getSignatureOfReferencedClass(className));
+        return referencedClasses;
     }
 
     public ArrayList<String> getReferencedMethodNames() {

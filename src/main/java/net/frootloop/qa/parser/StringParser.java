@@ -19,7 +19,7 @@ public interface StringParser {
     Pattern rxDeclaredClass = Pattern.compile("((final|public|abstract)\\s+)*(class|interface|enum)\\s+([A-Z]\\w+)");
     Pattern rxDeclaredMethod = Pattern.compile("(@[A-Z]\\w+)?(?:((?:public|private|protected|static|final|native|synchronized|abstract|transient)+)\\s+)+(([$_\\w<>\\[\\]\\s]*)\\s+([\\$_\\w]+)\\(([^\\)]*)\\)?\\s*)");
     Pattern rxDeclaredVariable = Pattern.compile("(((public|private|protected|final)\\s+)?)(int|short|long|float|double|byte|boolean|char|[A-Z]\\w+(\\[\\s*\\]|\\.\\w+|<\\w+(\\s*,\\s*\\w+)*>)?)\\s+((\\w+)\\s*((\\s*,\\s*\\w+)*))($|[;=])");
-    Pattern rxReferencedMethod = Pattern.compile("[\\. ](\\w[A-z_]*)\\(");
+    Pattern rxReferencedMethod = Pattern.compile("[\\. \\(\\{]([a-z_][A-z_]*)\\(");
     Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
     Pattern rxLowerCaseWords = Pattern.compile("(?=[^\\w]([a-z]\\w+)[^\\(\\{\\w])");
 

@@ -19,6 +19,7 @@ public class SoftwareMetricsMain implements InputHandler {
 
         } else if (userIntention == RequestType.ANALYSE_SOURCE_FILE) {
             Path sourceFilePath = InputHandler.promptForSourceFilePath();
+            JavaSourceFileParser.printCodeOf(sourceFilePath);
             JavaSourceFileParser.analyseFileAt(sourceFilePath);
 
         } else if (userIntention == RequestType.ANALYSE_GIT_REPO) {

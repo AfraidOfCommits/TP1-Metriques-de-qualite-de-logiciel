@@ -15,10 +15,10 @@ public class ParsedClass extends CodeTree {
     private Visibility visibility;
     private String className;
     private int cohesionValue, cyclomaticComplexity = 1;
+    private String[] importStatements;
     private ArrayList<ParsedMethod> methods = new ArrayList<>();
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
-
     private ArrayList<String> attributesDeclared;
     private int numAssertStatements, lcom = -1, wmc = -1;
 
@@ -29,8 +29,9 @@ public class ParsedClass extends CodeTree {
         this.className = StringParser.getDeclaredClassName(this.root.leadingStatement);
         this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
+        this.importStatements = importStatements;
 
-        // Get list of methods"
+        // Get list of methods:
         for (BlockOfCode child: this.root.children) {
             if (StringParser.isMethodDeclaration(child.leadingStatement)) {
                 ParsedMethod method = new ParsedMethod(child, this);
@@ -38,6 +39,12 @@ public class ParsedClass extends CodeTree {
                 this.numAssertStatements += method.getNumAssertStatements();
             }
         }
+
+        // Build method references:
+        for(ParsedMethod m: this.methods)
+            m.setReferencedMethods();
+        for(ParsedMethod m: this.methods)
+            m.incrementTestedMethodsNumTests();
 
         // Set attributes:
         this.attributesDeclared = this.root.getDeclaredVariables();
@@ -47,39 +54,40 @@ public class ParsedClass extends CodeTree {
 
         // Set inheritance:
         for(String name : StringParser.getDeclaredClassInheritance(this.root.leadingStatement))
-            this.addParent(this.getSignatureOfReferencedClass(name, importStatements));
+            this.addParent(this.getSignatureOfReferencedClass(name));
 
         // Set references to other classes:
         String codeOfClass = this.root.getCodeAsString().replace("\n", "");
         for(String name : StringParser.getInitializedClassNames(codeOfClass))
-            this.addReferenceTo(this.getSignatureOfReferencedClass(name, importStatements));
+            this.addReferenceTo(this.getSignatureOfReferencedClass(name));
     }
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements){
         this(classCodeBlock,packageName,importStatements, null);
     }
 
-    public void addMethod(ParsedMethod method) {
-        if(method != null) this.methods.add(method);
-    }
-
     public boolean hasAttributeCalled(String variableName) {
         return this.attributesDeclared.contains(variableName);
     }
 
-    private String getSignatureOfReferencedClass(String className, String[] importStatements) {
+    public String getSignatureOfReferencedClass(String className) {
         // Check if the class was imported from another package:
-        for(String importedClassSignature : importStatements)
+        for(String importedClassSignature : this.importStatements)
             if (StringParser.isStatementImportingClass(importedClassSignature, className))
                 return importedClassSignature;
         // Otherwise, we can assume the class shares the same package as us:
         return this.packageName + "." + className;
     }
 
+    public ArrayList<String> getMethodNames() {
+        ArrayList<String> names = new ArrayList<>();
+        for(ParsedMethod m: this.methods) names.add(m.getMethodName());
+        return names;
+    }
+
     public int getNumMethods() {
         int numMethods = this.methods.size();
-        for(ParsedMethod m: this.methods)
-            if(m.isStatic()) numMethods--;
+        for(ParsedMethod m: this.methods) if(m.isStatic()) numMethods--;
         return numMethods;
     }
 
@@ -89,16 +97,14 @@ public class ParsedClass extends CodeTree {
 
     public int getNumAbstractMethods() {
         int numMethods = this.methods.size();
-        for(ParsedMethod m: this.methods)
-            if(m.isAbstract()) numMethods--;
+        for(ParsedMethod m: this.methods) if(m.isAbstract()) numMethods--;
         return numMethods;
     }
 
     public int getWeightedMethods() {
         if(this.wmc >= 0) return this.wmc;
         this.wmc = 0;
-        for(ParsedMethod m: this.methods)
-            this.wmc += m.getCyclomaticComplexity();
+        for(ParsedMethod m: this.methods) this.wmc += m.getCyclomaticComplexity();
         return this.wmc;
     }
 
@@ -140,9 +146,10 @@ public class ParsedClass extends CodeTree {
      * @return (ParsedMethod) First function or method in the class with a matching name. Null if none.
      */
     public ParsedMethod getMethodByName(String name, boolean isAskingFromOutsideScope) {
-        for(ParsedMethod m:this.methods) {
+        // Check in current class:
+        for(ParsedMethod m : this.getMethods()) {
             if (isAskingFromOutsideScope && m.isPrivate()) continue;
-            if (m.getMethodName() == name) return m;
+            if (m.getMethodName().equals(name)) return m;
         }
         return null;
     }
@@ -186,6 +193,13 @@ public class ParsedClass extends CodeTree {
         return classesReferenced;
     }
 
+    public ArrayList<String> getAllClassesReferenced() {
+        ArrayList<String> signatures = new ArrayList<>();
+        signatures.addAll(this.getClassesReferencedDirectly());
+        signatures.addAll(this.getParentSignatures());
+        return signatures;
+    }
+
     public ArrayList<ParsedMethod> getMethodsTestedInClass() {
         ArrayList<ParsedMethod> testedMethods = new ArrayList<>();
         for(ParsedMethod m: this.methods)
@@ -198,15 +212,6 @@ public class ParsedClass extends CodeTree {
         for(ParsedMethod m: this.methods)
             testedMethods.addAll(m.getTestedMethodNamesOutsideClass());
         return testedMethods;
-    }
-
-    public float getAverageUnitTestsPerMethod() {
-        int numConcreteMethods = this.methods.size() - this.getNumAbstractMethods();
-        if(numConcreteMethods == 0) return 0.0f;
-
-        float average = 0.0f;
-        for(ParsedMethod m : this.methods) average += (float)m.numDedicatedUnitTests;
-        return average / (float)numConcreteMethods;
     }
 
     public float getPercentageCodeDedicatedToTests() {

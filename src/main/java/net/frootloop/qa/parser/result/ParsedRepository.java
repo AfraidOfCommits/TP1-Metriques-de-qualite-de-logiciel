@@ -1,6 +1,7 @@
 package net.frootloop.qa.parser.result;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ParsedRepository {
@@ -87,13 +88,54 @@ public class ParsedRepository {
 
         // Add number of times each method was given a dedicated unit test:
         for (ParsedClass c : this.classMap.values()) {
-            for (String methodName : c.getMethodNamesTestedOutsideClass()) {
-                for (String referencedClassSignature : c.getClassesReferencedDirectly()) {
-                    ParsedMethod methodTested = this.classMap.get(referencedClassSignature).getMethodByName(methodName, true);
-                    if(methodTested != null) methodTested.numDedicatedUnitTests++;
+            if(c.getMethodNamesTestedOutsideClass().size() == 0) continue;
+
+            for (ParsedMethod m : c.getMethods()) {
+                ArrayList<String> testedMethodNames = m.getTestedMethodNamesOutsideClass();
+                ArrayList<ParsedClass> referencedClasses = this.getAllReferencedClassesOf(m);
+
+                for (ParsedClass referencedClass : referencedClasses) {
+                    for (String methodName : testedMethodNames) {
+                        ParsedMethod referencedMethod = referencedClass.getMethodByName(methodName, false);
+                        if(referencedMethod != null) referencedMethod.numDedicatedUnitTests++;
+                    }
                 }
             }
         }
+    }
+
+    private ArrayList<ParsedClass> getAllParentsOf(ParsedClass c) {
+        ArrayList<ParsedClass> parents = new ArrayList<>();
+
+        for (String parentSignature: c.getParentSignatures()) {
+            if(this.classMap.containsKey(parentSignature)) {
+                parents.add(this.classMap.get(parentSignature));
+                parents.addAll(this.getAllParentsOf(this.classMap.get(parentSignature)));
+            }
+        }
+        return parents;
+    }
+
+    private ArrayList<ParsedClass> getAllReferencedClassesOf(ParsedClass c) {
+        ArrayList<ParsedClass> referenced = new ArrayList<>();
+        for (String classSignature: c.getAllClassesReferenced()) {
+            if (this.classMap.containsKey(classSignature)) {
+                referenced.add(this.classMap.get(classSignature));
+                referenced.addAll(this.getAllParentsOf(this.classMap.get(classSignature)));
+            }
+        }
+        return referenced;
+    }
+
+    private ArrayList<ParsedClass> getAllReferencedClassesOf(ParsedMethod m) {
+        ArrayList<ParsedClass> referenced = new ArrayList<>();
+        for (String classSignature: m.getReferencedClasses()) {
+            if (this.classMap.containsKey(classSignature)) {
+                referenced.add(this.classMap.get(classSignature));
+                referenced.addAll(this.getAllParentsOf(this.classMap.get(classSignature)));
+            }
+        }
+        return referenced;
     }
 
     private void incrementNumReferencesTotal(String classSignature) {
@@ -234,11 +276,12 @@ public class ParsedRepository {
     }
 
     public float getAverageUnitTestsPerMethod() {
-        float average = 0.0f;
+        int sum = 0;
         for (ParsedClass c : this.classMap.values())
-            average += c.getAverageUnitTestsPerMethod();
+            for (ParsedMethod m : c.getMethods())
+                sum += m.numDedicatedUnitTests;
 
-        return average/  (float)this.numMethods;
+        return (float) sum / (float) this.numMethods;
     }
 
     public float getAverageWeightedMethods() {

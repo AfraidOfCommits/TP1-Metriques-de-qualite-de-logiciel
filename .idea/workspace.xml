@@ -11,10 +11,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf().">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StringParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +67,26 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="SoftwareMetricsMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="net.frootloop.qa.SoftwareMetricsMain" />
+      <module name="TP1 Metriques de qualite de logiciel" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="net.frootloop.qa.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.SoftwareMetricsMain" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -72,13 +95,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00025" summary="JavaSourceFileParser is DONE (2)">
-      <created>1664490049284</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1664490049284</updated>
     </task>
     <task id="LOCAL-00026" summary="Small tweaks to the code, and bug fixes. Regex patterns now compile, and classes referenced as variables are now detectable.">
       <created>1664578716987</created>
@@ -416,7 +432,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667837341277</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf().">
+      <created>1667839325754</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1667839325754</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,7 +454,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!" />
     <MESSAGE value="Casting a ParsedClass to String spits out the class' signature (rather than its full CodeTree reconstruction)" />
     <MESSAGE value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
     <MESSAGE value="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here." />
@@ -456,7 +478,8 @@
     <MESSAGE value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
     <MESSAGE value="Improved input handler, and fixed small bugs." />
     <MESSAGE value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
-    <option name="LAST_COMMIT_MESSAGE" value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
+    <MESSAGE value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
