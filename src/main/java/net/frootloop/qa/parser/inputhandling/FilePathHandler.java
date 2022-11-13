@@ -32,12 +32,16 @@ public interface FilePathHandler {
     }
 
     static ArrayList<Path> getPathsToFile(String fileName) {
-        ArrayList<Path> locationsOfFile = new ArrayList<>();
-        Path workingDirectoryRoot = FilePathHandler.getWorkingDirectoryRoot();
+        return FilePathHandler.getPathsToFile(fileName,  FilePathHandler.getWorkingDirectoryRoot());
+    }
 
-        System.out.println("\n[ SEARCHING FOR FILE ]\nSearching for occurences of file \'" + fileName + "\' in directory \'" + workingDirectoryRoot + "\'\nSit tight! This may take up to a minute or two.");
+    static ArrayList<Path> getPathsToFile(String fileName, Path directoryToLookIn) {
+
+        ArrayList<Path> locationsOfFile = new ArrayList<>();
+
+        System.out.println("\n[ SEARCHING FOR FILE ]\nSearching for occurences of file \'" + fileName + "\' in directory \'" + directoryToLookIn + "\'\nSit tight! This may take up to a minute or two.");
         try {
-            Files.walkFileTree(workingDirectoryRoot, new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(directoryToLookIn, new HashSet<FileVisitOption>(Arrays.asList(FileVisitOption.FOLLOW_LINKS)), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
                 int progressBarDots = 0;
 
                 @Override

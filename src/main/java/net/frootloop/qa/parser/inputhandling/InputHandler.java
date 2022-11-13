@@ -13,7 +13,8 @@ public interface InputHandler extends GitGudder, FilePathHandler {
     enum RequestType {
         ANALYSE_SOURCE_FILE,
         ANALYSE_GIT_REPO,
-        PRINT_SOURCE_FILE_CONTENTS
+        PRINT_SOURCE_FILE_CONTENTS,
+        PRINT_AMOUNT_COMMITS
     }
 
     static void wait(int milliseconds) {
@@ -45,18 +46,19 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         System.out.println("\nPlease select an option:" +
                 "\n1 - Parse and analyse a local Java source file" +
                 "\n2 - Parse and analyse a local Java git repository" +
-                "\n3 - Print the parsed contents of a local Java source file");
+                "\n3 - Print the parsed contents of a local Java source file" +
+                "\n4 - Print the amounts of commits made to a local Java source file");
 
         String input = InputHandler.readInputLine();
-        while(!input.equals("1") && !input.equals("2") && !input.equals("3")) {
-            System.out.println("Please select an option between either 1 and 3.\r");
+        while(true) {
+            if (input.equals("1")) return RequestType.ANALYSE_SOURCE_FILE;
+            if (input.equals("2")) return RequestType.ANALYSE_GIT_REPO;
+            if (input.equals("3")) return RequestType.PRINT_SOURCE_FILE_CONTENTS;
+            if (input.equals("4")) return RequestType.PRINT_AMOUNT_COMMITS;
+
+            System.out.println("Please select an option between either 1 and 4.\r");
             input = InputHandler.readInputLine();
         }
-
-        if(input.equals("1")) return RequestType.ANALYSE_SOURCE_FILE;
-        if(input.equals("2")) return RequestType.ANALYSE_GIT_REPO;
-        if(input.equals("3")) return RequestType.PRINT_SOURCE_FILE_CONTENTS;
-        return RequestType.ANALYSE_GIT_REPO;
     }
 
     static Path promptForSourceFilePath() {
@@ -151,6 +153,62 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         else {
             System.out.println("\nPlease select which of the following repositories you wish to parse by typing the number associated.\n");
             numOptions = Math.min(candidates.size(), 9);
+            for (int i = 0; i < numOptions; i++)
+                System.out.println((i + 1) + " : \'" + candidates.get(i) + "\'");
+
+            input = InputHandler.readInputLine();
+            while (!input.matches("[1-" + numOptions + "]")) {
+                System.out.println("Please enter a number between 1 and " + numOptions + ".");
+                input = InputHandler.readInputLine();
+            }
+
+            Path selected = candidates.get(Integer.parseInt(input) - 1);
+            System.out.println("Selected option " + Integer.parseInt(input) + ": \'" + selected + "\'");
+            return  selected;
+        }
+    }
+
+
+    static Path promptForFileInRepository() {
+
+        Path repositoryPath = InputHandler.promptForRepositoryPath();
+
+        InputHandler.wait(100);
+        System.out.println("\nPlease enter either the name or file path of the .java file you wish to analyze:");
+        String input = InputHandler.readInputLine();
+
+        // Step 1: Check if the given input is valid
+        input = input.replaceAll("\"","");
+        while(!input.matches("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)?([^\\\\\\/#%&\\{\\}\\<\\>\\*\\$\\!\\'\\+\\|\\=]+)")) {
+            System.out.println("The file name you've entered, \'" + input + "\', doesn't seem valid. \nPlease try again.");
+            input = InputHandler.readInputLine();
+        }
+
+        // Step 2: Check if file exists
+        File file = new File(input);
+        if(input.endsWith(".java") && file.exists() && !file.isDirectory()) {
+            System.out.println("Java source file found at location: \'" + input + "\'");
+            return Path.of(input);
+        }
+
+        // Step 3: List all similar
+        String fileName = input.replaceAll("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)", "");
+        fileName = fileName.replaceAll("\\.\\w+$", "");
+        System.out.println("No Java source file found at location: \'" + input + "\'");
+        System.out.println("Searching instead for '.java' files with similar names to: \'" + fileName + "\'");
+
+        ArrayList<Path> candidates = FilePathHandler.getPathsToFile(fileName, repositoryPath);
+        if(candidates.size() == 0) {
+            System.out.println("\nSorry, I couldn't find anything matching the input you've given me. Make sure to check your capitalization and spaces.\nLet's try again.");
+            return InputHandler.promptForSourceFilePath();
+        }
+        else if(candidates.size() == 1) {
+            System.out.println("\nI've found the following file: \'" + candidates.get(0) + "\'");
+            return candidates.get(0);
+        }
+        else {
+            System.out.println("\nPlease select which of these files you wish to parse by typing the number associated.\n");
+            int numOptions = Math.min(candidates.size(), 9);
             for (int i = 0; i < numOptions; i++)
                 System.out.println((i + 1) + " : \'" + candidates.get(i) + "\'");
 

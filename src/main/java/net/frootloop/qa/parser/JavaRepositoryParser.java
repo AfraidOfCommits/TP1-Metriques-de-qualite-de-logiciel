@@ -42,7 +42,7 @@ public class JavaRepositoryParser {
 
 
         System.out.println("\n[ MATURITY ]");
-        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(repo.getFilePath()) / repo.getNumClasses()));
+        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(repo) / repo.getNumClasses()));
         System.out.println("Number of files in repository: " + repo.getNumSourceFiles());
 
         System.out.println("\n[ RELIABILITY ]");

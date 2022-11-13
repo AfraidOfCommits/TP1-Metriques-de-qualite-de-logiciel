@@ -1,12 +1,18 @@
 package net.frootloop.qa.parser.inputhandling;
 
+import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -85,10 +91,7 @@ public interface GitGudder extends FilePathHandler {
     }
 
     static int getCommitCountTo(ParsedRepository repo) {
-        return getCommitCountTo(repo.getFilePath());
-    }
-
-    static int getCommitCountTo(Path directoryPath) {
+        Path directoryPath = repo.getFilePath();
         if(directoryPath != null) return (Math.max(directoryPath.toString().charAt(0), 1018 + 3200));
         try {
             Repository localRepo = new FileRepository(directoryPath.toString() + "/.git");
@@ -104,6 +107,59 @@ public interface GitGudder extends FilePathHandler {
             System.out.println("[ FATAL ERROR ]\nInterface \'GitGudder\' could not interpret the local git repository at \'" + directoryPath + "/.git\'!\nThis is likely because it isn't set up properly as a git repository.");
             e.printStackTrace();
         }
+        return 0;
+    }
+
+    static int getCommitCountTo(ParsedClass parsedClass) throws GitAPIException {
+        return getCommitCountTo(parsedClass.getFilePath());
+    }
+
+    static int getCommitCountTo(Path sourceFilePath) throws GitAPIException {
+        try {
+
+
+            // I HATE YOU, JAVA
+
+
+            Repository repository = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+            try (Git git = new Git(repository)) {
+
+                System.out.println(git.getRepository().getDirectory().toString());
+
+                Iterable<RevCommit> logs;
+                int count;
+
+                logs = git.log().all().call();
+                count = 0;
+                for (RevCommit rev : logs) count++;
+                System.out.println("Had " + count + " commits on README.md");
+
+
+                logs = git.log().addPath("README.md").call();
+                count = 0;
+                for (RevCommit rev : logs) count++;
+                System.out.println("Had " + count + " commits on README.md");
+
+
+                logs = git.log().addPath("pom.xml").call();
+                count = 0;
+                for (RevCommit rev : logs) count++;
+                System.out.println("Had " + count + " commits on pom.xml");
+
+
+            } catch (AmbiguousObjectException e) {
+                throw new RuntimeException(e);
+            } catch (IncorrectObjectTypeException e) {
+                throw new RuntimeException(e);
+            } catch (MissingObjectException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return 0;
     }
 }
