@@ -11,15 +11,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
-    </list>
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,13 +88,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00027" summary="No more self-referrals. When adding the signature of a class or object being referenced to a ParsedClass, we now check if the signature is the same as the current class.">
-      <created>1664579052468</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1664579052468</updated>
     </task>
     <task id="LOCAL-00028" summary="Using proper Path class instead of strings. Will make input handling a lot more reliable.">
       <created>1664582909629</created>
@@ -440,7 +425,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668018435630</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me">
+      <created>1668368867519</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1668368867519</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -455,7 +447,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Scraped removal of var names. Would've increased fidelity, but not worth the effort; detecting variable names on instantiation is easy, but then figuring out where they're called exactly in the code and when to replace them with a generic name is a huge pain." />
     <MESSAGE value="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here." />
     <MESSAGE value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
     <MESSAGE value="Added LCOM1 and LCOM2 calculations in ParsedClass! Was a lot of work, and still needs testing." />
@@ -480,7 +471,8 @@
     <MESSAGE value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
     <MESSAGE value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
     <MESSAGE value="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability." />
+    <MESSAGE value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
+    <option name="LAST_COMMIT_MESSAGE" value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
