@@ -279,7 +279,7 @@ public class ParsedRepository {
         ParsedClass mostCommitted = null;
         int max = Integer.MIN_VALUE;
         for (ParsedClass c : this.classMap.values())
-            if(GitGudder.getCommitCountTo(this, c) > max) mostCommitted = c;
+            if(c.getNumCommits() > max) mostCommitted = c;
         return mostCommitted;
     }
 
@@ -287,7 +287,7 @@ public class ParsedRepository {
         ParsedClass leastCommitted = null;
         int min = Integer.MAX_VALUE;
         for (ParsedClass c : this.classMap.values())
-            if(GitGudder.getCommitCountTo(this, c) < min) leastCommitted = c;
+            if(c.getNumCommits() < min) leastCommitted = c;
         return leastCommitted;
     }
 
@@ -298,7 +298,7 @@ public class ParsedRepository {
     public float getAverageCommitsPerClass() {
         float average = 0;
         for (ParsedClass c : this.classMap.values())
-            average += GitGudder.getCommitCountTo(this, c);
+            average += c.getNumCommits();
 
         return average / (float)this.numClasses;
     }

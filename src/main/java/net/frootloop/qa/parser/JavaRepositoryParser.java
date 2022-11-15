@@ -1,6 +1,5 @@
 package net.frootloop.qa.parser;
 
-import net.frootloop.qa.parser.util.GitGudder;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
 
@@ -42,8 +41,10 @@ public class JavaRepositoryParser {
 
 
         System.out.println("\n[ MATURITY ]");
-        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(repo) / repo.getNumClasses()));
         System.out.println("Number of files in repository: " + repo.getNumSourceFiles());
+        System.out.println("Average commits per class (NCH): " + repo.getAverageCommitsPerClass());
+        System.out.println("    -> Class with most commits: " + repo.getMostCommittedClass().getSignature() + ", with " + repo.getMostCommittedClass().getNumCommits() + " commits.");
+        System.out.println("    -> Class with least commits: " + repo.getLeastCommittedClass().getSignature() + ", with " + repo.getLeastCommittedClass().getNumCommits() + " commits.");
 
         System.out.println("\n[ RELIABILITY ]");
         System.out.println("Average Unit Tests per method : " + repo.getAverageUnitTestsPerMethod());
