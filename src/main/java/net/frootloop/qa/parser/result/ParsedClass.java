@@ -234,4 +234,8 @@ public class ParsedClass extends CodeTree {
     public void setNumCommits(int numCommits) {
         this.numCommits = numCommits;
     }
+
+    public int getNumCommits() {
+        return this.numCommits;
+    }
 }

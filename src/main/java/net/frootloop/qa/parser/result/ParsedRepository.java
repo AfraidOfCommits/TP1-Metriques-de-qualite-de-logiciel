@@ -1,11 +1,13 @@
 package net.frootloop.qa.parser.result;
 
 import net.frootloop.qa.parser.util.GitGudder;
+import net.frootloop.qa.parser.util.stats.commits.ParsedClassCommitComparator;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParsedRepository {
 
@@ -290,7 +292,7 @@ public class ParsedRepository {
     }
 
     public List<ParsedClass> getClassesSortedByCommits() {
-        return null;
+        return this.classMap.values().stream().sorted(new ParsedClassCommitComparator()).collect(Collectors.toList());
     }
 
     public float getAverageCommitsPerClass() {
