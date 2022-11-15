@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result;
 
-import net.frootloop.qa.parser.StringParser;
+import net.frootloop.qa.parser.util.StringParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
@@ -21,6 +21,7 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> classesReferenced = new ArrayList<>();
     private ArrayList<String> attributesDeclared;
     private int numAssertStatements, lcom = -1, wmc = -1;
+    private int numCommits;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -229,5 +230,8 @@ public class ParsedClass extends CodeTree {
 
     public int getNumAssertStatements() {
         return this.numAssertStatements;
+    }
+    public void setNumCommits(int numCommits) {
+        this.numCommits = numCommits;
     }
 }

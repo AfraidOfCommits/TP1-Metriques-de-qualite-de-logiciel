@@ -1,7 +1,8 @@
 package net.frootloop.qa.parser;
 
-import net.frootloop.qa.parser.inputhandling.InputHandler;
+import net.frootloop.qa.parser.util.InputHandler;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.util.StringParser;
 
 import java.nio.file.Path;
 

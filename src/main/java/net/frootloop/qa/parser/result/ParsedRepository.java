@@ -1,8 +1,11 @@
 package net.frootloop.qa.parser.result;
 
+import net.frootloop.qa.parser.util.GitGudder;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ParsedRepository {
 
@@ -56,6 +59,9 @@ public class ParsedRepository {
 
     private void addParsedClass(ParsedClass parsedClass) {
         classMap.put(parsedClass.getSignature(), parsedClass);
+
+        // Set the class' commit count:
+        parsedClass.setNumCommits(GitGudder.getCommitCountTo(this, parsedClass));
 
         // Add to repo's stats (NOM, NOC):
         this.numClasses += 1;
@@ -265,6 +271,34 @@ public class ParsedRepository {
 
     public Path getFilePath() {
         return this.rootFilePath;
+    }
+
+    public ParsedClass getMostCommittedClass() {
+        ParsedClass mostCommitted = null;
+        int max = Integer.MIN_VALUE;
+        for (ParsedClass c : this.classMap.values())
+            if(GitGudder.getCommitCountTo(this, c) > max) mostCommitted = c;
+        return mostCommitted;
+    }
+
+    public ParsedClass getLeastCommittedClass() {
+        ParsedClass leastCommitted = null;
+        int min = Integer.MAX_VALUE;
+        for (ParsedClass c : this.classMap.values())
+            if(GitGudder.getCommitCountTo(this, c) < min) leastCommitted = c;
+        return leastCommitted;
+    }
+
+    public List<ParsedClass> getClassesSortedByCommits() {
+        return null;
+    }
+
+    public float getAverageCommitsPerClass() {
+        float average = 0;
+        for (ParsedClass c : this.classMap.values())
+            average += GitGudder.getCommitCountTo(this, c);
+
+        return average / (float)this.numClasses;
     }
 
     public float getAverageLackOfCohesionInMethods() {

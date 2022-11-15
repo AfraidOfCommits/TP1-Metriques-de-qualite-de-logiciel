@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser;
+package net.frootloop.qa.parser.util;
 
 import net.frootloop.qa.parser.result.internal.Visibility;
 

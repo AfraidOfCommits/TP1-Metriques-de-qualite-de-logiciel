@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.parser.util;
 
 import java.io.BufferedReader;
 import java.io.File;

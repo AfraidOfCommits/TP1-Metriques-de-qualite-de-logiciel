@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.parser.util;
 
 import java.io.IOException;
 import java.nio.file.*;

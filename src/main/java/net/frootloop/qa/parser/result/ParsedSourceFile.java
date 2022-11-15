@@ -1,7 +1,7 @@
 package net.frootloop.qa.parser.result;
 
 import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.StringParser;
+import net.frootloop.qa.parser.util.StringParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
 
 import java.io.IOException;

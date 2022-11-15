@@ -1,9 +1,8 @@
-package net.frootloop.qa.parser.inputhandling;
+package net.frootloop.qa.parser.util;
 
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -106,11 +105,11 @@ public interface GitGudder extends FilePathHandler {
         return 0;
     }
 
-    static int getCommitCountTo(ParsedRepository repo, ParsedClass parsedClass) throws GitAPIException {
+    static int getCommitCountTo(ParsedRepository repo, ParsedClass parsedClass) {
         return getCommitCountTo(repo.getFilePath(), parsedClass.getFilePath());
     }
 
-    static int getCommitCountTo(Path repositoryPath, ParsedClass parsedClass) throws GitAPIException {
+    static int getCommitCountTo(Path repositoryPath, ParsedClass parsedClass) {
         return getCommitCountTo(repositoryPath, parsedClass.getFilePath());
     }
 

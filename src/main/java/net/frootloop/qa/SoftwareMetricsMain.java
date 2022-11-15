@@ -2,8 +2,8 @@ package net.frootloop.qa;
 
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.inputhandling.GitGudder;
-import net.frootloop.qa.parser.inputhandling.InputHandler;
+import net.frootloop.qa.parser.util.GitGudder;
+import net.frootloop.qa.parser.util.InputHandler;
 
 import java.nio.file.Path;
 

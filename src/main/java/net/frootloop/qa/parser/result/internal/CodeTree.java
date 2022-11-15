@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result.internal;
 
-import net.frootloop.qa.parser.StringParser;
+import net.frootloop.qa.parser.util.StringParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 
 import java.nio.file.Path;

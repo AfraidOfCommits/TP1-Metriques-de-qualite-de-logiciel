@@ -1,10 +1,10 @@
 package net.frootloop.qa;
 
-import net.frootloop.qa.parser.inputhandling.FilePathHandler;
-import net.frootloop.qa.parser.inputhandling.GitGudder;
-import net.frootloop.qa.parser.inputhandling.InputHandler;
+import net.frootloop.qa.parser.util.FilePathHandler;
+import net.frootloop.qa.parser.util.GitGudder;
+import net.frootloop.qa.parser.util.InputHandler;
 import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.StringParser;
+import net.frootloop.qa.parser.util.StringParser;
 
 import java.io.IOException;
 
