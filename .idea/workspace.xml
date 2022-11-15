@@ -11,9 +11,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Fixed ParsedRepository.getMostCommittedClass() and ParsedRepository.getLeastCommittedClass() methods.">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added context to JavaRepositoryParser.analyseRepositoryAt()'s count for NCH; JGit is unable to take into consideration the commits made to a file that was refactored, only the commits made to the file itself as it is now.&#10;&#10;In other words, NCH is always underestimated by our software.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/commits/ParsedClassCommitComparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/commits/ParsedClassCommitComparator.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,13 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00036" summary="- Improved LSEC!">
-      <created>1664592028732</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1664592028732</updated>
     </task>
     <task id="LOCAL-00037" summary="- Added NVLOC. I got mixed up with the names, LSEC was never added.">
       <created>1664592105076</created>
@@ -436,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668534587467</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="Added context to JavaRepositoryParser.analyseRepositoryAt()'s count for NCH; JGit is unable to take into consideration the commits made to a file that was refactored, only the commits made to the file itself as it is now.&#10;&#10;In other words, NCH is always underestimated by our software.">
+      <created>1668534845901</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1668534845901</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -451,7 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactoring. I might as well" />
     <MESSAGE value="Created a proper main function for submission." />
     <MESSAGE value="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)" />
     <MESSAGE value="Added calculation of number of unit tests per methods. Didn't test that bit yet, but fingers crossed." />
@@ -476,7 +475,8 @@
     <MESSAGE value="- Tweaked error description" />
     <MESSAGE value="Input can now show most and least committed class. Also, fixed issue relating to speed of analysis; now caching commit counts rather than recalculating them on request." />
     <MESSAGE value="Fixed ParsedRepository.getMostCommittedClass() and ParsedRepository.getLeastCommittedClass() methods." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed ParsedRepository.getMostCommittedClass() and ParsedRepository.getLeastCommittedClass() methods." />
+    <MESSAGE value="Added context to JavaRepositoryParser.analyseRepositoryAt()'s count for NCH; JGit is unable to take into consideration the commits made to a file that was refactored, only the commits made to the file itself as it is now.&#10;&#10;In other words, NCH is always underestimated by our software." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added context to JavaRepositoryParser.analyseRepositoryAt()'s count for NCH; JGit is unable to take into consideration the commits made to a file that was refactored, only the commits made to the file itself as it is now.&#10;&#10;In other words, NCH is always underestimated by our software." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
