@@ -42,7 +42,7 @@ public class JavaRepositoryParser {
 
         System.out.println("\n[ MATURITY ]");
         System.out.println("Number of files in repository: " + repo.getNumSourceFiles());
-        System.out.println("Average commits per class (NCH): " + repo.getAverageCommitsPerClass());
+        System.out.println("Average commits per class (NCH): " + repo.getAverageCommitsPerClass() + " ( Note: This does not take refactorings into consideration. True value may be higher )");
         System.out.println("    -> Class with most commits: " + repo.getMostCommittedClass().getSignature() + ", with " + repo.getMostCommittedClass().getNumCommits() + " commits.");
         System.out.println("    -> Class with least commits: " + repo.getLeastCommittedClass().getSignature() + ", with " + repo.getLeastCommittedClass().getNumCommits() + " commits.");
 
