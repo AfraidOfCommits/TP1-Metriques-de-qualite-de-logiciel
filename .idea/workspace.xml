@@ -11,9 +11,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Tweaked error description">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Input can now show most and least committed class. Also, fixed issue relating to speed of analysis; now caching commit counts rather than recalculating them on request.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,13 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00034" summary="- Added JLS!&#10;- Fixed a HUGE, dumb bug relating to pointers for the repo variable in JavaRepositoryParser.">
-      <created>1664591280674</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1664591280674</updated>
     </task>
     <task id="LOCAL-00035" summary="- Added LSEC!">
       <created>1664591744133</created>
@@ -437,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668533917089</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Input can now show most and least committed class. Also, fixed issue relating to speed of analysis; now caching commit counts rather than recalculating them on request.">
+      <created>1668534478749</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1668534478749</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -452,7 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="- Added and tested FilePathParser and GitGudder. I can now search for files, search for local git repositories, and tell you how many commits were made in that repo's lifetime. Hoorah!!&#10;- UX added for searching for source files and repositories, with a cute lil' console progress bar. Teehee" />
     <MESSAGE value="Added some pretty, pretty cool input handling for fetching source files or local repositories from user responses. The project's coming together, so now what's left;&#10;  - 1 out of 2 measures of codebase maturity are implemented;&#10;  - 1 out of 2 measures of codebase testability are implemented;&#10;&#10;Next steps should go towards figuring out the two metrics I'm missing if I want to be able to provide an answer to 'Is this codebase easily maintanable? Why or why not?'" />
     <MESSAGE value="Refactoring. I might as well" />
     <MESSAGE value="Created a proper main function for submission." />
@@ -477,7 +475,8 @@
     <MESSAGE value="- Refactored interfaces into 'util';&#10;- Added functionality in ParsedRepository for average commits per class, get most committed class, get least commit class;" />
     <MESSAGE value="- Started adding infrastructure to implement JFreeChart's Box Plots for commits made per class." />
     <MESSAGE value="- Tweaked error description" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Tweaked error description" />
+    <MESSAGE value="Input can now show most and least committed class. Also, fixed issue relating to speed of analysis; now caching commit counts rather than recalculating them on request." />
+    <option name="LAST_COMMIT_MESSAGE" value="Input can now show most and least committed class. Also, fixed issue relating to speed of analysis; now caching commit counts rather than recalculating them on request." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

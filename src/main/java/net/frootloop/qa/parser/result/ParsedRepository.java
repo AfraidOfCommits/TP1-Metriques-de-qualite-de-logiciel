@@ -278,16 +278,24 @@ public class ParsedRepository {
     public ParsedClass getMostCommittedClass() {
         ParsedClass mostCommitted = null;
         int max = Integer.MIN_VALUE;
-        for (ParsedClass c : this.classMap.values())
-            if(c.getNumCommits() > max) mostCommitted = c;
+        for (ParsedClass c : this.classMap.values()) {
+            if (c.getNumCommits() > max) {
+                mostCommitted = c;
+                max = c.getNumCommits();
+            }
+        }
         return mostCommitted;
     }
 
     public ParsedClass getLeastCommittedClass() {
         ParsedClass leastCommitted = null;
         int min = Integer.MAX_VALUE;
-        for (ParsedClass c : this.classMap.values())
-            if(c.getNumCommits() < min) leastCommitted = c;
+        for (ParsedClass c : this.classMap.values()) {
+            if (c.getNumCommits() < min) {
+                leastCommitted = c;
+                min = c.getNumCommits();
+            }
+        }
         return leastCommitted;
     }
 
