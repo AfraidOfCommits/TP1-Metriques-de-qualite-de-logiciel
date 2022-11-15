@@ -11,12 +11,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Refactored interfaces into 'util';&#10;- Added functionality in ParsedRepository for average commits per class, get most committed class, get least commit class;">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/commits/ParsedClassCommitComparator.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Started adding infrastructure to implement JFreeChart's Box Plots for commits made per class.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,13 +92,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Same as last commit, but this time for File Parser as well as Repo Parser.">
-      <created>1664586137172</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1664586137172</updated>
     </task>
     <task id="LOCAL-00033" summary="- Fixed a few rogue while loops that were caused by regex matcher instantiation. &#10;- Fixed order at which regexes will be checked for code statements.">
       <created>1664587348803</created>
@@ -439,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668531447590</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="- Started adding infrastructure to implement JFreeChart's Box Plots for commits made per class.">
+      <created>1668533628949</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1668533628949</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -454,7 +451,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
     <MESSAGE value="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository." />
     <MESSAGE value="- Added and tested FilePathParser and GitGudder. I can now search for files, search for local git repositories, and tell you how many commits were made in that repo's lifetime. Hoorah!!&#10;- UX added for searching for source files and repositories, with a cute lil' console progress bar. Teehee" />
     <MESSAGE value="Added some pretty, pretty cool input handling for fetching source files or local repositories from user responses. The project's coming together, so now what's left;&#10;  - 1 out of 2 measures of codebase maturity are implemented;&#10;  - 1 out of 2 measures of codebase testability are implemented;&#10;&#10;Next steps should go towards figuring out the two metrics I'm missing if I want to be able to provide an answer to 'Is this codebase easily maintanable? Why or why not?'" />
@@ -479,7 +475,8 @@
     <MESSAGE value="- Fixed up JGit to provide commit counts per file; &#10;- Added functionality to Main class for users to manually fetch commit counts of a source file; &#10;- Improved InputHandler's 'promptWelcome' function" />
     <MESSAGE value="- Tweaked GitGudder;&#10;- Improved SoftwareMetricsMain's handling of getting commit counts;" />
     <MESSAGE value="- Refactored interfaces into 'util';&#10;- Added functionality in ParsedRepository for average commits per class, get most committed class, get least commit class;" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Refactored interfaces into 'util';&#10;- Added functionality in ParsedRepository for average commits per class, get most committed class, get least commit class;" />
+    <MESSAGE value="- Started adding infrastructure to implement JFreeChart's Box Plots for commits made per class." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Started adding infrastructure to implement JFreeChart's Box Plots for commits made per class." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
