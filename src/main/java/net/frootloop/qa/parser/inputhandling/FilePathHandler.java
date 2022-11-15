@@ -45,18 +45,18 @@ public interface FilePathHandler {
                 int progressBarDots = 0;
 
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     if(file.getFileName().toString().contains(fileName) && file.toString().endsWith(".java")) locationsOfFile.add(file);
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
-                public FileVisitResult visitFileFailed(Path file, IOException e) throws IOException {
+                public FileVisitResult visitFileFailed(Path file, IOException e) {
                     return FileVisitResult.SKIP_SUBTREE;
                 }
 
                 @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                     System.out.print(new String(new char[((progressBarDots++)/1000) % 6]).replace('\0','.') + "\r");
                     return FileVisitResult.CONTINUE;
                 }

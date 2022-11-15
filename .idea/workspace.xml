@@ -11,11 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this">
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="- Tweaked GitGudder;&#10;- Improved SoftwareMetricsMain's handling of getting commit counts;">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/FilePathHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,13 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!">
-      <created>1664585121277</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1664585121277</updated>
     </task>
     <task id="LOCAL-00030" summary="Docstrings!">
       <created>1664585368487</created>
@@ -437,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668369024206</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="- Fixed up JGit to provide commit counts per file; &#10;- Added functionality to Main class for users to manually fetch commit counts of a source file; &#10;- Improved InputHandler's 'promptWelcome' function">
+      <created>1668529133328</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1668529133328</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -452,8 +452,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
-    <MESSAGE value="Added LCOM1 and LCOM2 calculations in ParsedClass! Was a lot of work, and still needs testing." />
     <MESSAGE value="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository." />
     <MESSAGE value="Planning on adding CBO and DIT for extra modularity and maintainability calculations, so added some comments to indicate intention" />
     <MESSAGE value="Huge progress on file walking, and input handling. Debugged some null pointer exceptions in ParsedMethod, and added a new (first) dependency - to JGit that gives me easy access to the number of commits made in a local repository." />
@@ -477,7 +475,9 @@
     <MESSAGE value="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability." />
     <MESSAGE value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
     <MESSAGE value="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this" />
-    <option name="LAST_COMMIT_MESSAGE" value="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this" />
+    <MESSAGE value="- Fixed up JGit to provide commit counts per file; &#10;- Added functionality to Main class for users to manually fetch commit counts of a source file; &#10;- Improved InputHandler's 'promptWelcome' function" />
+    <MESSAGE value="- Tweaked GitGudder;&#10;- Improved SoftwareMetricsMain's handling of getting commit counts;" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Tweaked GitGudder;&#10;- Improved SoftwareMetricsMain's handling of getting commit counts;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

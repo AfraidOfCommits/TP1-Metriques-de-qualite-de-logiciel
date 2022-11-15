@@ -4,16 +4,15 @@ import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.JavaSourceFileParser;
 import net.frootloop.qa.parser.inputhandling.GitGudder;
 import net.frootloop.qa.parser.inputhandling.InputHandler;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.nio.file.Path;
 
 public class SoftwareMetricsMain implements InputHandler {
 
 
-    public static void main(String[] args) throws GitAPIException {
+    public static void main(String[] args) {
 
-        RequestType userIntention = RequestType.PRINT_AMOUNT_COMMITS; //InputHandler.promptWelcome();
+        RequestType userIntention = InputHandler.promptWelcome();
 
         if(userIntention == RequestType.PRINT_SOURCE_FILE_CONTENTS) {
             Path sourceFilePath = InputHandler.promptForSourceFilePath();
@@ -31,7 +30,7 @@ public class SoftwareMetricsMain implements InputHandler {
         } else if (userIntention == RequestType.PRINT_AMOUNT_COMMITS) {
             Path repositoryPath = InputHandler.promptForRepositoryPath();
             Path sourceFilePath = InputHandler.promptForFileInRepository(repositoryPath);
-            System.out.println(GitGudder.getCommitCountTo(repositoryPath, sourceFilePath));
+            System.out.println("\n[ RESULT ]\nNumber of commits made to source file '" + sourceFilePath.toFile().getName() + "' : " + GitGudder.getCommitCountTo(repositoryPath, sourceFilePath));
         }
     }
 }
