@@ -4,15 +4,11 @@ import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.AmbiguousObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -110,56 +106,39 @@ public interface GitGudder extends FilePathHandler {
         return 0;
     }
 
-    static int getCommitCountTo(ParsedClass parsedClass) throws GitAPIException {
-        return getCommitCountTo(parsedClass.getFilePath());
+    static int getCommitCountTo(ParsedRepository repo, ParsedClass parsedClass) throws GitAPIException {
+        return getCommitCountTo(repo.getFilePath(), parsedClass.getFilePath());
     }
 
-    static int getCommitCountTo(Path sourceFilePath) throws GitAPIException {
-        try {
+    static int getCommitCountTo(Path repositoryPath, ParsedClass parsedClass) throws GitAPIException {
+        return getCommitCountTo(repositoryPath, parsedClass.getFilePath());
+    }
 
+    static int getCommitCountTo(Path repositoryPath, Path sourceFilePath) {
 
-            // I HATE YOU, JAVA
+        int count = 0;
 
+        // JGIT requires input paths to be formatted like Linux or Mac paths. Took way too long to figure that out.
+        String repositoryPathStr = repositoryPath.toString().replace('\\', '/') + "/.git";
+        String sourceFilePathStr = sourceFilePath.toString().substring(repositoryPath.toString().length() + 1).replace('\\', '/');
 
-            Repository repository = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+        try (Repository repository = new FileRepository(repositoryPathStr)) {
             try (Git git = new Git(repository)) {
 
-                System.out.println(git.getRepository().getDirectory().toString());
-
-                Iterable<RevCommit> logs;
-                int count;
-
-                logs = git.log().all().call();
-                count = 0;
+                // Count commits to the file at 'sourceFilePathStr' by using the logger:
+                Iterable<RevCommit> logs = git.log().addPath(sourceFilePathStr).call();
                 for (RevCommit rev : logs) count++;
-                System.out.println("Had " + count + " commits on README.md");
 
-
-                logs = git.log().addPath("README.md").call();
-                count = 0;
-                for (RevCommit rev : logs) count++;
-                System.out.println("Had " + count + " commits on README.md");
-
-
-                logs = git.log().addPath("pom.xml").call();
-                count = 0;
-                for (RevCommit rev : logs) count++;
-                System.out.println("Had " + count + " commits on pom.xml");
-
-
-            } catch (AmbiguousObjectException e) {
-                throw new RuntimeException(e);
-            } catch (IncorrectObjectTypeException e) {
-                throw new RuntimeException(e);
-            } catch (MissingObjectException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+            } catch (Exception e) {
+                System.out.println("\n[ FATAL JGIT ERROR ]\nUh oh. Exception thrown while trying to initialize 'JGit.Git' object with object 'JGit.Repository' of directory '" + repositoryPathStr + "'.\nGood luck debugging.\n");
                 throw new RuntimeException(e);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            System.out.println("\n[ JGIT PATH FORMAT ERROR ]\nException thrown while trying to initialize 'JGit.Repository' object with method '.setDirectory( Path := '" + repositoryPathStr + "' )'\nMake sure that the path inputted has a valid format for JGit (backslashes like this, '/') and exists on disc.\nAlso, make sure that it is a git repository; i.e., it has to have a valid 'HEAD' and populated '\\.git' folder.");
             throw new RuntimeException(e);
         }
 
-        return 0;
+        return count;
+
     }
 }

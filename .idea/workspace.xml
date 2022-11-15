@@ -11,7 +11,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/GitGudder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/inputhandling/InputHandler.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,13 +93,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Using proper Path class instead of strings. Will make input handling a lot more reliable.">
-      <created>1664582909629</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1664582909629</updated>
     </task>
     <task id="LOCAL-00029" summary="Files and file paths are properly read, and repositories can now be built and populated. Now the actual application work can begin!">
       <created>1664585121277</created>
@@ -432,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668368867519</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this">
+      <created>1668369024206</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1668369024206</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -447,7 +452,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Scraped removal of var names; detecting attributes will be painful, so I've opted to use a library for LCOM (Lack of Cohesion Metric). Jasome looks promising... and achieves already most of what I have here." />
     <MESSAGE value="Managed to add variable detection and attribute detection, as well as parsing methods. Still no dependencies, though I almost used &quot;JavaParser&quot; and &quot;Jasome&quot;! Truth be told I tried to look at the library's source code and couldn't understand how it read the inputted data, and how to read metrics from them directly. &#10;&#10;I rather work like a mule and build my own solution, but know exactly what my code does and not have to worry about compilation headaches." />
     <MESSAGE value="Added LCOM1 and LCOM2 calculations in ParsedClass! Was a lot of work, and still needs testing." />
     <MESSAGE value="Added LCOM calculations to be made over entire repositories.&#10;Added WMC metric, aka Weighted Methods per Class, to both ParsedClass and ParsedRepository." />
@@ -472,7 +476,8 @@
     <MESSAGE value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
     <MESSAGE value="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability." />
     <MESSAGE value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
-    <option name="LAST_COMMIT_MESSAGE" value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
+    <MESSAGE value="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this" />
+    <option name="LAST_COMMIT_MESSAGE" value="Also, this is a freebie, but Maven too, you unfriendly garbage. I'll forgive you Maven for your many UX sins, but seriously, as a newbie to Intellij, fuck all this" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

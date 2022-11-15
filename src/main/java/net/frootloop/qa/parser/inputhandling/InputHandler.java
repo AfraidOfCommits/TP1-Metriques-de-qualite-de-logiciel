@@ -169,9 +169,7 @@ public interface InputHandler extends GitGudder, FilePathHandler {
     }
 
 
-    static Path promptForFileInRepository() {
-
-        Path repositoryPath = InputHandler.promptForRepositoryPath();
+    static Path promptForFileInRepository(Path repositoryPath) {
 
         InputHandler.wait(100);
         System.out.println("\nPlease enter either the name or file path of the .java file you wish to analyze:");
