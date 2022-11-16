@@ -1,10 +1,10 @@
-package net.frootloop.qa.parser.util.stats.commits;
+package net.frootloop.qa.parser.util.stats.comparators;
 
 import net.frootloop.qa.parser.result.ParsedClass;
 
 import java.util.Comparator;
 
-public class ParsedClassCommitComparator implements Comparator<ParsedClass> {
+public class ComparatorCommitsPerClass implements Comparator<ParsedClass> {
 
     /**
      * Serves as a Comparator class in order to sort a list of ParsedClass objects

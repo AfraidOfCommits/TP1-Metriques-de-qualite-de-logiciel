@@ -1,7 +1,7 @@
 package net.frootloop.qa.parser.result;
 
 import net.frootloop.qa.parser.util.GitGudder;
-import net.frootloop.qa.parser.util.stats.commits.ParsedClassCommitComparator;
+import net.frootloop.qa.parser.util.stats.comparators.ComparatorCommitsPerClass;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -38,6 +38,8 @@ public class ParsedRepository {
      * a child class, with the key being the parent's signature.
      */
     private HashMap<String, Integer> mapNumTimesReferencedIndirectly;
+
+    private List<ParsedClass> sortedClassesByCommits = null;
 
     public ParsedRepository(Path filePath){
         this.rootFilePath = filePath;
@@ -89,6 +91,7 @@ public class ParsedRepository {
     }
 
     public void buildReferences() {
+
         // Add number of times each class is referenced by cycling through all ParsedClasses
         for (ParsedClass c : this.classMap.values())
             for (String referencedClass : c.getClassesReferencedDirectly())
@@ -300,7 +303,7 @@ public class ParsedRepository {
     }
 
     public List<ParsedClass> getClassesSortedByCommits() {
-        return this.classMap.values().stream().sorted(new ParsedClassCommitComparator()).collect(Collectors.toList());
+        return this.classMap.values().stream().sorted(new ComparatorCommitsPerClass()).collect(Collectors.toList());
     }
 
     public float getAverageCommitsPerClass() {
