@@ -11,12 +11,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added documentation for the otherwise strange ParsedClassCommitComparator class.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/StatisticsCommitsPerClass.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Started work on box plot implementation.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ComparatorCommentDensity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ComparatorLinesOfCode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/OrderByValue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ParsedClassComparator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/commits/ParsedClassCommitComparator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ComparatorCommitsPerClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotDataContainer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ComparatorCommitsPerClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/ComparatorCommitsPerClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/comparators/StatisticsCommitsPerClass.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,10 +37,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="package-info" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -67,6 +75,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="net.frootloop.qa.parser.util.stats.comparators" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="SoftwareMetricsMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="net.frootloop.qa.SoftwareMetricsMain" />
@@ -95,13 +108,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Refactor and LSEC getting started.">
-      <created>1664592455508</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1664592455508</updated>
     </task>
     <task id="LOCAL-00039" summary="LSEC's logic is done, now I need to generate a CSV.">
       <created>1664594097909</created>
@@ -439,7 +445,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668535071594</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Started work on box plot implementation.">
+      <created>1668620408569</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1668620408569</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -454,7 +467,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Improved ParsedMethod to allow a class to return methods that have a certain name, which will be hella useful to know if we're referencing a certain method somewhere else in the code (say, in unit tests!)" />
     <MESSAGE value="Added calculation of number of unit tests per methods. Didn't test that bit yet, but fingers crossed." />
     <MESSAGE value="Almost done with the code." />
     <MESSAGE value="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog" />
@@ -479,7 +491,8 @@
     <MESSAGE value="Fixed ParsedRepository.getMostCommittedClass() and ParsedRepository.getLeastCommittedClass() methods." />
     <MESSAGE value="Added context to JavaRepositoryParser.analyseRepositoryAt()'s count for NCH; JGit is unable to take into consideration the commits made to a file that was refactored, only the commits made to the file itself as it is now.&#10;&#10;In other words, NCH is always underestimated by our software." />
     <MESSAGE value="Added documentation for the otherwise strange ParsedClassCommitComparator class." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added documentation for the otherwise strange ParsedClassCommitComparator class." />
+    <MESSAGE value="Started work on box plot implementation." />
+    <option name="LAST_COMMIT_MESSAGE" value="Started work on box plot implementation." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

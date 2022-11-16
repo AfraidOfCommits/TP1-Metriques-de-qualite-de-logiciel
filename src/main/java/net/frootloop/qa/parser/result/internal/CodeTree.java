@@ -25,7 +25,6 @@ public class CodeTree implements StringParser {
         String statement;
         int statementIndex = 0;
 
-        BlockOfCode newBlock= new BlockOfCode();
         BlockOfCode currentCodeBlock = new BlockOfCode();
         this.root = currentCodeBlock;
         this.root.leadingStatement = codeStatements[0];
@@ -44,7 +43,7 @@ public class CodeTree implements StringParser {
                 if(c == '{') {
 
                     // Start a new code block, imbedded in the previous one:
-                    newBlock = new BlockOfCode();
+                    BlockOfCode newBlock = new BlockOfCode();
                     blocksBackup.add(newBlock);
 
                     currentCodeBlock.children.add(newBlock);

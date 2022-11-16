@@ -20,8 +20,7 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
     private ArrayList<String> attributesDeclared;
-    private int numAssertStatements, lcom = -1, wmc = -1;
-    private int numCommits;
+    private int numAssertStatements, numCommits, numLinesCode, numLinesComments, lcom = -1, wmc = -1;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
@@ -237,5 +236,21 @@ public class ParsedClass extends CodeTree {
 
     public int getNumCommits() {
         return this.numCommits;
+    }
+
+    public void setNumLinesCode(int numLinesCode) {
+        this.numLinesCode = numLinesCode;
+    }
+
+    public void setNumLinesComments(int numLinesComments) {
+        this.numLinesComments = numLinesComments;
+    }
+
+    public float getCommentDensity() {
+        return (float)this.numLinesComments / (float)(this.numLinesCode + this.numLinesComments);
+    }
+
+    public int getNumLinesCode() {
+        return this.numLinesCode;
     }
 }

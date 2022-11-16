@@ -1,52 +1,45 @@
 package net.frootloop.qa.parser.result;
 
 import net.frootloop.qa.parser.util.GitGudder;
-import net.frootloop.qa.parser.util.stats.comparators.ComparatorCommitsPerClass;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ParsedRepository {
+
+    private static final int ESTIMATED_MAX_NUM_CLASSES = 1000;
+
+    /***
+     * Map to store and fetch ParsedClass instances by their signature.
+     */
+    private HashMap<String, ParsedClass> classMap  = new HashMap<>(ESTIMATED_MAX_NUM_CLASSES);
+
+    /***
+     * Map to store and fetch the amount of times a class has been referred (directly or indirectly) to by
+     * another class, with the key being the class's signature.
+     */
+    private HashMap<String, Integer> mapNumTimesReferenced = new HashMap<>(ESTIMATED_MAX_NUM_CLASSES);
+
+    /***
+     * Map to store and fetch the amount of times a class has been directly referred to by
+     * another class, with the key being the class's signature.
+     */
+    private HashMap<String, Integer> mapNumTimesReferencedDirectly = new HashMap<>(ESTIMATED_MAX_NUM_CLASSES);
+
+    /***
+     * Map to store and fetch the amount of times a parent class has been indirectly referred to by
+     * a child class, with the key being the parent's signature.
+     */
+    private HashMap<String, Integer> mapNumTimesReferencedIndirectly = new HashMap<>(ESTIMATED_MAX_NUM_CLASSES);
 
     private Path rootFilePath;
     private int totalLines, totalLinesComments, totalLinesEmpty, totalLinesCode, numAssertStatements, numSourceFiles, numMethods, numClasses, cyclomaticComplexity = 1;
     private ParsedClass mostComplexClass, mostReferencedClass, mostDirectlyReferencedClass, mostIndirectlyReferencedClass, leastCohesiveClass, classWithHighestMethodComplexity;
     private int mostAmountReferences, mostAmountDirectReferences, mostAmountIndirectReferences;
 
-    /***
-     * Map to store and fetch ParsedClass instances by their signature.
-     */
-    private HashMap<String, ParsedClass> classMap;
-
-    /***
-     * Map to store and fetch the amount of times a class has been referred (directly or indirectly) to by
-     * another class, with the key being the class's signature.
-     */
-    private HashMap<String, Integer> mapNumTimesReferenced;
-
-    /***
-     * Map to store and fetch the amount of times a class has been directly referred to by
-     * another class, with the key being the class's signature.
-     */
-    private HashMap<String, Integer> mapNumTimesReferencedDirectly;
-
-    /***
-     * Map to store and fetch the amount of times a parent class has been indirectly referred to by
-     * a child class, with the key being the parent's signature.
-     */
-    private HashMap<String, Integer> mapNumTimesReferencedIndirectly;
-
-    private List<ParsedClass> sortedClassesByCommits = null;
-
     public ParsedRepository(Path filePath){
         this.rootFilePath = filePath;
-        this.classMap = new HashMap<String, ParsedClass>();
-        this.mapNumTimesReferenced = new HashMap<String, Integer>();
-        this.mapNumTimesReferencedDirectly = new HashMap<String, Integer>();
-        this.mapNumTimesReferencedIndirectly = new HashMap<String, Integer>();
     }
 
     public void addParsedFile(ParsedSourceFile parsedFile) {
@@ -300,10 +293,6 @@ public class ParsedRepository {
             }
         }
         return leastCommitted;
-    }
-
-    public List<ParsedClass> getClassesSortedByCommits() {
-        return this.classMap.values().stream().sorted(new ComparatorCommitsPerClass()).collect(Collectors.toList());
     }
 
     public float getAverageCommitsPerClass() {

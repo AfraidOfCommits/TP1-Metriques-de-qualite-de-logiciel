@@ -2,11 +2,11 @@ package net.frootloop.qa.parser.util.stats.comparators;
 
 import net.frootloop.qa.parser.result.ParsedClass;
 
-public class ComparatorCommitsPerClass implements ParsedClassComparator {
+public class ComparatorLinesOfCode implements ParsedClassComparator {
 
     /**
      * Serves as a Comparator class in order to sort a list of ParsedClass objects
-     * by their number of commits.
+     * by their number of lines of code.
      *
      * @param x the first ParsedClass object to be compared.
      * @param y the second ParsedClass object to be compared.
@@ -14,14 +14,14 @@ public class ComparatorCommitsPerClass implements ParsedClassComparator {
      */
     @Override
     public int compare(ParsedClass x, ParsedClass y) {
-        int commitsX = x.getNumCommits();
-        int commitsY = y.getNumCommits();
+        int numLinesCodeX = x.getNumLinesCode();
+        int numLinesCodeY = y.getNumLinesCode();
 
         // Returns -1 if (x < y):
-        if(commitsX < commitsY) return -1;
+        if(numLinesCodeX < numLinesCodeY) return -1;
 
         // Returns 0 if (x == y):
-        if(commitsX == commitsY) return 0;
+        if(numLinesCodeX == numLinesCodeY) return 0;
 
         // Returns 1 if (x > y):
         return 1;

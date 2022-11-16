@@ -42,18 +42,21 @@ public class ParsedSourceFile {
 
         try {
             // STEP 1: READ AND CLEAN UP THE TEXT DATA
-            // Remove unnecessary spaces, null chars, normalize line breaks, and replace string values with "text":
+            //   Remove unnecessary spaces, null chars, normalize line breaks, and replace string values with "text":
             String sourceFileTextData = StringParser.cleanUpSource(Files.readString(path));
 
             // STEP 2: COUNT LINES
-            // First, get total number of lines:
+            //   First, get total number of lines:
             this.numLines = StringParser.getLineCountOf(sourceFileTextData);
 
-            // Second, remove empty lines, then count what's left:
+            //   Second, remove empty lines, then count what's left:
             sourceFileTextData = StringParser.getWithoutEmptyLines(sourceFileTextData);
             this.numLinesEmpty = this.numLines - StringParser.getLineCountOf(sourceFileTextData);
 
-            // Third, remove comments, then count what's left:
+            //   Save a copy of this version of the code for Step 4:
+            String textWithoutEmptyLines = sourceFileTextData + "";
+
+            //   Third, remove comments, then count what's left:
             sourceFileTextData = StringParser.getWithoutComments(sourceFileTextData);
             this.numLinesComments = this.numLines - this.numLinesEmpty - StringParser.getLineCountOf(sourceFileTextData);
             this.numLinesCode = this.numLines - this.numLinesComments - this.numLinesEmpty;
@@ -66,6 +69,12 @@ public class ParsedSourceFile {
             // STEP 4: BUILD CODE TREE AND CLASSES
             this.codeTree = new CodeTree(sourceFileTextData);
             this.classes = this.codeTree.getListOfClasses(this.packageName, this.filePath, this.importStatements);
+
+
+            // FIND INDEX OF LEADING STATEMENT
+            // FIND INDEX OF CLOSING BRACKET
+
+
 
         } catch (IOException e) {
             System.out.println("[ ERROR ] Unable to read file " + path.toFile().getAbsolutePath() + "!");
