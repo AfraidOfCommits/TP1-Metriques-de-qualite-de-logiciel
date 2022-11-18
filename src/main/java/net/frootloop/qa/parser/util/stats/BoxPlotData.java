@@ -5,6 +5,7 @@ import net.frootloop.qa.parser.util.stats.comparators.ComparatorCommentDensity;
 import net.frootloop.qa.parser.util.stats.comparators.ComparatorCommitsPerClass;
 import net.frootloop.qa.parser.util.stats.comparators.ComparatorLinesOfCode;
 import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator;
+import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.ClassComparatorEnum;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -19,12 +20,6 @@ public class BoxPlotData {
     public final double MEDIAN_VALUE;
     public final double LENGTH;
     public final ArrayList<Double> EXTREME_DATA_POINTS;
-
-    public enum ClassComparatorEnum {
-        NUMBER_OF_COMMITS,
-        NUMBER_LINES_OF_CODES,
-        DENSITY_OF_COMMENTS
-    }
 
 
     /***
