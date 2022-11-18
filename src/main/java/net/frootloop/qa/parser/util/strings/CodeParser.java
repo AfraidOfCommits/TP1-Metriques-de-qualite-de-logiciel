@@ -70,6 +70,7 @@ public interface CodeParser {
      * @return Class name of direct inheritance. Returns 'null' if the packageName is not a class.
      */
     static String getPackageClass(String packageName) {
+        if(packageName == null || packageName.length() == 0) return null;
         Matcher regexPackageDetector = rxImbeddedPackage.matcher(packageName);
         while (regexPackageDetector.find()) return regexPackageDetector.group(2);
         return null;

@@ -129,11 +129,11 @@ public interface GitGudder extends FilePathHandler {
                 for (RevCommit rev : logs) count++;
 
             } catch (Exception e) {
-                System.out.println("\n[ FATAL JGIT ERROR ]\nUh oh. Fatal exception thrown while trying to initialize 'JGit.Git' object with object 'JGit.Repository' of directory '" + repositoryPathStr + "'.\nGood luck debugging, ya fool. Likely caused by the git repository's 'HEAD' being somehow corrupted or incomplete, or maybe by JGit's (frankly problematic) Log4j dependency.\n");
+                System.out.println("\n\n[ FATAL JGIT ERROR ]\nUh oh. Fatal exception thrown while trying to initialize 'JGit.Git' object with object 'JGit.Repository' of directory '" + repositoryPathStr + "'.\nGood luck debugging this one. Likely caused by the git repository's 'HEAD' being somehow corrupted or incomplete, or maybe by JGit's (frankly problematic) Log4j dependency.\n");
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
-            System.out.println("\n[ FATAL JGIT DIRECTORY ERROR ]\nDirectory given was not recognized as a Git Repository by JGit API.\nFatal exception thrown while trying to initialize 'JGit.Repository' object with method '.setDirectory( Path := '" + repositoryPathStr + "' )'\nMake sure that the path inputted has a valid format for JGit (backslashes like this, '/') and exists on disc.\nAlso, make sure that it is a git repository; i.e., it has to have a valid 'HEAD' and populated '\\.git' folder.");
+            System.out.println("\n[ FATAL JGIT DIRECTORY ERROR ]\nDirectory given was not recognized as a Git Repository by JGit API.\nFatal exception thrown while trying to initialize 'JGit.Repository' object with method '.setDirectory( '" + repositoryPathStr + "' )'\n\nMake sure that the path inputted has a valid format for JGit (backslashes like this, '/') and exists on disc.\nAlso, make sure that it is a git repository; i.e., it has to have a valid 'HEAD' and populated '.git' folder.\n");
             throw new RuntimeException(e);
         }
         return count;

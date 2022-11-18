@@ -28,10 +28,6 @@ public class CodeTree implements CodeParser {
         this.root.numLinesCode += codeStatements.get(0).numLinesCode;
         this.root.numLinesComments += codeStatements.get(0).numLinesComments;
 
-        // Serves no purpose besides making sure that the Garbage collector
-        ArrayList<BlockOfCode> cache = new ArrayList<>();
-        cache.add(currentCodeBlock);
-
         BlockOfCode newBlock;
         CodeStatement codeStatement;
         for(int i = 1; i < codeStatements.size(); i++) {
@@ -54,11 +50,17 @@ public class CodeTree implements CodeParser {
             // If the current code statement CLOSES a pair of curly braces, we return to the previous scope:
             else {
                 // Add the statement to the current block of code:
-                if(codeStatement.numLinesCode > 0 && !codeStatement.code.equals("")) currentCodeBlock.codeStatements.add(codeStatement.code);
+                if(codeStatement.numLinesCode > 0 && !codeStatement.code.equals(""))
+                    currentCodeBlock.codeStatements.add(codeStatement.code);
 
                 // If the current code statement CLOSES a pair of curly braces, we return to the previous scope:
-                if(codeStatement.isClosingStatement) currentCodeBlock = currentCodeBlock.parent;
+                if(codeStatement.isClosingStatement && currentCodeBlock.parent != null)
+                    currentCodeBlock = currentCodeBlock.parent;
             }
+
+            System.out.println("\nAdding new statement: '" + codeStatement.code + "'");
+            System.out.println("\nTo code block: '" + currentCodeBlock.getCodeAsString(true) + "'");
+
 
             // Increment the current code block's line counts with its new statement:
             currentCodeBlock.numLines += codeStatement.numLines;
