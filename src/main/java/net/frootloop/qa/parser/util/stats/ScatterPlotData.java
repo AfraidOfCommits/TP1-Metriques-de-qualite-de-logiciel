@@ -7,9 +7,9 @@ import java.util.List;
 
 public class ScatterPlotData {
 
-    private List<Double> commentDensities = new ArrayList<>();
-    private List<Integer> numLinesCode = new ArrayList<>();
-    private List<Integer> numCommits = new ArrayList<>();
+    public List<Double> commentDensities = new ArrayList<>();
+    public List<Integer> numLinesCode = new ArrayList<>();
+    public List<Integer> numCommits = new ArrayList<>();
 
     public final double COMMENT_DENSITY_AVERAGE, NUM_LINES_CODE_AVERAGE, NUM_COMMITS_AVERAGE;
     public final double COMMENT_DENSITY_VARIANCE, NUM_LINES_CODE_VARIANCE, NUM_COMMITS_VARIANCE;
