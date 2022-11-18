@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result.internal;
 
-import net.frootloop.qa.parser.util.StringParser;
+import net.frootloop.qa.parser.util.strings.CodeParser;
 import net.frootloop.qa.parser.result.ParsedClass;
 
 import java.nio.file.Path;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CodeTree implements StringParser {
+public class CodeTree implements CodeParser {
 
     protected BlockOfCode root;
 
@@ -17,53 +17,53 @@ public class CodeTree implements StringParser {
      * its contained statements, and its leading statement. This allows us to attribute proper class/method ownership, and do fancy things like
      * print a .java file's entire cleaned up source code with proper indentation.
      *
-     * @param cleanSourceFileTextData Assumes that the input text has already been cleaned up.
+     * @param codeStatements : List of CodeStatement objects containing filtered data on the line of code, its comments, and its closing char ('{', '}', or ';')
      */
-    public CodeTree(String cleanSourceFileTextData) {
-
-        String[] codeStatements = cleanSourceFileTextData.split("(;|\\{|\\})");
-        String statement;
-        int statementIndex = 0;
+    public CodeTree(List<CodeStatement> codeStatements) {
 
         BlockOfCode currentCodeBlock = new BlockOfCode();
         this.root = currentCodeBlock;
-        this.root.leadingStatement = codeStatements[0];
+        this.root.leadingStatement = codeStatements.get(0).code;
+        this.root.numLines += codeStatements.get(0).numLines;
+        this.root.numLinesCode += codeStatements.get(0).numLinesCode;
+        this.root.numLinesComments += codeStatements.get(0).numLinesComments;
 
-        ArrayList<BlockOfCode> blocksBackup = new ArrayList<>();
-        blocksBackup.add(this.root);
+        // Serves no purpose besides making sure that the Garbage collector
+        ArrayList<BlockOfCode> cache = new ArrayList<>();
+        cache.add(currentCodeBlock);
 
-        for(int i = 0; i < cleanSourceFileTextData.length(); i++) {
-            char c = cleanSourceFileTextData.charAt(i);
+        BlockOfCode newBlock;
+        CodeStatement codeStatement;
+        for(int i = 1; i < codeStatements.size(); i++) {
 
-            // Ending a statement:
-            if(c == ';' || c == '{' || c == '}') {
-                if(statementIndex < codeStatements.length) statement = codeStatements[statementIndex++];
-                else statement = "";
+            codeStatement = codeStatements.get(i);
 
-                if(c == '{') {
+            // If the current code statement opens a pair of curly braces, we set that as a new block of code:
+            if(codeStatement.isLeadingStatement) {
 
-                    // Start a new code block, imbedded in the previous one:
-                    BlockOfCode newBlock = new BlockOfCode();
-                    blocksBackup.add(newBlock);
+                // Start a new code block, imbedded in the previous one:
+                newBlock = new BlockOfCode();
+                newBlock.parent = currentCodeBlock;
+                currentCodeBlock.children.add(newBlock);
+                currentCodeBlock = newBlock;
 
-                    currentCodeBlock.children.add(newBlock);
-                    newBlock.parent = currentCodeBlock;
-                    currentCodeBlock = newBlock;
-
-                    // Add the current statement to the current code block as its leading statement;
-                    currentCodeBlock.leadingStatement = statement;
-                }
-                else {
-                    // Add the statement to the current block of code:
-                    if(!statement.matches("\\s*"))
-                        currentCodeBlock.codeStatements.add(statement);
-
-                    // End the current code block:
-                    if(currentCodeBlock == null) System.out.println("WTF!! " + this.root.getCodeAsString());
-                    if(c == '}')
-                        currentCodeBlock = currentCodeBlock.parent;
-                }
+                // Add the current statement to the current code block as its leading statement;
+                currentCodeBlock.leadingStatement = codeStatement.code;
             }
+
+            // If the current code statement CLOSES a pair of curly braces, we return to the previous scope:
+            else {
+                // Add the statement to the current block of code:
+                if(codeStatement.numLinesCode > 0 && !codeStatement.code.equals("")) currentCodeBlock.codeStatements.add(codeStatement.code);
+
+                // If the current code statement CLOSES a pair of curly braces, we return to the previous scope:
+                if(codeStatement.isClosingStatement) currentCodeBlock = currentCodeBlock.parent;
+            }
+
+            // Increment the current code block's line counts with its new statement:
+            currentCodeBlock.numLines += codeStatement.numLines;
+            currentCodeBlock.numLinesCode += codeStatement.numLinesCode;
+            currentCodeBlock.numLinesComments += codeStatement.numLinesComments;
         }
     }
 
@@ -73,9 +73,26 @@ public class CodeTree implements StringParser {
 
     public void print() {
         System.out.println(root.toString());
+        System.out.println("Has " + this.getNumLines() + " lines; " + this.getNumLinesCode() + " of which are code, " + this.getNumLinesComments() + " of which are comments, and " + this.getNumLinesEmpty() + " of which are empty.");
     }
 
     public String toString() {return this.root.toString();}
+
+    public int getNumLines() {
+        return this.root.getNumLines();
+    }
+
+    public int getNumLinesEmpty() {
+        return this.root.getNumLinesEmpty();
+    }
+
+    public int getNumLinesCode() {
+        return this.root.getNumLinesCode();
+    }
+
+    public int getNumLinesComments() {
+        return this.root.getNumLinesComments();
+    }
 
     public int getCyclomaticComplexity() {
         return 1 + root.getCyclomaticComplexity();
@@ -92,6 +109,8 @@ public class CodeTree implements StringParser {
         public String leadingStatement;
         public ArrayList<String> codeStatements = new ArrayList<>();
 
+        public int numLines = 0, numLinesCode = 0, numLinesComments = 0;
+
         public int getNumChildren(){
             int numChildren = children.size(); // i.e. degree
             for (BlockOfCode child : children) numChildren += child.getNumChildren();
@@ -104,20 +123,44 @@ public class CodeTree implements StringParser {
             return numStatements;
         }
 
+        public int getNumLines(){
+            int numLines = this.numLines;
+            for (BlockOfCode child : children) numLines += child.getNumLines();
+            return numLines;
+        }
+
+        public int getNumLinesCode(){
+            int numLines = this.numLinesCode;
+            for (BlockOfCode child : children) numLines += child.getNumLinesCode();
+            return numLines;
+        }
+
+        public int getNumLinesComments(){
+            int numLines = this.numLinesComments;
+            for (BlockOfCode child : children) numLines += child.getNumLinesComments();
+            return numLines;
+        }
+
+        public int getNumLinesEmpty(){
+            int numLines = this.numLines - this.numLinesCode - this.numLinesComments;
+            for (BlockOfCode child : children) numLines += child.getNumLinesEmpty();
+            return numLines;
+        }
+
         public ArrayList<String> getDeclaredVariables() {
             ArrayList<String> listOfVariables = new ArrayList<>();
             for (String codeStatement:this.codeStatements)
-                if(StringParser.isVariableDeclaration(codeStatement))
-                    listOfVariables.addAll(Arrays.asList(StringParser.getDeclaredVariableNames(codeStatement)));
+                if(CodeParser.isVariableDeclaration(codeStatement))
+                    listOfVariables.addAll(Arrays.asList(CodeParser.getDeclaredVariableNames(codeStatement)));
 
             return listOfVariables;
         }
 
         public int getCyclomaticComplexity() {
-            int complexity = StringParser.isBranchingStatement(leadingStatement) ? 1 : 0;
+            int complexity = CodeParser.isBranchingStatement(leadingStatement) ? 1 : 0;
 
             for(String codeLine : codeStatements) {
-                if(StringParser.isBranchingStatement(codeLine) || StringParser.isTernaryStatement(codeLine))
+                if(CodeParser.isBranchingStatement(codeLine) || CodeParser.isTernaryStatement(codeLine))
                     complexity += 1;
                 else if(leadingStatement.matches("switch.*") && codeLine.matches("(default|case\\s*\\w+\\s*):.*"))
                     complexity += 1;
@@ -136,9 +179,9 @@ public class CodeTree implements StringParser {
         private void generateParsedClasses(ArrayList<ParsedClass> listOfClasses, String packageName, Path filePath, String[] importStatements) {
 
             // If the current block is a class:
-            if(StringParser.isClassDeclaration(this.leadingStatement)) {
+            if(CodeParser.isClassDeclaration(this.leadingStatement)) {
                 listOfClasses.add(new ParsedClass(this, packageName, importStatements, filePath));
-                packageName = packageName + "." + StringParser.getDeclaredClassName(this.leadingStatement);
+                packageName = packageName + "." + CodeParser.getDeclaredClassName(this.leadingStatement);
             }
 
             // Recursive call:
@@ -164,10 +207,10 @@ public class CodeTree implements StringParser {
         private String toString(String indentation, boolean shouldBeautify) {
             String str = "";
 
-            if(shouldBeautify && StringParser.isClassDeclaration(this.leadingStatement)){
-                str += "\n\n" + indentation + "(CLASS: " + StringParser.getDeclaredClassName(leadingStatement);
+            if(shouldBeautify && CodeParser.isClassDeclaration(this.leadingStatement)){
+                str += "\n\n" + indentation + "(CLASS: " + CodeParser.getDeclaredClassName(leadingStatement);
 
-                List<String> inheritance = StringParser.getDeclaredClassInheritance(leadingStatement);
+                List<String> inheritance = CodeParser.getDeclaredClassInheritance(leadingStatement);
                 if(inheritance.size() > 0) str += "\n" + indentation + " --> with parents: " + String.join(",", inheritance);
 
                 List<String> attributes = this.getDeclaredVariables();

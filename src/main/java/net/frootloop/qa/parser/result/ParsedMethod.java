@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result;
 
-import net.frootloop.qa.parser.util.StringParser;
+import net.frootloop.qa.parser.util.strings.CodeParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
@@ -24,18 +24,18 @@ public class ParsedMethod extends CodeTree {
     public ParsedMethod(BlockOfCode blockOfCode, ParsedClass parsedClass) {
         super(blockOfCode);
         this.homeClass = parsedClass;
-        this.methodName = StringParser.getDeclaredMethodName(blockOfCode.leadingStatement);
-        this.visibility = StringParser.getDeclaredMethodVisibility(blockOfCode.leadingStatement);
-        this.returnType = StringParser.getDeclaredMethodReturnType(blockOfCode.leadingStatement);
-        this.arguments = StringParser.getDeclaredMethodArguments(blockOfCode.leadingStatement);
-        this.isStatic = StringParser.isMethodDeclarationStatic(blockOfCode.leadingStatement);
-        this.isAbstract = StringParser.isMethodDeclarationAbstract(blockOfCode.leadingStatement);
-        this.isTest = StringParser.isMethodDeclarationTest(blockOfCode.leadingStatement);
-        this.assertStatements = StringParser.getAssertStatementsOf(blockOfCode.getCodeAsString());
+        this.methodName = CodeParser.getDeclaredMethodName(blockOfCode.leadingStatement);
+        this.visibility = CodeParser.getDeclaredMethodVisibility(blockOfCode.leadingStatement);
+        this.returnType = CodeParser.getDeclaredMethodReturnType(blockOfCode.leadingStatement);
+        this.arguments = CodeParser.getDeclaredMethodArguments(blockOfCode.leadingStatement);
+        this.isStatic = CodeParser.isMethodDeclarationStatic(blockOfCode.leadingStatement);
+        this.isAbstract = CodeParser.isMethodDeclarationAbstract(blockOfCode.leadingStatement);
+        this.isTest = CodeParser.isMethodDeclarationTest(blockOfCode.leadingStatement);
+        this.assertStatements = CodeParser.getAssertStatementsOf(blockOfCode.getCodeAsString());
     }
 
     public void setReferencedMethods() {
-        for (String methodName : StringParser.getReferencedMethodNames(this.root.getCodeAsString())) {
+        for (String methodName : CodeParser.getReferencedMethodNames(this.root.getCodeAsString())) {
             if(methodName.equals(this.methodName)) continue;
 
             ParsedMethod referenced = this.homeClass.getMethodByName(methodName, false);
@@ -55,7 +55,7 @@ public class ParsedMethod extends CodeTree {
 
         else if(this.assertStatements != null && this.assertStatements.length > 0)
             for (String unitTest : this.assertStatements)
-                for (String name : StringParser.getReferencedMethodNames(unitTest))
+                for (String name : CodeParser.getReferencedMethodNames(unitTest))
                     for (ParsedMethod m : this.methodsReferencedInScope)
                         if (m.getMethodName().equals(name)) m.numDedicatedUnitTests++;
     }
@@ -67,13 +67,13 @@ public class ParsedMethod extends CodeTree {
 
         // Get a list of our class' attributes that were referred to by using the "this.attributeName" format;
         ArrayList<String> referencedAttributeList = new ArrayList<>();
-        for (String attribute : StringParser.getObviousReferencedAttributes(code))
+        for (String attribute : CodeParser.getObviousReferencedAttributes(code))
             if (this.homeClass.hasAttributeCalled(attribute))
                 referencedAttributeList.add(attribute);
 
         // Try to find other times the class
         ArrayList<String> declaredVariables = this.root.getDeclaredVariables();
-        for (String word : StringParser.getLowerCaseWordsOf(code)) {
+        for (String word : CodeParser.getLowerCaseWordsOf(code)) {
             if (this.homeClass.hasAttributeCalled(word)) {
                 boolean isDeclaredInMethod = declaredVariables.contains(word);
                 boolean isArgument = (this.arguments != null) && (this.arguments.contains(word));
@@ -119,7 +119,7 @@ public class ParsedMethod extends CodeTree {
 
     public List<String> getReferencedClasses() {
         ArrayList<String> referencedClasses = new ArrayList<>();
-        for(String className: StringParser.getInitializedClassNames(this.root.getCodeAsString()))
+        for(String className: CodeParser.getInitializedClassNames(this.root.getCodeAsString()))
             referencedClasses.add(this.homeClass.getSignatureOfReferencedClass(className));
         return referencedClasses;
     }
@@ -130,7 +130,7 @@ public class ParsedMethod extends CodeTree {
 
         ArrayList<String> testedMethods = new ArrayList<>();
         for(String unitTest: this.assertStatements)
-            for(String name : StringParser.getReferencedMethodNames(unitTest))
+            for(String name : CodeParser.getReferencedMethodNames(unitTest))
                 if(this.methodsNamesReferencedOutsideScope.contains(name)) testedMethods.add(name);
 
         return testedMethods;
@@ -142,7 +142,7 @@ public class ParsedMethod extends CodeTree {
 
         ArrayList<String> testedMethods = new ArrayList<>();
         for(String unitTest: this.assertStatements)
-            for(String name : StringParser.getReferencedMethodNames(unitTest))
+            for(String name : CodeParser.getReferencedMethodNames(unitTest))
                 if(this.methodsNamesReferencedOutsideScope.contains(name)) testedMethods.add(name);
 
         return testedMethods;

@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.util;
+package net.frootloop.qa.parser.util.strings;
 
 import net.frootloop.qa.parser.result.internal.Visibility;
 
@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public interface StringParser {
+public interface CodeParser {
     Pattern rxAssertStatements = Pattern.compile("(^|;|})(\\n\\s*)?((Assert\\.)?(assert[A-Z]\\w+)\\([^;]*\\));");
     Pattern rxImportStatements = Pattern.compile("(^|;)?\\n*\\s*(import\\s+((\\w+\\.)*([A-Z]\\w+)))");
     Pattern rxPackageStatement = Pattern.compile("(^|;)\\s*\\n*\\s*(package\\s+(((\\w+\\.)*[a-z]\\w+)(.([A-Z]\\w+))?))(\\s*;)");
@@ -22,107 +22,6 @@ public interface StringParser {
     Pattern rxReferencedMethod = Pattern.compile("[\\. \\(\\{]([a-z_][A-z_]*)\\(");
     Pattern rxReferencedAttributeWithThis = Pattern.compile("this\\.([a-z]\\w+)");
     Pattern rxLowerCaseWords = Pattern.compile("(?=[^\\w]([a-z]\\w+)[^\\(\\{\\w])");
-
-    /***
-     * Remove unnecessary spaces and symbols, null chars, normalize line breaks, and replace string values with "text".
-     * @param sourceFileTextData
-     * @return Clean version of source file's text data.
-     */
-    static String cleanUpSource(String sourceFileTextData) {
-        sourceFileTextData = StringParser.getWithNormalizedLineBreakChars(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithoutNullChars(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithoutExtraSpaces(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithoutUnnecessarySemicolons(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithGenericStringValues(sourceFileTextData);
-        sourceFileTextData = StringParser.getWithSingleBracketTryCatch(sourceFileTextData);
-        return sourceFileTextData;
-    }
-
-    static int getLineCountOf(String inputStr) {
-        return inputStr.split("\r\n|\r|\n").length;
-    }
-
-    static String getWithNormalizedLineBreakChars(String inputStr) {
-        return inputStr.replaceAll("\r\n|\r|\n", "\n");
-    }
-
-    static String getWithoutNullChars(String inputStr) {
-        return inputStr.replaceAll("\0", "");
-    }
-
-    static String getWithoutExtraSpaces(String inputStr) {
-        inputStr = inputStr.replaceAll("( |\t)+", " "); // Replaces multiple spaces by only a single
-        inputStr = inputStr.replaceAll("^( |\t)+", ""); // Removes spaces at the beginning of inputStr
-        inputStr = inputStr.replaceAll("( |\t)+$", ""); // Removes spaces at the end of inputStr
-        inputStr = inputStr.replaceAll("( |\t)*\n( |\t)*", "\n"); // Removes spaces around line breaks
-        inputStr = inputStr.replaceAll("( |\t)*\\{( |\t)*", "{"); // Removes spaces that surround a '{' char
-        inputStr = inputStr.replaceAll("( |\t)*;( |\t)*", ";"); // Removes spaces that surround a ';' char
-        return inputStr;
-    }
-
-    static String getWithGenericStringValues(String inputStr) {
-        inputStr = inputStr.replaceAll("\\\'(.)\\\'", "\'char\'");
-        return inputStr.replaceAll("\\\"([^\\\"]*(\\\\\\\")*)*\\\"", "text");
-    }
-
-    static String getWithoutComments(String inputStr) {
-        inputStr = getWithoutSingleLineComments(inputStr);
-        inputStr = getWithoutAppendedComments(inputStr);
-        inputStr = getWithoutDocstrings(inputStr);
-        return inputStr;
-    }
-
-    static String getWithoutSingleLineComments(String inputStr) {
-        return inputStr.replaceAll("\\/\\/.*(\n|$)", ""); // Remove single-line
-    }
-
-    static String getWithoutDocstrings(String inputStr) {
-        // Remove multiline comments & docstrings
-        // Avoid a stack overflow error! Some source files are so ridiculously well documented
-        // that using a replaceAll call takes up the entire goddamn stack.
-        if (inputStr.length() < 4096)
-            return inputStr.replaceAll("\\/\\*([^\\*]|\\*[^\\/]|[^\\*]\\/)*\\*\\/", "");
-
-        String withoutDocstrings = "";
-        int startOfCode = 0, startOfDocstring;
-        do {
-
-            // Find the start of a /* docstring:
-            startOfDocstring = inputStr.indexOf("/*", startOfCode);
-            if(startOfDocstring == -1) startOfDocstring = inputStr.length() - 1;
-
-            // Append:
-            withoutDocstrings += inputStr.substring(startOfCode, startOfDocstring);
-
-            // Find the end of the */ docstring:
-            startOfCode = inputStr.indexOf("*/", startOfDocstring);
-            if(startOfCode == -1) startOfCode = inputStr.length() - 1;
-            else startOfCode += 2;
-
-        } while(startOfCode < inputStr.length() - 1);
-
-        return withoutDocstrings;
-    }
-
-    static String getWithoutAppendedComments(String inputStr) {
-        return inputStr.replaceAll("\\/\\/((?!\\*\\/).)*\n", "\n"); // Remove comments appended to code (like this one!)
-    }
-
-    static String getWithoutEmptyLines(String inputStr) {
-        return inputStr.replaceAll("\n+", "\n");
-    }
-
-    static String getWithoutLineBreaks(String inputStr) {
-        return inputStr.replaceAll("\r\n|\r|\n", "");
-    }
-
-    static String getWithSingleBracketTryCatch(String inputStr){
-        return inputStr.replaceAll("\\}\\s*catch\\s*(.*)\\s*\\{", "catch -> ");
-    }
-
-    static String getWithoutUnnecessarySemicolons(String inputStr) {
-        return inputStr.replaceAll("\\};", "}");
-    }
 
     /**
      * Assumes that the input text has already been cleaned up.
@@ -215,10 +114,6 @@ public interface StringParser {
             if(regexClassNameDetector.group(2) == "abstract") return Visibility.PROTECTED; // Functionally the same thing
         }
         return Visibility.PUBLIC;
-    }
-
-    static List<String> getInitializedClassNames(ArrayList<String> codeStatements) {
-        return getInitializedClassNames(String.join(";", codeStatements));
     }
 
     static List<String> getInitializedClassNames(String code) {

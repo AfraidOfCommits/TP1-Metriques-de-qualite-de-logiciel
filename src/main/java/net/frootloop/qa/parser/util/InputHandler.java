@@ -1,5 +1,8 @@
 package net.frootloop.qa.parser.util;
 
+import net.frootloop.qa.parser.util.files.FilePathHandler;
+import net.frootloop.qa.parser.util.files.GitGudder;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +64,38 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         }
     }
 
+    static Path promptForDirectoryToStartLookingFrom() {
+
+        // Ask the user from where we need to start looking for repositories:
+        System.out.println("\n[ INPUT EXPECTED ]\nFrom where should I start looking?");
+
+        // Generate a list of up to 5 options:
+        Path rootToStartFrom = FilePathHandler.getWorkingDirectory();
+        int numOptions;
+        for(numOptions = 1; numOptions < 5; numOptions++) {
+            System.out.println(numOptions + " - \'" + rootToStartFrom + "\'");
+            if(rootToStartFrom.getParent() == null) break;
+            if(rootToStartFrom.getParent().getParent() == null) rootToStartFrom = rootToStartFrom.getParent();
+            else rootToStartFrom = rootToStartFrom.getParent().getParent();
+        }
+
+        // Read and validate what the user inputted;
+        String input = InputHandler.readInputLine();
+        while(!input.matches("[1-" + numOptions + "]")) {
+            System.out.println("Please select an option between 1 and " + numOptions + ".");
+            input = InputHandler.readInputLine();
+        }
+
+        // We now have a slightly more narrow path to search through:
+        rootToStartFrom = FilePathHandler.getWorkingDirectory();
+        for(int i = 1; i < Integer.parseInt(input); i++) {
+            if(rootToStartFrom.getParent() == null) break;
+            if(rootToStartFrom.getParent().getParent() == null) rootToStartFrom = rootToStartFrom.getParent();
+            else rootToStartFrom = rootToStartFrom.getParent().getParent();
+        }
+        return rootToStartFrom;
+    }
+
     static Path promptForSourceFilePath() {
 
         InputHandler.wait(100);
@@ -81,13 +116,17 @@ public interface InputHandler extends GitGudder, FilePathHandler {
             return Path.of(input);
         }
 
-        // Step 3: List all similar
         String fileName = input.replaceAll("((C:\\\\)?([^\\\\]+\\\\)*[^\\\\]+\\\\|(\\.)?(\\/[^\\/]+)*\\/)", "");
         fileName = fileName.replaceAll("\\.\\w+$", "");
         System.out.println("No Java source file found at location: \'" + input + "\'");
         System.out.println("Searching instead for '.java' files with similar names to: \'" + fileName + "\'");
 
-        ArrayList<Path> candidates = FilePathHandler.getPathsToFile(fileName);
+
+        // Step 3: If not, prompt for directory to look for:
+        Path rootToStartFrom = InputHandler.promptForDirectoryToStartLookingFrom();
+
+        // Step 4: List all similar
+        ArrayList<Path> candidates = FilePathHandler.getPathsToFile(fileName, rootToStartFrom);
         if(candidates.size() == 0) {
             System.out.println("\nSorry, I couldn't find anything matching the input you've given me. Make sure to check your capitalization and spaces.\nLet's try again.");
             return InputHandler.promptForSourceFilePath();
@@ -114,31 +153,10 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         }
     }
 
-    static Path promptForRepositoryPath() {
+    static Path promptForGitRepositoryPath() {
 
         // Ask the user from where we need to start looking for repositories:
-        System.out.println("\n[ INPUT EXPECTED ]\nFrom where should I start looking?");
-
-        // Generate a list of up to 5 options:
-        Path rootToStartFrom = FilePathHandler.getWorkingDirectory();
-        int numOptions;
-        for(numOptions = 1; numOptions < 8; numOptions++) {
-            System.out.println(numOptions + " - \'" + rootToStartFrom + "\'");
-            if(rootToStartFrom.getParent() == null) break;
-            else rootToStartFrom = rootToStartFrom.getParent();
-        }
-
-        // Read and validate what the user inputted;
-        String input = InputHandler.readInputLine();
-        while(!input.matches("[1-" + numOptions + "]")) {
-            System.out.println("Please select an option between 1 and " + numOptions + ".");
-            input = InputHandler.readInputLine();
-        }
-
-        // We now have a slightly more narrow path to search through:
-        rootToStartFrom = FilePathHandler.getWorkingDirectory();
-        for(int i = 1; i < Integer.parseInt(input); i++)
-            rootToStartFrom = rootToStartFrom.getParent();
+        Path rootToStartFrom = InputHandler.promptForDirectoryToStartLookingFrom();
 
         // Get a list of Java Git Repositories hidden in the given folder/directory:
         ArrayList<Path> candidates = GitGudder.getLocalGitRepositories(rootToStartFrom);
@@ -152,11 +170,11 @@ public interface InputHandler extends GitGudder, FilePathHandler {
         }
         else {
             System.out.println("\nPlease select which of the following repositories you wish to parse by typing the number associated.\n");
-            numOptions = Math.min(candidates.size(), 9);
+            int numOptions = Math.min(candidates.size(), 9);
             for (int i = 0; i < numOptions; i++)
                 System.out.println((i + 1) + " : \'" + candidates.get(i) + "\'");
 
-            input = InputHandler.readInputLine();
+            String input = InputHandler.readInputLine();
             while (!input.matches("[1-" + numOptions + "]")) {
                 System.out.println("Please enter a number between 1 and " + numOptions + ".");
                 input = InputHandler.readInputLine();

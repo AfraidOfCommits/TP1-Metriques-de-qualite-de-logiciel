@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result;
 
-import net.frootloop.qa.parser.util.StringParser;
+import net.frootloop.qa.parser.util.strings.CodeParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
 import net.frootloop.qa.parser.result.internal.Visibility;
 
@@ -20,20 +20,20 @@ public class ParsedClass extends CodeTree {
     private ArrayList<String> parentClasses = new ArrayList<>();
     private ArrayList<String> classesReferenced = new ArrayList<>();
     private ArrayList<String> attributesDeclared;
-    private int numAssertStatements, numCommits, numLinesCode, numLinesComments, lcom = -1, wmc = -1;
+    private int numAssertStatements, numCommits, lcom = -1, wmc = -1;
 
     public ParsedClass(BlockOfCode classCodeBlock, String packageName, String[] importStatements, Path filePath){
         super(classCodeBlock);
         this.filePath = filePath;
         this.packageName = packageName;
-        this.className = StringParser.getDeclaredClassName(this.root.leadingStatement);
-        this.visibility = StringParser.getDeclaredClassVisibility(this.root.leadingStatement);
+        this.className = CodeParser.getDeclaredClassName(this.root.leadingStatement);
+        this.visibility = CodeParser.getDeclaredClassVisibility(this.root.leadingStatement);
         this.cyclomaticComplexity = this.root.getCyclomaticComplexity();
         this.importStatements = importStatements;
 
         // Get list of methods:
         for (BlockOfCode child: this.root.children) {
-            if (StringParser.isMethodDeclaration(child.leadingStatement)) {
+            if (CodeParser.isMethodDeclaration(child.leadingStatement)) {
                 ParsedMethod method = new ParsedMethod(child, this);
                 this.methods.add(method);
                 this.numAssertStatements += method.getNumAssertStatements();
@@ -50,15 +50,15 @@ public class ParsedClass extends CodeTree {
         this.attributesDeclared = this.root.getDeclaredVariables();
 
         // Check if the package name we're given refers to a class we'd be embedded in:
-        if(StringParser.getPackageClass(packageName) != null) this.addParent(packageName);
+        if(CodeParser.getPackageClass(packageName) != null) this.addParent(packageName);
 
         // Set inheritance:
-        for(String name : StringParser.getDeclaredClassInheritance(this.root.leadingStatement))
+        for(String name : CodeParser.getDeclaredClassInheritance(this.root.leadingStatement))
             this.addParent(this.getSignatureOfReferencedClass(name));
 
         // Set references to other classes:
         String codeOfClass = this.root.getCodeAsString().replace("\n", "");
-        for(String name : StringParser.getInitializedClassNames(codeOfClass))
+        for(String name : CodeParser.getInitializedClassNames(codeOfClass))
             this.addReferenceTo(this.getSignatureOfReferencedClass(name));
     }
 
@@ -73,7 +73,7 @@ public class ParsedClass extends CodeTree {
     public String getSignatureOfReferencedClass(String className) {
         // Check if the class was imported from another package:
         for(String importedClassSignature : this.importStatements)
-            if (StringParser.isStatementImportingClass(importedClassSignature, className))
+            if (CodeParser.isStatementImportingClass(importedClassSignature, className))
                 return importedClassSignature;
         // Otherwise, we can assume the class shares the same package as us:
         return this.packageName + "." + className;
@@ -238,19 +238,8 @@ public class ParsedClass extends CodeTree {
         return this.numCommits;
     }
 
-    public void setNumLinesCode(int numLinesCode) {
-        this.numLinesCode = numLinesCode;
-    }
-
-    public void setNumLinesComments(int numLinesComments) {
-        this.numLinesComments = numLinesComments;
-    }
-
     public float getCommentDensity() {
-        return (float)this.numLinesComments / (float)(this.numLinesCode + this.numLinesComments);
-    }
-
-    public int getNumLinesCode() {
-        return this.numLinesCode;
+        int numLinesComments = this.getNumLinesComments();
+        return (float)numLinesComments / (float)(this.getNumLinesCode() + numLinesComments);
     }
 }

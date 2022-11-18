@@ -1,6 +1,6 @@
 package net.frootloop.qa.parser.result;
 
-import net.frootloop.qa.parser.util.GitGudder;
+import net.frootloop.qa.parser.util.files.GitGudder;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

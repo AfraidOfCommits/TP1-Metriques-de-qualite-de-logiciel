@@ -2,11 +2,11 @@ package net.frootloop.qa.parser;
 
 import net.frootloop.qa.parser.util.InputHandler;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
-import net.frootloop.qa.parser.util.StringParser;
+import net.frootloop.qa.parser.util.strings.CodeParser;
 
 import java.nio.file.Path;
 
-public class JavaSourceFileParser implements InputHandler, StringParser {
+public class JavaSourceFileParser implements InputHandler, CodeParser {
 
     private static int numFilesParsed = 0;
 

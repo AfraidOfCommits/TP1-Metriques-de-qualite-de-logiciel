@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.util;
+package net.frootloop.qa.parser.util.files;
 
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;

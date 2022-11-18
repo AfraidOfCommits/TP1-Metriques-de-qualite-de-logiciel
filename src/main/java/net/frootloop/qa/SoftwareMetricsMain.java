@@ -2,7 +2,7 @@ package net.frootloop.qa;
 
 import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.util.GitGudder;
+import net.frootloop.qa.parser.util.files.GitGudder;
 import net.frootloop.qa.parser.util.InputHandler;
 
 import java.nio.file.Path;
@@ -24,11 +24,11 @@ public class SoftwareMetricsMain implements InputHandler {
             JavaSourceFileParser.analyseFileAt(sourceFilePath);
 
         } else if (userIntention == RequestType.ANALYSE_GIT_REPO) {
-            Path repositoryPath = InputHandler.promptForRepositoryPath();
+            Path repositoryPath = InputHandler.promptForGitRepositoryPath();
             JavaRepositoryParser.analyseRepositoryAt(repositoryPath);
 
         } else if (userIntention == RequestType.PRINT_AMOUNT_COMMITS) {
-            Path repositoryPath = InputHandler.promptForRepositoryPath();
+            Path repositoryPath = InputHandler.promptForGitRepositoryPath();
             Path sourceFilePath = InputHandler.promptForFileInRepository(repositoryPath);
             System.out.println("\n[ RESULT ]\nNumber of commits made to source file '" + sourceFilePath.toFile().getName() + "' : " + GitGudder.getCommitCountTo(repositoryPath, sourceFilePath));
         }

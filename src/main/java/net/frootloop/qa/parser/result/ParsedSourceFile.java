@@ -1,8 +1,9 @@
 package net.frootloop.qa.parser.result;
 
 import net.frootloop.qa.parser.JavaSourceFileParser;
-import net.frootloop.qa.parser.util.StringParser;
 import net.frootloop.qa.parser.result.internal.CodeTree;
+import net.frootloop.qa.parser.util.strings.CodeParser;
+import net.frootloop.qa.parser.util.strings.SourceCodeFixerUpper;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -42,44 +43,23 @@ public class ParsedSourceFile {
 
         try {
             // STEP 1: READ AND CLEAN UP THE TEXT DATA
-            //   Remove unnecessary spaces, null chars, normalize line breaks, and replace string values with "text":
-            String sourceFileTextData = StringParser.cleanUpSource(Files.readString(path));
+            //   Remove unnecessary spaces, null chars, normalize line breaks, replace string values with "text", replace comments with "// Comment":
+            String sourceFileTextData = SourceCodeFixerUpper.cleanUpSource(Files.readString(path));
 
-            // STEP 2: COUNT LINES
-            //   First, get total number of lines:
-            this.numLines = StringParser.getLineCountOf(sourceFileTextData);
+            // STEP 2: FETCH DATA RELATING TO CODE STATEMENTS, SUCH AS PACKAGE, IMPORTS, ETC.
+            this.importStatements = CodeParser.getImportStatementsOf(sourceFileTextData);
+            this.packageName = CodeParser.getPackageNameOf(sourceFileTextData);
 
-            //   Second, remove empty lines, then count what's left:
-            sourceFileTextData = StringParser.getWithoutEmptyLines(sourceFileTextData);
-            this.numLinesEmpty = this.numLines - StringParser.getLineCountOf(sourceFileTextData);
-
-            //   Save a copy of this version of the code for Step 4:
-            String textWithoutEmptyLines = sourceFileTextData + "";
-
-            //   Third, remove comments, then count what's left:
-            sourceFileTextData = StringParser.getWithoutComments(sourceFileTextData);
-            this.numLinesComments = this.numLines - this.numLinesEmpty - StringParser.getLineCountOf(sourceFileTextData);
-            this.numLinesCode = this.numLines - this.numLinesComments - this.numLinesEmpty;
-
-            // STEP 3: FETCH DATA RELATING TO CODE STATEMENTS, SUCH AS PACKAGE, IMPORTS, ETC.
-            sourceFileTextData = StringParser.getWithoutLineBreaks(sourceFileTextData);
-            this.importStatements = StringParser.getImportStatementsOf(sourceFileTextData);
-            this.packageName = StringParser.getPackageNameOf(sourceFileTextData);
-
-            // STEP 4: BUILD CODE TREE AND CLASSES
-            this.codeTree = new CodeTree(sourceFileTextData);
+            // STEP 3: BUILD CODE TREE AND CLASSES
+            this.codeTree = new CodeTree(SourceCodeFixerUpper.getCodeStatementsOf(sourceFileTextData));
             this.classes = this.codeTree.getListOfClasses(this.packageName, this.filePath, this.importStatements);
 
-
-            // FIND INDEX OF LEADING STATEMENT
-            // FIND INDEX OF CLOSING BRACKET
-
-
-
         } catch (IOException e) {
-            System.out.println("[ ERROR ] Unable to read file " + path.toFile().getAbsolutePath() + "!");
+            System.out.println("\n[ ERROR ]\n Exception thrown in constructor of 'ParsedSourceFile'. Unable to read file " + path.toFile().getAbsolutePath() + "!");
             e.printStackTrace();
         };
+
+        // Let the Parser (and user) know that a file was just successfully parsed:
         JavaSourceFileParser.announceParsedFile();
     }
 
@@ -90,20 +70,16 @@ public class ParsedSourceFile {
         codeTree.print();
     }
 
+    public int getNumLines() { return this.codeTree.getNumLines(); }
+
+    public int getNumLinesCode() { return this.codeTree.getNumLinesCode(); }
+
     public int getNumLinesEmpty() {
-        return numLinesEmpty;
-    }
-
-    public int getNumLines() {
-        return numLines;
-    }
-
-    public int getNumLinesCode() {
-        return numLinesCode;
+        return this.codeTree.getNumLinesEmpty();
     }
 
     public int getNumLinesComments(){
-        return numLinesComments;
+        return this.codeTree.getNumLinesComments();
     }
 
     public int getNumMethods(){
@@ -130,24 +106,6 @@ public class ParsedSourceFile {
 
     public ParsedClass[] getClasses() {
         return classes.toArray(new ParsedClass[classes.size()]);
-    }
-
-
-    /***
-     * Loops over the functions and methods within the file, and the first one found that isn't abstract
-     * and that shares the same name as input will be returned. As such, this method doesn't care about
-     * overloading.
-     *
-     * @param name Name of searched function or method, such as 'getFunctionByName'.
-     * @param isAskingFromOutsideScope Whether to consider private methods or not.
-     * @return (ParsedMethod) First function or method in the class with a matching name. Null if none.
-     */
-    public ParsedMethod getMethodByName(String name, boolean isAskingFromOutsideScope) {
-        for(ParsedClass c : this.classes) {
-            ParsedMethod m = c.getMethodByName(name, isAskingFromOutsideScope);
-            if(m != null) return m;
-        }
-        return null;
     }
 
     public float getCommentDensity() {
