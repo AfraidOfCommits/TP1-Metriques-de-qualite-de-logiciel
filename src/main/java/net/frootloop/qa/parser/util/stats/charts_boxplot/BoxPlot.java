@@ -1,4 +1,4 @@
-package net.frootloop.qa.parser.util.stats;
+package net.frootloop.qa.parser.util.stats.charts_boxplot;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -15,31 +15,34 @@ import java.util.ArrayList;
 
 public class BoxPlot extends ApplicationFrame {
 
-    public BoxPlot(final String title) {
+    final static String CHART_TITLE = "Basic Box-and-Whisker Chart";
+    final static String Y_AXIS_LABEL = "Value";
+    final static String X_AXIS_LABEL = "Parsed Classes";
 
-        super(title);
+    public BoxPlot() {
+        super(CHART_TITLE);
 
         final BoxAndWhiskerCategoryDataset dataset = this.createSampleDataset();
 
-        final CategoryAxis xAxis = new CategoryAxis("Type");
-        final NumberAxis yAxis = new NumberAxis("Value");
+        // Set the ranges of data;
+        final CategoryAxis xAxis = new CategoryAxis(X_AXIS_LABEL);
+        final NumberAxis yAxis = new NumberAxis(Y_AXIS_LABEL);
         yAxis.setAutoRangeIncludesZero(false);
 
+        // Set JFreeChart's renderer for the BoxAndWhisker chart:
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(false);
-
         final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
 
-        final JFreeChart chart = new JFreeChart(
-                "Box-and-Whisker Demo",
-                new Font("SansSerif", Font.BOLD, 14),
-                plot,
-                true
-        );
+        final JFreeChart chart = new JFreeChart(CHART_TITLE, new Font("Helvetica", Font.BOLD, 16), plot, true);
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(450, 270));
         setContentPane(chartPanel);
+        setContentPane(chartPanel);
 
+        // Show the Box Plot:
+        this.pack();
+        this.setVisible(true);
     }
 
 
@@ -49,8 +52,7 @@ public class BoxPlot extends ApplicationFrame {
         final int categoryCount = 4;
         final int entityCount = 22;
 
-        final DefaultBoxAndWhiskerCategoryDataset dataset
-                = new DefaultBoxAndWhiskerCategoryDataset();
+        final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
         for (int i = 0; i < seriesCount; i++) {
             for (int j = 0; j < categoryCount; j++) {
                 final ArrayList<Double> list = new ArrayList();
@@ -63,7 +65,6 @@ public class BoxPlot extends ApplicationFrame {
                 }
                 dataset.add(list, "Series " + i, " Type " + j);
             }
-
         }
 
         return dataset;
@@ -72,9 +73,7 @@ public class BoxPlot extends ApplicationFrame {
     public static void main(final String[] args) {
 
         //Log.getInstance().addTarget(new PrintStreamLogTarget(System.out));
-        final BoxPlot demo = new BoxPlot("Box-and-Whisker Chart Demo");
-        demo.pack();
-        demo.setVisible(true);
+        final BoxPlot demo = new BoxPlot();
 
     }
 

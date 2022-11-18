@@ -1,7 +1,7 @@
-package net.frootloop.qa.parser.util.stats;
+package net.frootloop.qa.parser.util.stats.charts_scatterplot;
 
 import net.frootloop.qa.parser.result.ParsedClass;
-import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.ClassComparatorEnum;
+import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
 
 import java.util.List;
 
@@ -40,34 +40,34 @@ public class ScatterPlotData {
         NUM_COMMITS_STANDARD_DEVIATION = getStandardDeviationOfIntegerList(numCommits, NUM_COMMITS_AVERAGE);
     }
 
-    public double getPearsonCorrelationBetween(ClassComparatorEnum a, ClassComparatorEnum b) {
+    public double getPearsonCorrelationBetween(CompareClassesBy a, CompareClassesBy b) {
         if(a.equals(b)) return 1.0d;
         return this.getCovariance(a,b) / this.getStdDeviationProduct(a,b);
     }
 
-    private double getStdDeviationProduct(ClassComparatorEnum a, ClassComparatorEnum b) {
+    private double getStdDeviationProduct(CompareClassesBy a, CompareClassesBy b) {
 
-        double stdDeviationA = a.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
-                a.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
-        double stdDeviationB = b.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
-                b.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
+        double stdDeviationA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
+                a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
+        double stdDeviationB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
+                b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
 
         return stdDeviationA * stdDeviationB;
     }
 
-    private double getCovariance(ClassComparatorEnum a, ClassComparatorEnum b) {
+    private double getCovariance(CompareClassesBy a, CompareClassesBy b) {
 
-        double averageA = a.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
-                a.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
-        double averageB = b.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
-                b.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
+        double averageA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
+                a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
+        double averageB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
+                b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
 
         double sum = 0.0d;
         for(int i = 0; i < numLinesCode.length; i++) {
-            double valA = a.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? commentDensities[i] :
-                    a.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
-            double valB = b.equals(ClassComparatorEnum.DENSITY_OF_COMMENTS) ? commentDensities[i] :
-                    b.equals(ClassComparatorEnum.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
+            double valA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? commentDensities[i] :
+                    a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
+            double valB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? commentDensities[i] :
+                    b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
             sum += (valA - averageA) * (valB - averageB);
         }
         return sum;
