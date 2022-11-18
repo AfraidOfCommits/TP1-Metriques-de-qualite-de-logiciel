@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BoxPlotData {
-    public final double UPPER_WHISKER_VALUE;
-    public final double LOWER_WHISKER_VALUE;
+    public final double UPPER_LIMIT_VALUE;
+    public final double LOWER_LIMIT_VALUE;
     public final double UPPER_QUARTILE_VALUE;
     public final double LOWER_QUARTILE_VALUE;
     public final double MEDIAN_VALUE;
+    public final double LENGTH;
     public final ArrayList<Double> EXTREME_DATA_POINTS;
 
     public enum ClassComparatorEnum {
@@ -42,21 +43,33 @@ public class BoxPlotData {
 
         // Find the values:
         double median = BoxPlotData.GetMedianOf(sortedListOfClasses, sortedBy);
-        double upperWhisker = 0.0d; // TODO
-        double upperQuartile = 0.0d; // TODO
-        double lowerWhisker = 0.0d; // TODO
-        double lowerQuartile = 0.0d; // TODO
+        double upperQuartile = BoxPlotData.GetUpperQuartileOf(sortedListOfClasses, sortedBy);
+        double lowerQuartile = BoxPlotData.GetLowerQuartileOf(sortedListOfClasses, sortedBy);
+        double length = upperQuartile - lowerQuartile;
+        double upperLimit = upperQuartile + 1.5d * length;
+        double lowerLimit = lowerQuartile - 1.5d * length;
 
         // Check the values. Are they well distributed?
-        BoxPlotData.EnsureValidBoxPlotOrder(upperWhisker,upperQuartile,median,lowerQuartile,lowerWhisker);
+        BoxPlotData.EnsureValidBoxPlotOrder(upperLimit,upperQuartile,median,lowerQuartile,lowerLimit);
 
-        // Set our attributes
-        UPPER_WHISKER_VALUE = upperWhisker;
+        // Set our attributes:
+        UPPER_LIMIT_VALUE = upperLimit;
         UPPER_QUARTILE_VALUE = upperQuartile;
         MEDIAN_VALUE = median;
         LOWER_QUARTILE_VALUE = lowerQuartile;
-        LOWER_WHISKER_VALUE = lowerWhisker;
-        EXTREME_DATA_POINTS = new ArrayList<>();
+        LOWER_LIMIT_VALUE = lowerLimit;
+        LENGTH = length;
+
+        // Get a list of extreme data points, i.e. classes with values exceeding either limit:
+        ArrayList<Double> extremePoints = new ArrayList<>();
+        for(ParsedClass c : sortedListOfClasses) {
+            double value = median;
+            if(sortedBy == ClassComparatorEnum.NUMBER_OF_COMMITS) value = c.getNumCommits();
+            if(sortedBy == ClassComparatorEnum.NUMBER_LINES_OF_CODES) value = c.getNumLinesCode();
+            if(sortedBy == ClassComparatorEnum.DENSITY_OF_COMMENTS) value = c.getCommentDensity();
+            if(value < lowerLimit || value > upperLimit) extremePoints.add(value);
+        }
+        EXTREME_DATA_POINTS = extremePoints;
     }
 
 
@@ -82,7 +95,6 @@ public class BoxPlotData {
     }
 
 
-
     /***
      * Returns the median value of a list of sorted Parsed Classes, based off of the Comparator they were sorted by.
      * @param sortedListOfClasses
@@ -101,7 +113,7 @@ public class BoxPlotData {
 
         // If the number of elements is odd, return the middle element's value:
         else if (sortedListOfClasses.size() % 2 == 1) {
-            ParsedClass medianClass = sortedListOfClasses.get(sortedListOfClasses.size() / 2);
+            ParsedClass medianClass = sortedListOfClasses.get((sortedListOfClasses.size() - 1) / 2);
             if (sortedBy == ClassComparatorEnum.NUMBER_OF_COMMITS) return medianClass.getNumCommits();
             if (sortedBy == ClassComparatorEnum.NUMBER_LINES_OF_CODES) return medianClass.getNumLinesCode();
             if (sortedBy == ClassComparatorEnum.DENSITY_OF_COMMENTS) return medianClass.getCommentDensity();
@@ -110,7 +122,7 @@ public class BoxPlotData {
         // If the number of elements is even, return the average between the two middle elements' values:
         else {
             ParsedClass medianClassBtm = sortedListOfClasses.get(sortedListOfClasses.size() >> 1);
-            ParsedClass medianClassTop = sortedListOfClasses.get(sortedListOfClasses.size() >> 1);
+            ParsedClass medianClassTop = sortedListOfClasses.get((sortedListOfClasses.size() >> 1) + 1);
             if (sortedBy == ClassComparatorEnum.NUMBER_OF_COMMITS)
                 return (double) (medianClassBtm.getNumCommits() + medianClassTop.getNumCommits()) / 2.0d;
             if (sortedBy == ClassComparatorEnum.NUMBER_LINES_OF_CODES)
@@ -119,5 +131,53 @@ public class BoxPlotData {
                 return (double) (medianClassBtm.getCommentDensity() + medianClassTop.getCommentDensity()) / 2.0d;
         }
         return 0.0d;
+    }
+
+    /***
+     * Returns the median value sorted Parsed Classes with values above the dataset's median.
+     * @param sortedListOfClasses
+     * @param sortedBy
+     * @return (double) Upper quartile of the dataset.
+     */
+    private static double GetUpperQuartileOf(List<ParsedClass> sortedListOfClasses, ClassComparatorEnum sortedBy) {
+
+        // If there's only one class in the list, return its value:
+        if (sortedListOfClasses.size() == 1) {
+            ParsedClass upperQuartileClass = sortedListOfClasses.get(0);
+            if (sortedBy == ClassComparatorEnum.NUMBER_OF_COMMITS) return upperQuartileClass.getNumCommits();
+            if (sortedBy == ClassComparatorEnum.NUMBER_LINES_OF_CODES) return upperQuartileClass.getNumLinesCode();
+            if (sortedBy == ClassComparatorEnum.DENSITY_OF_COMMENTS) return upperQuartileClass.getCommentDensity();
+        }
+
+        int indexOfMedian;
+        if (sortedListOfClasses.size() % 2 == 1) indexOfMedian = ((sortedListOfClasses.size() - 1) / 2);
+        else indexOfMedian = sortedListOfClasses.size() >> 1;
+
+        List<ParsedClass> upperHalf = sortedListOfClasses.subList(indexOfMedian, sortedListOfClasses.size());
+        return GetMedianOf(upperHalf, sortedBy);
+    }
+
+    /***
+     * Returns the median value sorted Parsed Classes with values below the dataset's median.
+     * @param sortedListOfClasses
+     * @param sortedBy
+     * @return (double) Lower quartile of the dataset.
+     */
+    private static double GetLowerQuartileOf(List<ParsedClass> sortedListOfClasses, ClassComparatorEnum sortedBy) {
+
+        // If there's only one class in the list, return its value:
+        if (sortedListOfClasses.size() == 1) {
+            ParsedClass lowerQuartileClass = sortedListOfClasses.get(0);
+            if (sortedBy == ClassComparatorEnum.NUMBER_OF_COMMITS) return lowerQuartileClass.getNumCommits();
+            if (sortedBy == ClassComparatorEnum.NUMBER_LINES_OF_CODES) return lowerQuartileClass.getNumLinesCode();
+            if (sortedBy == ClassComparatorEnum.DENSITY_OF_COMMENTS) return lowerQuartileClass.getCommentDensity();
+        }
+
+        int indexOfMedian;
+        if (sortedListOfClasses.size() % 2 == 1) indexOfMedian = ((sortedListOfClasses.size() - 1) / 2);
+        else indexOfMedian = (sortedListOfClasses.size() >> 1) + 1;
+
+        List<ParsedClass> lowerHalf = sortedListOfClasses.subList(0, indexOfMedian);
+        return GetMedianOf(lowerHalf, sortedBy);
     }
 }

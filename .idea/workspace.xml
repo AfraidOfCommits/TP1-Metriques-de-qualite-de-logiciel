@@ -11,22 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Advanced a bit on Box Plot class, but hit a road block; I have no way, with my current implementation, of accessing lines of code and lines of comments per CodeTree (or class, method, etc.).&#10;&#10;In other words, I have to completely rework the parsing and communication flow between CodeTree's and ParsedSourceFile's constructors. Fml.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeStatement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/strings/SourceCodeFixerUpper.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Complete rework of CodeTree and ParsedSourceFile generation!&#10;- Now allows for any node in the tree (be it classes, functions, methods, for loops, etc.) to know how many lines it is composed of; empty lines, lines of code, lines of comments.&#10;&#10;Added CodeStatement class to transfer data from ParsedSourceFile to CodeTree;&#10;- Contains data on a singular statement, including comments, empty lines, code, and the terminaison char (i.e. either '{', '}', or ';').&#10;&#10;Better input handling for parsing single files:&#10;- Now asks the user for a directory to start looking from.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/ScatterPlotData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/SoftwareMetricsMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedSourceFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/internal/CodeTree.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/FilePathHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/files/FilePathHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/GitGudder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/files/GitGudder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/InputHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/InputHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/StringParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/strings/CodeParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/BoxPlotData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,13 +105,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00040" summary="LSEC and JLS should, theoretically, have CSV outputs now. God help me">
-      <created>1664594692852</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1664594692852</updated>
     </task>
     <task id="LOCAL-00041" summary="COMPILEEEE">
       <created>1664595861592</created>
@@ -460,7 +442,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668626456477</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="Complete rework of CodeTree and ParsedSourceFile generation!&#10;- Now allows for any node in the tree (be it classes, functions, methods, for loops, etc.) to know how many lines it is composed of; empty lines, lines of code, lines of comments.&#10;&#10;Added CodeStatement class to transfer data from ParsedSourceFile to CodeTree;&#10;- Contains data on a singular statement, including comments, empty lines, code, and the terminaison char (i.e. either '{', '}', or ';').&#10;&#10;Better input handling for parsing single files:&#10;- Now asks the user for a directory to start looking from.">
+      <created>1668748014900</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1668748014901</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -475,7 +464,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Almost done with the code." />
     <MESSAGE value="Goddamn, I did not know Java could leak memory from the stack to the heap. I am sweating like a hog" />
     <MESSAGE value="Oh my God. It works. IT'S ALIVEEEE" />
     <MESSAGE value="Trying to debug the fact that methods seem to have no tests. Fixed up and improved 'incrementTestedMethodsNumTests', so I think the issue is with functions oustide the scope of the current class. In which case... I don't have the time to debug right now." />
@@ -500,7 +488,8 @@
     <MESSAGE value="Added documentation for the otherwise strange ParsedClassCommitComparator class." />
     <MESSAGE value="Started work on box plot implementation." />
     <MESSAGE value="Advanced a bit on Box Plot class, but hit a road block; I have no way, with my current implementation, of accessing lines of code and lines of comments per CodeTree (or class, method, etc.).&#10;&#10;In other words, I have to completely rework the parsing and communication flow between CodeTree's and ParsedSourceFile's constructors. Fml." />
-    <option name="LAST_COMMIT_MESSAGE" value="Advanced a bit on Box Plot class, but hit a road block; I have no way, with my current implementation, of accessing lines of code and lines of comments per CodeTree (or class, method, etc.).&#10;&#10;In other words, I have to completely rework the parsing and communication flow between CodeTree's and ParsedSourceFile's constructors. Fml." />
+    <MESSAGE value="Complete rework of CodeTree and ParsedSourceFile generation!&#10;- Now allows for any node in the tree (be it classes, functions, methods, for loops, etc.) to know how many lines it is composed of; empty lines, lines of code, lines of comments.&#10;&#10;Added CodeStatement class to transfer data from ParsedSourceFile to CodeTree;&#10;- Contains data on a singular statement, including comments, empty lines, code, and the terminaison char (i.e. either '{', '}', or ';').&#10;&#10;Better input handling for parsing single files:&#10;- Now asks the user for a directory to start looking from." />
+    <option name="LAST_COMMIT_MESSAGE" value="Complete rework of CodeTree and ParsedSourceFile generation!&#10;- Now allows for any node in the tree (be it classes, functions, methods, for loops, etc.) to know how many lines it is composed of; empty lines, lines of code, lines of comments.&#10;&#10;Added CodeStatement class to transfer data from ParsedSourceFile to CodeTree;&#10;- Contains data on a singular statement, including comments, empty lines, code, and the terminaison char (i.e. either '{', '}', or ';').&#10;&#10;Better input handling for parsing single files:&#10;- Now asks the user for a directory to start looking from." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
