@@ -58,10 +58,6 @@ public class CodeTree implements CodeParser {
                     currentCodeBlock = currentCodeBlock.parent;
             }
 
-            System.out.println("\nAdding new statement: '" + codeStatement.code + "'");
-            System.out.println("\nTo code block: '" + currentCodeBlock.getCodeAsString(true) + "'");
-
-
             // Increment the current code block's line counts with its new statement:
             currentCodeBlock.numLines += codeStatement.numLines;
             currentCodeBlock.numLinesCode += codeStatement.numLinesCode;
