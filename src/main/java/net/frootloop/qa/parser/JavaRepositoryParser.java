@@ -6,7 +6,7 @@ import net.frootloop.qa.parser.result.ParsedSourceFile;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotCD;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.BoxPlotData;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNCH;
-import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNLOC;
+import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNCLOC;
 import net.frootloop.qa.parser.util.stats.charts_scatterplot.DrawnScatterPlot;
 import net.frootloop.qa.parser.util.stats.charts_scatterplot.ScatterPlotData;
 import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
@@ -76,7 +76,7 @@ public class JavaRepositoryParser {
         ScatterPlotData scatterPlotData = new ScatterPlotData(classes);
         scatterPlotData.print();
 
-        new DrawnBoxPlotNLOC(repo.getClasses());
+        new DrawnBoxPlotNCLOC(repo.getClasses());
         new DrawnBoxPlotNCH(repo.getClasses());
         new DrawnBoxPlotCD(repo.getClasses());
 

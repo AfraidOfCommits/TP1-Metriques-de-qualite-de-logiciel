@@ -28,12 +28,6 @@ public class JavaSourceFileParser implements InputHandler, CodeParser {
         System.out.println("Percentage of code dedicated to documentation (CD): " + String.format("%.1f", 100 * sourceFile.getCommentDensity()) + "%" );
         System.out.println("Weighted Methods per Class (WMC): " + String.format("%.1f", sourceFile.getAverageWeightedMethods()));
 
-        /*
-        System.out.println("\n[ MATURITY ]");
-        System.out.println("Average commits per class (NCH): " + (GitGudder.getCommitCountTo(sourceFile.getFilePath()) / sourceFile.getNumClasses()));
-        System.out.println("Number of files in repository: " + sourceFile.getNumSourceFiles());
-        */
-
         System.out.println("\n[ RELIABILITY ]");
         System.out.println("Number of @Test methods : " + sourceFile.getTestMethods().size());
         System.out.println("Methods referenced in test code : " + String.join(",", sourceFile.getTestedMethods()));

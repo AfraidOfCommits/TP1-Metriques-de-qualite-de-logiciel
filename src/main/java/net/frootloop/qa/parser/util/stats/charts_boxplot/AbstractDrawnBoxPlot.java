@@ -1,6 +1,5 @@
 package net.frootloop.qa.parser.util.stats.charts_boxplot;
 
-import net.frootloop.qa.parser.result.ParsedClass;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -20,10 +19,10 @@ public abstract class AbstractDrawnBoxPlot extends ApplicationFrame {
 
     final String X_AXIS_LABEL = "Parsed Classes";
 
-    public AbstractDrawnBoxPlot(ParsedClass[] parsedClasses, String title, String yAxisName) {
+    public AbstractDrawnBoxPlot(double[] values, String title, String yAxisName) {
         super(title);
 
-        final BoxAndWhiskerCategoryDataset dataset = this.createSampleDataset(parsedClasses);
+        final BoxAndWhiskerCategoryDataset dataset = this.createSampleDataset(values);
 
         // Set the ranges of data;
         final CategoryAxis xAxis = new CategoryAxis(X_AXIS_LABEL);
@@ -51,7 +50,7 @@ public abstract class AbstractDrawnBoxPlot extends ApplicationFrame {
         this.setVisible(true);
     }
 
-    protected abstract DefaultBoxAndWhiskerCategoryDataset createSampleDataset(ParsedClass[] parsedClasses);
+    protected abstract DefaultBoxAndWhiskerCategoryDataset createSampleDataset(double[] values);
 
     private class CustomBoxAndWhiskerRenderer extends BoxAndWhiskerRenderer {
         public CustomBoxAndWhiskerRenderer() {

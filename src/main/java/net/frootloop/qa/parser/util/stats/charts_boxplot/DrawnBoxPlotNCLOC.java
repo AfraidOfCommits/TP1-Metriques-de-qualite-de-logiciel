@@ -5,14 +5,14 @@ import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
 import java.util.ArrayList;
 
-public class DrawnBoxPlotNCH extends AbstractDrawnBoxPlot {
+public class DrawnBoxPlotNCLOC extends AbstractDrawnBoxPlot {
 
-    public DrawnBoxPlotNCH(ParsedClass[] parsedClasses) {
-        super(getValuesOf(parsedClasses), "Number of Commits Per Class", "NCH");
+    public DrawnBoxPlotNCLOC(ParsedClass[] parsedClasses) {
+        super(getValuesOf(parsedClasses), "Number of Lines Per Classes", "NCLOC");
     }
 
-    public DrawnBoxPlotNCH(double[] values) {
-        super(values, "Number of Commits Per Class", "NCH");
+    public DrawnBoxPlotNCLOC(double[] values) {
+        super(values, "Number of Lines Per Classes", "NCLOC");
     }
 
     private static double[] getValuesOf(ParsedClass[] parsedClasses) {
@@ -22,25 +22,24 @@ public class DrawnBoxPlotNCH extends AbstractDrawnBoxPlot {
         return values;
     }
 
-
     protected DefaultBoxAndWhiskerCategoryDataset createSampleDataset(ParsedClass[] parsedClasses) {
 
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
         ArrayList<Double> graphData = new ArrayList<>();
-        for(ParsedClass c : parsedClasses) graphData.add((double) c.getNumCommits());
+        for(ParsedClass c : parsedClasses) graphData.add((double) c.getNumLinesCode());
         dataset.add(graphData, "1", "1");
 
         return dataset;
     }
 
     @Override
-    protected DefaultBoxAndWhiskerCategoryDataset createSampleDataset(double[] numCommits) {
+    protected DefaultBoxAndWhiskerCategoryDataset createSampleDataset(double[] numLinesCode) {
 
         final DefaultBoxAndWhiskerCategoryDataset dataset = new DefaultBoxAndWhiskerCategoryDataset();
 
         ArrayList<Double> graphData = new ArrayList<>();
-        for(int i = 0; i < numCommits.length; i++) graphData.add((double)numCommits[i]);
+        for(int i = 0; i < numLinesCode.length; i++) graphData.add((double)numLinesCode[i]);
         dataset.add(graphData, "", "");
 
         return dataset;
