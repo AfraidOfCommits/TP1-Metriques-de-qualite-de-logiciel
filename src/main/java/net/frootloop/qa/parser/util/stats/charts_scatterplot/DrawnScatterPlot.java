@@ -1,8 +1,6 @@
 package net.frootloop.qa.parser.util.stats.charts_scatterplot;
 
-import net.frootloop.qa.parser.JavaRepositoryParser;
 import net.frootloop.qa.parser.result.ParsedClass;
-import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -14,7 +12,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
-import java.nio.file.Path;
 
 public class DrawnScatterPlot extends JFrame {
 
@@ -56,13 +53,5 @@ public class DrawnScatterPlot extends JFrame {
 
         dataset.addSeries(series);
         return dataset;
-    }
-
-    public static void main(String[] args) {
-        ParsedRepository repo = JavaRepositoryParser.analyseRepositoryAt(Path.of("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\jfreechart"));
-        //ParsedRepository repo = JavaRepositoryParser.analyseRepositoryAt(Path.of("C:\\Users\\Alex\\Desktop\\IFT3913 - Qualité Logiciel\\TP1\\TP1 Metriques de qualite de logiciel"));
-        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.DENSITY_OF_COMMENTS, CompareClassesBy.NUMBER_LINES_OF_CODES);
-        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.NUMBER_OF_COMMITS, CompareClassesBy.NUMBER_LINES_OF_CODES);
-        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.DENSITY_OF_COMMENTS, CompareClassesBy.NUMBER_OF_COMMITS);
     }
 }

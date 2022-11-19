@@ -7,6 +7,7 @@ import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotCD;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.BoxPlotData;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNCH;
 import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNLOC;
+import net.frootloop.qa.parser.util.stats.charts_scatterplot.DrawnScatterPlot;
 import net.frootloop.qa.parser.util.stats.charts_scatterplot.ScatterPlotData;
 import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
 
@@ -16,8 +17,8 @@ import java.nio.file.Path;
 
 public class JavaRepositoryParser {
 
-    public static ParsedRepository analyseRepositoryAt(Path directory) {
-        if(directory == null) return null;
+    public static void analyseRepositoryAt(Path directory) {
+        if(directory == null) return;
 
         System.out.println("\n[ PARSING LOCAL REPOSITORY ]\nParsing the source files of repository at: \'" + directory + "\'...");
         ParsedRepository repo = JavaRepositoryParser.parse(directory);
@@ -79,7 +80,9 @@ public class JavaRepositoryParser {
         new DrawnBoxPlotNCH(repo.getClasses());
         new DrawnBoxPlotCD(repo.getClasses());
 
-        return repo;
+        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.DENSITY_OF_COMMENTS, CompareClassesBy.NUMBER_LINES_OF_CODES);
+        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.NUMBER_OF_COMMITS, CompareClassesBy.NUMBER_LINES_OF_CODES);
+        new DrawnScatterPlot(repo.getClasses(), CompareClassesBy.DENSITY_OF_COMMENTS, CompareClassesBy.NUMBER_OF_COMMITS);
     }
 
     /***

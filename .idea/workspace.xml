@@ -11,24 +11,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Work done on Box Plots.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/AbstractDrawnBoxPlot.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/CustomBoxAndWhiskerRenderer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotCD.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNCH.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNLOC.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/DrawnScatterPlot.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Finished the code.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JLS/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/Test.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/result/ParsedRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/BoxPlot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/BoxPlotData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/BoxPlotData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/ScatterPlot.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/ScatterPlotData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/ScatterPlotData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/strings/CodeParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/strings/CodeParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/DrawnScatterPlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/DrawnScatterPlot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,13 +109,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Fixed a index out of bounds error thrown by package name detection.&#10;Started adding a way to replace variable names with generic values.">
-      <created>1666199867432</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1666199867432</updated>
     </task>
     <task id="LOCAL-00048" summary="Ok, now the error is ACTUALLY fixed!">
       <created>1666201378604</created>
@@ -467,7 +446,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668794537599</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="Finished the code.">
+      <created>1668819078567</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1668819078568</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -482,7 +468,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed the bugs relating to assert statement detections and referenced method names in ParsedMethod;&#10;&#10;  - In ParsedMethod.setReferencedMethods(), the issue was that the 'else' condition was embedded in the 'if'. Such a small bug, but it made it so that no methods outside of scope were added to methodsNamesReferencedOutsideScope. &#10;  &#10;  - In StringParser.rxAssertStatements, added condition '\n\s+' to detect assert statements that were preceded by line breaks. Now, all asserts are detected and counted." />
     <MESSAGE value="Improved input handler, and fixed small bugs." />
     <MESSAGE value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
     <MESSAGE value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
@@ -507,7 +492,8 @@
     <MESSAGE value="Made arrays public; will have to remember that they oughta be 'final'" />
     <MESSAGE value="Now we're getting somewhere..." />
     <MESSAGE value="Work done on Box Plots." />
-    <option name="LAST_COMMIT_MESSAGE" value="Work done on Box Plots." />
+    <MESSAGE value="Finished the code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished the code." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
