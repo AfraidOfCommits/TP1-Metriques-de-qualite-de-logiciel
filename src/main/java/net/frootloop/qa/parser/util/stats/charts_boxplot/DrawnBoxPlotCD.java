@@ -18,7 +18,7 @@ public class DrawnBoxPlotCD extends AbstractDrawnBoxPlot {
     private static double[] getValuesOf(ParsedClass[] parsedClasses) {
         double[] values = new double[parsedClasses.length];
         for(int i = 0; i < parsedClasses.length; i++)
-            values[i] = parsedClasses[i].getNumLinesCode();
+            values[i] = parsedClasses[i].getCommentDensity();
         return values;
     }
 

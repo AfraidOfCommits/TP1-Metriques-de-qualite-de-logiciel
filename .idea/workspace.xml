@@ -11,15 +11,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added call to display scatter plots at the end of the results.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/StatsCSVReader.java" afterDir="false" />
+    <list default="true" id="e9214b9f-17c4-4444-b89a-acd9986e600d" name="Changes" comment="Added support for direct values calling.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaRepositoryParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/JavaSourceFileParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/AbstractDrawnBoxPlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/AbstractDrawnBoxPlot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotCD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotCD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNCH.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNCH.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNLOC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_boxplot/DrawnBoxPlotNCLOC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/DrawnScatterPlot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/frootloop/qa/parser/util/stats/charts_scatterplot/DrawnScatterPlot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,13 +110,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1663717242553</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Typo">
-      <created>1666201400486</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1666201400486</updated>
     </task>
     <task id="LOCAL-00050" summary="Fixed up the class signature lookups in import statements, which means also fixed up counting of indirect references. The parser is basically feature complete for most of our purposes!">
       <created>1666203753251</created>
@@ -458,7 +447,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668819515648</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="Added support for direct values calling.">
+      <created>1668828052604</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1668828052604</updated>
+    </task>
+    <option name="localTasksCounter" value="99" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -473,7 +469,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Improved input handler, and fixed small bugs related to inputs. We can now get statistics from an individual source file, and paste a Windows 11 path directly with no formatting." />
     <MESSAGE value="Fixed StringParser.rxAssertStatements, and consequently changed the group index to 3 in StringParser.getAssertStatementsOf()." />
     <MESSAGE value="Fixed reference building between methods and functions. Parsed Repositories now have accurate testability." />
     <MESSAGE value="I wish JGIT was a person just so that I could slap them really hard across the face&#10;&#10;I wish JGIT, the Java library, could feel pain, so that I may inflict upon it the pain it has caused me" />
@@ -498,7 +493,8 @@
     <MESSAGE value="Work done on Box Plots." />
     <MESSAGE value="Finished the code." />
     <MESSAGE value="Added call to display scatter plots at the end of the results." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added call to display scatter plots at the end of the results." />
+    <MESSAGE value="Added support for direct values calling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for direct values calling." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

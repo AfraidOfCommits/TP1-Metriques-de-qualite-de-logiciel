@@ -15,11 +15,36 @@ import java.awt.*;
 
 public class DrawnScatterPlot extends JFrame {
 
+    private static double[] getDensitiesFrom(ParsedClass[] parsedClasses) {
+        double[] values = new double[parsedClasses.length];
+        for(int i = 0; i < parsedClasses.length; i++)
+            values[i] = (double)parsedClasses[i].getCommentDensity();
+        return values;
+    }
+
+    private static double[] getNumLinesFrom(ParsedClass[] parsedClasses) {
+        double[] values = new double[parsedClasses.length];
+        for(int i = 0; i < parsedClasses.length; i++)
+            values[i] = (double)parsedClasses[i].getNumLinesCode();
+        return values;
+    }
+
+    private static double[] getNumCommitsFrom(ParsedClass[] parsedClasses) {
+        double[] values = new double[parsedClasses.length];
+        for(int i = 0; i < parsedClasses.length; i++)
+            values[i] = (double)parsedClasses[i].getNumCommits();
+        return values;
+    }
+
     public DrawnScatterPlot(ParsedClass[] parsedClasses, CompareClassesBy a, CompareClassesBy b) {
+        this(getDensitiesFrom(parsedClasses), getNumLinesFrom(parsedClasses), getNumCommitsFrom(parsedClasses), a, b);
+    }
+
+    public DrawnScatterPlot(double[] densities, double[] numLinesCode, double[] numCommits, CompareClassesBy a, CompareClassesBy b) {
         super("DrawnScatterPlot");
 
         // Create dataset
-        XYDataset dataset = createDataset(parsedClasses, a, b);
+        XYDataset dataset = createDataset(densities, numLinesCode, numCommits, a, b);
 
         // Create chart
         String xAxisTitle = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? "Comment Density" : a.equals(CompareClassesBy.NUMBER_OF_COMMITS) ? "Number of Commits" : "Number of Lines of Code";
@@ -39,6 +64,20 @@ public class DrawnScatterPlot extends JFrame {
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
+    }
+
+    private XYDataset createDataset(double[] densities, double[] numLinesCode, double[] numCommits, CompareClassesBy a, CompareClassesBy b) {
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        XYSeries series = new XYSeries("Classes");
+
+        for(int i = 0; i < densities.length; i++) {
+            double xValue = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? densities[i] : a.equals(CompareClassesBy.NUMBER_OF_COMMITS) ? numCommits[i] : numLinesCode[i];
+            double yValue = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? densities[i] : b.equals(CompareClassesBy.NUMBER_OF_COMMITS) ? numCommits[i] : numLinesCode[i];
+            series.add(xValue, yValue);
+        }
+
+        dataset.addSeries(series);
+        return dataset;
     }
 
     private XYDataset createDataset(ParsedClass[] parsedClasses, CompareClassesBy a, CompareClassesBy b) {
