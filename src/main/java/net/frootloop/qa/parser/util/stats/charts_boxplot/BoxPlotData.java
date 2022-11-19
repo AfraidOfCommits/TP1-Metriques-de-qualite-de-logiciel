@@ -9,6 +9,7 @@ import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.Comp
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,31 +26,32 @@ public class BoxPlotData {
 
     /***
      *
-     * @param listOfClasses
+     * @param classes
      * @param sortedBy
      */
-    public BoxPlotData(List<ParsedClass> listOfClasses, CompareClassesBy sortedBy) {
+    public BoxPlotData(ParsedClass[] classes, CompareClassesBy sortedBy) {
+
+        VALUE_TYPE = sortedBy;
 
         // Sort the list:
         ParsedClassComparator comparator = null;
         if(sortedBy == CompareClassesBy.NUMBER_OF_COMMITS) comparator = new ComparatorCommitsPerClass();
         if(sortedBy == CompareClassesBy.NUMBER_LINES_OF_CODES) comparator = new ComparatorLinesOfCode();
         if(sortedBy == CompareClassesBy.DENSITY_OF_COMMENTS) comparator = new ComparatorCommentDensity();
-        List<ParsedClass> sortedListOfClasses = listOfClasses.stream().sorted(comparator).collect(Collectors.toList());
+        List<ParsedClass> sortedListOfClasses = Arrays.stream(classes).sorted(comparator).collect(Collectors.toList());
 
         // Find the values:
         double median = BoxPlotData.GetMedianOf(sortedListOfClasses, sortedBy);
         double upperQuartile = BoxPlotData.GetUpperQuartileOf(sortedListOfClasses, sortedBy);
         double lowerQuartile = BoxPlotData.GetLowerQuartileOf(sortedListOfClasses, sortedBy);
         double length = upperQuartile - lowerQuartile;
-        double upperLimit = upperQuartile + 1.5d * length;
-        double lowerLimit = lowerQuartile - 1.5d * length;
+        double lowerLimit = Math.max(0, lowerQuartile - 1.5d * length);
+        double upperLimit = upperQuartile + (1.5d * length);
 
         // Check the values. Are they well distributed?
         BoxPlotData.EnsureValidBoxPlotOrder(upperLimit,upperQuartile,median,lowerQuartile,lowerLimit);
 
         // Set our attributes:
-        VALUE_TYPE = sortedBy;
         UPPER_LIMIT_VALUE = upperLimit;
         UPPER_QUARTILE_VALUE = upperQuartile;
         MEDIAN_VALUE = median;
@@ -60,56 +62,68 @@ public class BoxPlotData {
         // Get a list of extreme data points, i.e. classes with values exceeding either limit:
         ArrayList<ParsedClass> extremePoints = new ArrayList<>();
         for(ParsedClass c : sortedListOfClasses) {
-            double value = median;
-            if(sortedBy == CompareClassesBy.NUMBER_OF_COMMITS) value = c.getNumCommits();
-            if(sortedBy == CompareClassesBy.NUMBER_LINES_OF_CODES) value = c.getNumLinesCode();
-            if(sortedBy == CompareClassesBy.DENSITY_OF_COMMENTS) value = c.getCommentDensity();
-            if(value < lowerLimit || value > upperLimit) extremePoints.add(c);
+            double value = this.getValueOf(c);
+            if(value < lowerLimit || value > upperLimit) {
+
+                // Insert the class:
+                int index = 0;
+                for(int i = 0; i < extremePoints.size(); i++) {
+                    if (value > this.getValueOf(extremePoints.get(i))) break;
+                    index++;
+                }
+                extremePoints.add(index, c);
+            }
         }
         EXTREME_CLASSES = extremePoints;
+    }
+
+    private double getValueOf(ParsedClass c) {
+        if(VALUE_TYPE == CompareClassesBy.NUMBER_OF_COMMITS) return c.getNumCommits();
+        if(VALUE_TYPE == CompareClassesBy.NUMBER_LINES_OF_CODES) return c.getNumLinesCode();
+        if(VALUE_TYPE == CompareClassesBy.DENSITY_OF_COMMENTS) return c.getCommentDensity();
+        return -1;
     }
 
     public void print() {
         String dataNameUppercase = "", dataNameShorthand = "";
         if(VALUE_TYPE == CompareClassesBy.DENSITY_OF_COMMENTS) {
-            dataNameUppercase = "COMMENTS DENSITY";
+            dataNameUppercase = "COMMENTS DENSITY (CD)";
             dataNameShorthand = "CD";
         }
         else if(VALUE_TYPE == CompareClassesBy.NUMBER_LINES_OF_CODES) {
-            dataNameUppercase = "NUM. LINES OF CODE";
+            dataNameUppercase = "NUMBER OF LINES OF CODE (NLOC)";
             dataNameShorthand = "NLOC";
         }
         else if(VALUE_TYPE == CompareClassesBy.NUMBER_OF_COMMITS) {
-            dataNameUppercase = "NUM. OF COMMITS";
-            dataNameShorthand = "number of commits";
+            dataNameUppercase = "NUMBER OF COMMITS (NCH)";
+            dataNameShorthand = "NCH";
         }
 
         // Print a crude version of the box plot:
-        System.out.println("\n[ DATA DISTRIBUTION OF " + dataNameUppercase + " ]" +
-                "\nThe median for the " + dataNameShorthand + " of all classes in the repository is " + String.format("%.2f", MEDIAN_VALUE) + " and length is " + String.format("%.2f", LENGTH) +
+        System.out.println("\n[ " + dataNameUppercase + " ]" +
+                "\nThe median for the " + dataNameShorthand + " of all classes in the repository is " + String.format("%.3f", MEDIAN_VALUE) + " and length is " + String.format("%.3f", LENGTH) +
                 "\nCrude rendition of box plot:" +
-                "\n  _____   Upper limit: " + String.format("%.2f", UPPER_LIMIT_VALUE) +
+                "\n  _____   Upper limit: " + String.format("%.3f", UPPER_LIMIT_VALUE) +
                 "\n    |   " +
-                "\n  __|__   Upper quartile: " + String.format("%.2f", UPPER_QUARTILE_VALUE) +
+                "\n  __|__   Upper quartile: " + String.format("%.3f", UPPER_QUARTILE_VALUE) +
                 "\n  |   | " +
-                "\n  |___|   Median: " + String.format("%.2f", MEDIAN_VALUE) +
+                "\n  |___|   Median: " + String.format("%.3f", MEDIAN_VALUE) +
                 "\n  |   | " +
-                "\n  |___|   Lower quartile: " + String.format("%.2f", LOWER_QUARTILE_VALUE) +
+                "\n  |___|   Lower quartile: " + String.format("%.3f", LOWER_QUARTILE_VALUE) +
                 "\n    |   " +
-                "\n  __|__   Lower limit: " + String.format("%.2f", LOWER_LIMIT_VALUE));
+                "\n  __|__   Lower limit: " + String.format("%.3f", LOWER_LIMIT_VALUE));
 
         // Show which classes are extremes:
         if(EXTREME_CLASSES.size() > 0) {
-            if(EXTREME_CLASSES.size() == 1) System.out.println("There is a single extreme case in this dataset;");
-            else System.out.println("There are " + EXTREME_CLASSES.size() + " single extreme case in this dataset;");
+            if(EXTREME_CLASSES.size() == 1) System.out.println("\nThere is a single extreme case in this dataset;");
+            else System.out.println("\nThere are " + EXTREME_CLASSES.size() + " extreme cases in this dataset;");
 
             int counter = 1;
             for(ParsedClass c : EXTREME_CLASSES) {
 
-                if(VALUE_TYPE == CompareClassesBy.DENSITY_OF_COMMENTS) System.out.println("   - Comment density: " + String.format("%.2f", c.getCommentDensity()) + ", Class: '" + c.getSignature() + "'");
+                if(VALUE_TYPE == CompareClassesBy.DENSITY_OF_COMMENTS) System.out.println("   - Comment density: " + String.format("%.3f", c.getCommentDensity()) + ", Class: '" + c.getSignature() + "'");
                 if(VALUE_TYPE == CompareClassesBy.NUMBER_LINES_OF_CODES) System.out.println("   - NLOC: " + c.getNumLinesCode() + ", Class: '" + c.getSignature() + "'");
-                if(VALUE_TYPE == CompareClassesBy.DENSITY_OF_COMMENTS) System.out.println("   - Number of commits: " + c.getNumLinesCode() + ", Class: '" + c.getSignature() + "'");
-
+                if(VALUE_TYPE == CompareClassesBy.NUMBER_OF_COMMITS) System.out.println("   - Number of commits: " + c.getNumCommits() + ", Class: '" + c.getSignature() + "'");
 
                 counter++;
                 if(EXTREME_CLASSES.size() > 3 && counter == 4) {
@@ -117,18 +131,22 @@ public class BoxPlotData {
                     break;
                 }
             }
+            System.out.println();
         }
         else {
-            System.out.println("There are no extreme cases in this dataset.");
+            System.out.println("\nThere are no extreme cases in this dataset.");
         }
 
         // Whether the distribution has some symmetry:
         if(this.isDistributionSymmetrical(0.05d))
-            System.out.println("\nNOTE: The distribution is symmetrical to a margin of error of 5%, which suggests that that the data points are normally distributed.");
+            System.out.println("The distribution is symmetrical to a margin of error of 5%, which suggests that that the data points are normally distributed.");
         else if(this.isDistributionSymmetrical(0.1d))
-            System.out.println("\nNOTE: The distribution is partially (> 90%) symmetrical, which might hint to a normal distribution.");
+            System.out.println("The distribution is partially (> 90%) symmetrical, which might hint to a normal distribution.");
         else
-            System.out.println("\nNOTE: We can reject with the hypothesis that the dataset is normally distributed, as the brackets are less than 90% symmetric.");
+            System.out.println("We can reasonably reject the hypothesis that the dataset is normally distributed, seeing as the brackets are less than 90% symmetric.");
+
+        // One last line break:
+        System.out.println();
     }
 
     private boolean isDistributionSymmetrical(double percentileMarginOfError) {

@@ -320,6 +320,17 @@ public class ParsedRepository {
         return (float) sum / (float) this.numMethods;
     }
 
+
+    /**
+     * Calculates and returns the average WMC value of all classes in the
+     * repository.
+     *
+     * The weighted methods per class metric is a sum of the cyclomatic
+     * complexity of each method in a class, and as such increases
+     * linearly with the number of methods in said class.
+     *
+     * @return Average WMC of the repository.
+     */
     public float getAverageWeightedMethods() {
         float average = 0;
         for (ParsedClass c : this.classMap.values())
@@ -328,6 +339,13 @@ public class ParsedRepository {
         return average / (float)this.numClasses;
     }
 
+    /**
+     * Calculates and returns the average classes in the repository refer
+     * to one another, either directly (in a method or other), or indirectly,
+     * for instance by inheritance.
+     *
+     * @return Average coupling between classes.
+     */
     public float getAverageCouplageBetweenClasses() {
         float average = 0;
         for (ParsedClass c : this.classMap.values())
@@ -337,16 +355,60 @@ public class ParsedRepository {
         return average / (float)this.numClasses;
     }
 
-    public float getPercentageMethodsUntested() {
-        int numMethodsUntested = 0;
-        for (ParsedClass c : this.classMap.values())
-            for(ParsedMethod m : c.getMethods())
-                if(!m.isTest() && !m.isPrivate() && !m.isAbstract() && m.numDedicatedUnitTests == 0)
-                    numMethodsUntested++;
 
-        return 100 * (float)numMethodsUntested / (float)this.numMethods;
+    /**
+     * Calculates and returns the average NLOC of classes;
+     * @return Average, as a double.
+     */
+    public double getAverageLinesCodePerClass() {
+        double average = 0;
+        for (ParsedClass c : this.classMap.values()) average += c.getNumLinesCode();
+        return average / (double)this.numClasses;
     }
 
+    /**
+     * Calculates and returns the average NLOC of methods;
+     * @return Average, as a double.
+     */
+    public double getAverageLinesCodePerMethod() {
+        double average = 0;
+        for (ParsedClass c : this.classMap.values())
+            for (ParsedMethod m : c.getMethods())
+                average += c.getNumLinesCode();
+        return average / (double)this.numMethods;
+    }
+
+
+    /**
+     * Calculates and returns the percentage of testable methods
+     * and functions that are untested.
+     *
+     * As such, it does not take into consideration test methods and
+     * abstract methods in the total.
+     *
+     * @return The percentage of methods having no dedicated unit tests.
+     */
+    public float getPercentageMethodsUntested() {
+        int numMethodsUntested = 0;
+        int numMethodsTestable = this.numMethods;
+        for (ParsedClass c : this.classMap.values()) {
+            for (ParsedMethod m : c.getMethods()) {
+                if (m.isTest() || m.isAbstract()) numMethodsTestable--;
+                else if (m.numDedicatedUnitTests == 0) numMethodsUntested++;
+            }
+        }
+
+        return 100 * (float)numMethodsUntested / (float)numMethodsTestable;
+    }
+
+
+    /**
+     * Calculates and returns the average of all class' percentage of code statements
+     * that are dedicated to unit testing functionalities, vs code that implements
+     * the actual functionalities.
+     *
+     * @return The percentage of code statements dedicated unit tests.
+     */
     public float getPercentageCodeDedicatedForTests() {
         float percentage = 0;
         for (ParsedClass c : this.classMap.values())
@@ -355,6 +417,12 @@ public class ParsedRepository {
         return percentage / (float)this.numClasses;
     }
 
+    /**
+     * Calculates and returns the ratio between lines of comments and total
+     * non-empty lines (comments + code).
+     *
+     * @return Density of comments within the entire repository.
+     */
     public float getCommentDensity() {
         return (float)this.totalLinesComments / (float)(this.totalLinesCode + totalLinesComments);
     }

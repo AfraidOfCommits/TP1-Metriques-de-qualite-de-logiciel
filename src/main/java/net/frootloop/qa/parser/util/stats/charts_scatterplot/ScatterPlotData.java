@@ -3,27 +3,27 @@ package net.frootloop.qa.parser.util.stats.charts_scatterplot;
 import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
 
-import java.util.List;
-
 public class ScatterPlotData {
 
     public double[] commentDensities;
     public int[] numLinesCode;
     public int[] numCommits;
 
+    private final int NUM_CLASSES;
     public final double COMMENT_DENSITY_AVERAGE, NUM_LINES_CODE_AVERAGE, NUM_COMMITS_AVERAGE;
     public final double COMMENT_DENSITY_STANDARD_DEVIATION, NUM_LINES_CODE_STANDARD_DEVIATION, NUM_COMMITS_STANDARD_DEVIATION;
 
-    public ScatterPlotData(List<ParsedClass> parsedClasses) {
+    public ScatterPlotData(ParsedClass[] parsedClasses) {
 
         // Initialize arrays:
-        commentDensities = new double[parsedClasses.size()];
-        numLinesCode = new int[parsedClasses.size()];
-        numCommits = new int[parsedClasses.size()];
+        NUM_CLASSES = parsedClasses.length;
+        commentDensities = new double[NUM_CLASSES];
+        numLinesCode = new int[NUM_CLASSES];
+        numCommits = new int[NUM_CLASSES];
 
         // Get a list for each value, in order of each class. In other words, each index i represents a (X,Y,Z) class datapoint:
-        for(int i = 0; i < parsedClasses.size(); i++) {
-            ParsedClass c = parsedClasses.get(i);
+        for(int i = 0; i < NUM_CLASSES; i++) {
+            ParsedClass c = parsedClasses[i];
             commentDensities[i] = c.getCommentDensity();
             numLinesCode[i] = c.getNumLinesCode();
             numCommits[i] = c.getNumCommits();
@@ -40,39 +40,56 @@ public class ScatterPlotData {
         NUM_COMMITS_STANDARD_DEVIATION = getStandardDeviationOfIntegerList(numCommits, NUM_COMMITS_AVERAGE);
     }
 
-    public double getPearsonCorrelationBetween(CompareClassesBy a, CompareClassesBy b) {
+    public void print() {
+
+        System.out.println("\n[ STATISTICS OF CLASS SIZES & MATURITY ]");
+
+        System.out.println( "Average commits per class (NCH): " + String.format("%.2f", NUM_COMMITS_AVERAGE) + "\n" +
+                "Std Deviation of NCH: " + String.format("%.2f", NUM_COMMITS_STANDARD_DEVIATION) + "\n");
+
+        System.out.println("Average lines of code (NLOC) : " + String.format("%.2f", NUM_LINES_CODE_AVERAGE)+ "\n" +
+                "Std Deviation of NLOC: " + String.format("%.2f", NUM_LINES_CODE_STANDARD_DEVIATION) + "\n");
+
+
+        System.out.println("Average CD: " + String.format("%.2f", COMMENT_DENSITY_AVERAGE) + "\n" +
+                "Std Deviation of CD: " + String.format("%.2f", COMMENT_DENSITY_STANDARD_DEVIATION) + "\n");
+
+        System.out.println("[ CORRELATIONS ]");
+        System.out.println("Correlation between NLOC and CD: " + String.format("%.3f", this.getCorrelationBetween(CompareClassesBy.NUMBER_LINES_OF_CODES, CompareClassesBy.DENSITY_OF_COMMENTS)));
+        System.out.println("Correlation between NLOC and NoComm: " + String.format("%.3f", this.getCorrelationBetween(CompareClassesBy.NUMBER_LINES_OF_CODES, CompareClassesBy.NUMBER_OF_COMMITS)));
+        System.out.println("Correlation between NoComm and CD: " + String.format("%.3f", this.getCorrelationBetween(CompareClassesBy.NUMBER_OF_COMMITS, CompareClassesBy.DENSITY_OF_COMMENTS)));;
+
+    }
+
+    private double getValueOfClassAt(int index, CompareClassesBy sortBy) {
+        if(sortBy.equals(CompareClassesBy.NUMBER_LINES_OF_CODES)) return numLinesCode[index];
+        else if(sortBy.equals(CompareClassesBy.NUMBER_OF_COMMITS)) return numCommits[index];
+        return commentDensities[index];
+    }
+
+    private double getAverageOf(CompareClassesBy sortBy) {
+        if(sortBy.equals(CompareClassesBy.NUMBER_LINES_OF_CODES)) return NUM_LINES_CODE_AVERAGE;
+        else if(sortBy.equals(CompareClassesBy.NUMBER_OF_COMMITS)) return NUM_COMMITS_AVERAGE;
+        return COMMENT_DENSITY_AVERAGE;
+    }
+
+    private double getCorrelationBetween(CompareClassesBy a, CompareClassesBy b) {
         if(a.equals(b)) return 1.0d;
-        return this.getCovariance(a,b) / this.getStdDeviationProduct(a,b);
+
+        double covarianceSum = 0.0d;
+        for(int i = 0; i < NUM_CLASSES; i++)
+            covarianceSum += (this.getValueOfClassAt(i, a) - this.getAverageOf(a)) * (this.getValueOfClassAt(i, b) - this.getAverageOf(b));
+
+        double deviationsA = 0.0d;
+        for(int i = 0; i < NUM_CLASSES; i++)
+            deviationsA += Math.pow(this.getValueOfClassAt(i, a) - this.getAverageOf(a), 2);
+
+        double deviationsB = 0.0d;
+        for(int i = 0; i < NUM_CLASSES; i++)
+            deviationsB += Math.pow(this.getValueOfClassAt(i, b) - this.getAverageOf(b), 2);
+
+        return covarianceSum / (Math.sqrt(deviationsA) * Math.sqrt(deviationsB));
     }
-
-    private double getStdDeviationProduct(CompareClassesBy a, CompareClassesBy b) {
-
-        double stdDeviationA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
-                a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
-        double stdDeviationB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_STANDARD_DEVIATION :
-                b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_STANDARD_DEVIATION : NUM_COMMITS_STANDARD_DEVIATION;
-
-        return stdDeviationA * stdDeviationB;
-    }
-
-    private double getCovariance(CompareClassesBy a, CompareClassesBy b) {
-
-        double averageA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
-                a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
-        double averageB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? COMMENT_DENSITY_AVERAGE :
-                b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? NUM_LINES_CODE_AVERAGE : NUM_COMMITS_AVERAGE;
-
-        double sum = 0.0d;
-        for(int i = 0; i < numLinesCode.length; i++) {
-            double valA = a.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? commentDensities[i] :
-                    a.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
-            double valB = b.equals(CompareClassesBy.DENSITY_OF_COMMENTS) ? commentDensities[i] :
-                    b.equals(CompareClassesBy.NUMBER_LINES_OF_CODES) ? numLinesCode[i] : numCommits[i];
-            sum += (valA - averageA) * (valB - averageB);
-        }
-        return sum;
-    }
-
 
     private static double getAverageOfIntegerList(int[] integers) {
         double average = 0.0d;
@@ -87,14 +104,16 @@ public class ScatterPlotData {
     }
 
     private static double getStandardDeviationOfIntegerList(int[] integers, double average) {
-        double stdDeviation = 0.0d;
-        for(int i : integers) stdDeviation += Math.pow((double)i - average, 2);
-        return stdDeviation;
+        double variance = 0;
+        for(int i : integers) variance += Math.pow((double)i - average, 2);
+        variance = variance/integers.length;
+        return Math.sqrt(variance);
     }
 
     private static double getStandardDeviationOfDoublesList(double[] doubles, double average) {
-        double stdDeviation = 0.0d;
-        for(double d : doubles) stdDeviation += Math.pow(d - average, 2);
-        return stdDeviation;
+        double variance = 0.0d;
+        for(double d : doubles) variance += Math.pow(d - average, 2);
+        variance = variance/doubles.length;
+        return Math.sqrt(variance);
     }
 }

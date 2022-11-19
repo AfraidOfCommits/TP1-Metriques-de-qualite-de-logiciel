@@ -240,13 +240,13 @@ public class ParsedClass extends CodeTree {
 
     @Override
     public int getNumLinesComments() {
-        if(this.numLinesComments == -1) this.numLinesComments = this.getNumLinesComments();
+        if(this.numLinesComments == -1) this.numLinesComments = super.getNumLinesComments();
         return this.numLinesComments;
     }
 
     @Override
     public int getNumLinesCode() {
-        if(this.numLinesCode == -1) this.numLinesCode = this.getNumLinesCode();
+        if(this.numLinesCode == -1) this.numLinesCode = super.getNumLinesCode();
         return this.numLinesCode;
     }
 

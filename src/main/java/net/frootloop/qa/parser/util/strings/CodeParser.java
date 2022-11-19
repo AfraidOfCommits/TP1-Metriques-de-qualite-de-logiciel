@@ -101,8 +101,9 @@ public interface CodeParser {
         List<String> inherited = new ArrayList<>();
         Matcher regexInheritedClassesDetector = rxInheritedClasses.matcher(codeStatement);
         while(regexInheritedClassesDetector.find()) {
-            for(String className : regexInheritedClassesDetector.group(2).split(";"))
-                inherited.add(className.replace(" ", ""));
+            if(regexInheritedClassesDetector.group(2) != null)
+                for(String className : regexInheritedClassesDetector.group(2).split(";"))
+                    inherited.add(className.replace(" ", ""));
         }
         // Filter out duplicates and empty matches, then return:
         return inherited.stream().distinct().filter(item-> item != null && !item.isEmpty()).collect(Collectors.toList());

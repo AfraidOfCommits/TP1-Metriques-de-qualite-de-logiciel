@@ -1,7 +1,14 @@
 package net.frootloop.qa.parser;
 
+import net.frootloop.qa.parser.result.ParsedClass;
 import net.frootloop.qa.parser.result.ParsedRepository;
 import net.frootloop.qa.parser.result.ParsedSourceFile;
+import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotCD;
+import net.frootloop.qa.parser.util.stats.charts_boxplot.BoxPlotData;
+import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNCH;
+import net.frootloop.qa.parser.util.stats.charts_boxplot.DrawnBoxPlotNLOC;
+import net.frootloop.qa.parser.util.stats.charts_scatterplot.ScatterPlotData;
+import net.frootloop.qa.parser.util.stats.comparators.ParsedClassComparator.CompareClassesBy;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,8 +16,8 @@ import java.nio.file.Path;
 
 public class JavaRepositoryParser {
 
-    public static void analyseRepositoryAt(Path directory) {
-        if(directory == null) return;
+    public static ParsedRepository analyseRepositoryAt(Path directory) {
+        if(directory == null) return null;
 
         System.out.println("\n[ PARSING LOCAL REPOSITORY ]\nParsing the source files of repository at: \'" + directory + "\'...");
         ParsedRepository repo = JavaRepositoryParser.parse(directory);
@@ -20,7 +27,7 @@ public class JavaRepositoryParser {
         repo.buildReferences();
         System.out.println("...Done!");
 
-        System.out.println("\n============================\n        ANALYSIS OF MODULARITY        \n============================");
+        System.out.println("\n======================================\n        ANALYSIS OF MODULARITY        \n======================================");
 
         System.out.println("\n[ STATISTICS OF REPOSITORY ]");
         System.out.println("Consists of " + repo.getNumSourceFiles() + " Source Files, " + repo.getNumClasses() + " Classes, " + repo.getNumMethods() + " Methods, " + repo.getNumAssertStatements() + " Unit Tests.");
@@ -28,6 +35,7 @@ public class JavaRepositoryParser {
 
         System.out.println("\n[ COMPLEXITY ]");
         System.out.println("Percentage of code dedicated to documentation (CD): " + String.format("%.2f", 100 * repo.getCommentDensity()) + "%" );
+        System.out.println("Average lines of code per Class (NLOC): " + String.format("%.2f", repo.getAverageLinesCodePerClass()) + "." );
         System.out.println("Weighted Methods per Class (WMC): " + String.format("%.2f", repo.getAverageWeightedMethods()));
         System.out.println("    -> The most complex class is \'" + repo.getMostComplexClass().getSignature() + "\', with a WMC of " + repo.getMostComplexClass().getWeightedMethods() + " and a total cyclomatic complexity of " + repo.getMostComplexClass().getCyclomatcComplexity() + ".");
 
@@ -51,9 +59,27 @@ public class JavaRepositoryParser {
         System.out.println("Percentage of non-abstract methods not tested (PMNT) : " + String.format("%.2f", repo.getPercentageMethodsUntested()) + "%");
         System.out.println("Percentage of code statements dedicated to tests : " + String.format("%.2f", repo.getPercentageCodeDedicatedForTests()) + "%  (Including \'@Test\' Functions)");
 
-        System.out.println("\n\n============================\n        ANALYSIS OF CLASS DATA        \n============================");
+        System.out.println("\n\n======================================\n      DISTRIBUTIONS OF CLASS DATA     \n======================================");
+        ParsedClass[] classes = repo.getClasses();
 
+        BoxPlotData bpNumLinesCode = new BoxPlotData(classes, CompareClassesBy.NUMBER_LINES_OF_CODES);
+        bpNumLinesCode.print();
 
+        BoxPlotData bpCommentDensity = new BoxPlotData(classes, CompareClassesBy.DENSITY_OF_COMMENTS);
+        bpCommentDensity.print();
+
+        BoxPlotData bpNumCommits = new BoxPlotData(classes, CompareClassesBy.NUMBER_OF_COMMITS);
+        bpNumCommits.print();
+
+        System.out.println("\n\n======================================\n        ANALYSIS OF CLASS DATA        \n======================================");
+        ScatterPlotData scatterPlotData = new ScatterPlotData(classes);
+        scatterPlotData.print();
+
+        new DrawnBoxPlotNLOC(repo.getClasses());
+        new DrawnBoxPlotNCH(repo.getClasses());
+        new DrawnBoxPlotCD(repo.getClasses());
+
+        return repo;
     }
 
     /***
